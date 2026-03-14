@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ricoh Smart Service Hub — 進階功能</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--red:#CC0000;--red-dark:#A30000;--red-pale:#FFF0F0;--off:#F7F7F7;--g100:#F2F2F2;--g200:#E5E5E5;--g300:#CCC;--g500:#888;--g700:#444;--g900:#1A1A1A;--text:#222;--sub:#555;--border:#E0E0E0;--blue:#1A56DB;--blue-pale:#EFF6FF;--green:#16A34A;--green-pale:#F0FDF4}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{scroll-behavior:smooth;overflow-x:hidden}
+body{font-family:'Noto Sans TC','Helvetica Neue',sans-serif;background:#fff;color:var(--text);line-height:1.6;font-size:15px}
+
+/* NAV */
+.nav{background:var(--red);height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 5%;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.nav-l{display:flex;align-items:center;gap:12px}
+.wm{font-size:22px;font-weight:900;color:#fff;letter-spacing:-.03em}
+.nsep{width:1px;height:18px;background:rgba(255,255,255,.35)}
+.ntag{font-size:12px;font-weight:500;color:rgba(255,255,255,.88)}
+.nav-badge{background:rgba(255,255,255,.2);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;letter-spacing:.05em}
+.nav-r{display:flex;list-style:none}
+.nav-r a{color:rgba(255,255,255,.8);text-decoration:none;font-size:12.5px;padding:0 12px;height:54px;display:flex;align-items:center;transition:.15s;border-bottom:3px solid transparent}
+.nav-r a:hover{color:#fff;border-bottom-color:rgba(255,255,255,.6);background:rgba(0,0,0,.1)}
+.nav-home{background:rgba(255,255,255,.15);border-radius:4px;margin-right:8px}
+
+/* PAGE HERO */
+.pg-hero{background:var(--g900);padding:48px 5%;color:#fff}
+.pg-hero-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px}
+.pg-badge{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:rgba(255,255,255,.5);margin-bottom:10px}
+.pg-h1{font-size:clamp(22px,3vw,36px);font-weight:900;line-height:1.2;letter-spacing:-.02em;margin-bottom:8px}
+.pg-h1 span{color:var(--red)}
+.pg-desc{font-size:14px;color:rgba(255,255,255,.6);max-width:500px;line-height:1.7}
+.pg-modules{display:flex;gap:10px;flex-wrap:wrap}
+.pg-mod{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:6px;padding:8px 14px;font-size:12px;color:rgba(255,255,255,.75);cursor:pointer;transition:.2s;text-decoration:none;display:flex;align-items:center;gap:6px}
+.pg-mod:hover{background:rgba(255,255,255,.15);color:#fff}
+.pg-mod.active{background:var(--red);border-color:var(--red);color:#fff}
+
+/* SECTIONS */
+section{padding:64px 5%}
+.si{max-width:1100px;margin:0 auto}
+.ey{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.el{width:24px;height:3px;background:var(--red);flex-shrink:0}
+.elb{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--red)}
+.stit{font-size:clamp(20px,2.5vw,28px);font-weight:900;color:var(--g900);line-height:1.2;letter-spacing:-.02em;margin-bottom:8px}
+.sdesc{font-size:14px;color:var(--sub);max-width:560px;line-height:1.75;margin-bottom:32px}
+.sec-badge{display:inline-flex;align-items:center;gap:6px;font-size:10.5px;font-weight:700;padding:4px 12px;border-radius:10px;margin-bottom:16px}
+.sec-badge.new{background:#DCFCE7;color:#14532D}
+.sec-badge.wip{background:#FEF3C7;color:#92400E}
+
+/* ── 1. 維修知識庫 ── */
+#knowledge{background:#fff}
+.kb-toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;align-items:center;justify-content:space-between}
+.kb-search{flex:1;min-width:200px;max-width:360px;position:relative}
+.kb-search input{width:100%;border:1px solid var(--border);border-radius:6px;padding:9px 12px 9px 36px;font-size:13.5px;font-family:inherit;outline:none;transition:.2s}
+.kb-search input:focus{border-color:var(--red)}
+.kb-search-icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--g500);font-size:14px}
+.kb-filters{display:flex;gap:6px;flex-wrap:wrap}
+.kb-f{padding:5px 12px;border-radius:4px;border:1px solid var(--border);background:#fff;color:var(--sub);font-size:12px;cursor:pointer;transition:.15s;font-family:inherit}
+.kb-f.on{background:var(--red);border-color:var(--red);color:#fff}
+.kb-add-btn{background:var(--red);color:#fff;border:none;padding:9px 18px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap}
+.kb-stats{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}
+.kb-stat{background:var(--off);border-radius:6px;padding:10px 16px;font-size:12px;color:var(--sub);text-align:center}
+.kb-stat-n{display:block;font-size:22px;font-weight:700;color:var(--g900)}
+.kb-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.kb-card{background:#fff;border:1px solid var(--border);border-radius:8px;padding:16px;transition:.2s}
+.kb-card:hover{border-color:var(--g300);box-shadow:0 2px 12px rgba(0,0,0,.07)}
+.kb-card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px;gap:8px}
+.kb-cat{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:2px 8px;border-radius:2px}
+.kc-sc{background:#EFF6FF;color:#1E40AF}
+.kc-part{background:#F0FDF4;color:#14532D}
+.kc-repair{background:#FFF7ED;color:#C2410C}
+.kc-other{background:var(--off);color:var(--sub)}
+.kb-model{font-size:11px;color:var(--sub);background:var(--g100);padding:2px 7px;border-radius:3px}
+.kb-title{font-size:14px;font-weight:700;color:var(--g900);margin-bottom:6px;line-height:1.4}
+.kb-body{font-size:12.5px;color:var(--sub);line-height:1.6;margin-bottom:10px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical}
+.kb-body.open{display:block}
+.kb-foot{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px}
+.kb-meta{font-size:11px;color:var(--g500)}
+.kb-rating{display:flex;align-items:center;gap:4px;font-size:12px}
+.kb-acts{display:flex;gap:5px}
+.kb-btn{background:var(--off);color:var(--g700);border:1px solid var(--border);padding:4px 9px;border-radius:3px;font-size:11px;cursor:pointer;font-family:inherit}
+.kb-btn-del{background:#fff0f0;color:var(--red-dark);border:1px solid #f09595;padding:4px 9px;border-radius:3px;font-size:11px;cursor:pointer;font-family:inherit}
+.kb-btn-rate{background:#FFF7ED;color:#C2410C;border:1px solid #FED7AA;padding:4px 9px;border-radius:3px;font-size:11px;cursor:pointer;font-family:inherit}
+
+/* ── 2. 零件庫存查詢 ── */
+#inventory{background:var(--off)}
+.inv-top{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:24px;align-items:flex-end}
+.inv-search-group{flex:1;min-width:220px}
+.inv-search-group label{display:block;font-size:11.5px;color:var(--sub);margin-bottom:5px}
+.inv-search-group input,.inv-search-group select{width:100%;border:1px solid var(--border);border-radius:6px;padding:9px 12px;font-size:13.5px;font-family:inherit;outline:none;background:#fff;transition:.2s}
+.inv-search-group input:focus,.inv-search-group select:focus{border-color:var(--blue)}
+.inv-search-btn{background:var(--blue);color:#fff;border:none;padding:9px 20px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;align-self:flex-end;white-space:nowrap}
+.inv-add-btn{background:#fff;color:var(--blue);border:1.5px solid var(--blue);padding:9px 16px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;align-self:flex-end;white-space:nowrap}
+.inv-notice{background:var(--blue-pale);border:1px solid #BFDBFE;border-radius:6px;padding:12px 16px;font-size:12.5px;color:#1E40AF;margin-bottom:20px;display:flex;align-items:flex-start;gap:8px}
+.inv-table-wrap{overflow-x:auto}
+.inv-table{width:100%;border-collapse:collapse;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 1px 6px rgba(0,0,0,.06);font-size:13px}
+.inv-table th{padding:12px 16px;text-align:left;font-size:11.5px;font-weight:700;color:var(--sub);background:var(--off);border-bottom:2px solid var(--border);text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
+.inv-table td{padding:12px 16px;border-top:1px solid var(--border);vertical-align:middle}
+.inv-table tr:hover td{background:#FAFAFA}
+.inv-stock{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;padding:3px 10px;border-radius:10px}
+.inv-stock.ok{background:#DCFCE7;color:#14532D}
+.inv-stock.low{background:#FEF3C7;color:#92400E}
+.inv-stock.out{background:#FEE2E2;color:#991B1B}
+.inv-part-no{font-family:monospace;font-size:12.5px;color:var(--blue);font-weight:600}
+.inv-acts{display:flex;gap:5px}
+.inv-btn{background:var(--off);color:var(--g700);border:1px solid var(--border);padding:4px 9px;border-radius:3px;font-size:11px;cursor:pointer;font-family:inherit}
+
+/* ── 3. 遠端支援 ── */
+#remote{background:#fff}
+.remote-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.remote-card{border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.remote-head{padding:20px 22px;display:flex;align-items:center;gap:14px}
+.remote-card.video .remote-head{background:var(--g900)}
+.remote-card.guide .remote-head{background:#0F4C81}
+.remote-icon{width:44px;height:44px;background:rgba(255,255,255,.15);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.remote-htit{font-size:15px;font-weight:700;color:#fff}
+.remote-hsub{font-size:11.5px;color:rgba(255,255,255,.65)}
+.remote-body{padding:22px;background:#fff}
+.remote-desc{font-size:13px;color:var(--sub);line-height:1.7;margin-bottom:18px}
+
+.meet-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.meet-btn{display:flex;align-items:center;justify-content:center;gap:7px;padding:11px 10px;border-radius:6px;font-size:13px;font-weight:600;text-decoration:none;transition:.2s;border:none;cursor:pointer;font-family:inherit}
+.meet-btn.google{background:#1A73E8;color:#fff}
+.meet-btn.google:hover{background:#1557B0}
+.meet-btn.zoom{background:#2D8CFF;color:#fff}
+.meet-btn.zoom:hover{background:#1A6FCC}
+.meet-btn.teams{background:#6264A7;color:#fff}
+.meet-btn.teams:hover{background:#4F5196}
+.meet-btn.copy{background:var(--off);color:var(--g700);border:1px solid var(--border)}
+.meet-btn.copy:hover{background:var(--g100)}
+.meet-link-area{background:var(--off);border-radius:6px;padding:12px 14px;margin-bottom:12px}
+.meet-link-label{font-size:11px;color:var(--sub);margin-bottom:5px}
+.meet-link-input{width:100%;border:1px solid var(--border);border-radius:4px;padding:7px 10px;font-size:12px;background:#fff;color:var(--g700);outline:none}
+.meet-note{font-size:11.5px;color:var(--g500);line-height:1.6}
+
+.guide-steps{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.guide-step{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--off);border-radius:6px;cursor:pointer;transition:.2s;border:1px solid transparent}
+.guide-step:hover{background:var(--blue-pale);border-color:#BFDBFE}
+.guide-step.active{background:var(--blue-pale);border-color:var(--blue)}
+.guide-num{width:24px;height:24px;background:var(--blue);color:#fff;border-radius:50%;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.guide-step-txt{font-size:13px;font-weight:600;color:var(--g900)}
+.guide-content{background:var(--off);border-radius:8px;padding:16px;min-height:120px;font-size:13px;color:var(--sub);line-height:1.7}
+.guide-content h4{font-size:13.5px;font-weight:700;color:var(--g900);margin-bottom:10px}
+.guide-content ul{padding-left:16px;display:flex;flex-direction:column;gap:5px}
+.guide-next{background:var(--blue);color:#fff;border:none;padding:9px 20px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;margin-top:14px;display:flex;align-items:center;gap:6px}
+
+/* ── 4. EQR 手冊 ── */
+#eqr{background:var(--off)}
+.eqr-top{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;align-items:flex-end}
+.eqr-search{flex:1;min-width:220px;position:relative}
+.eqr-search input{width:100%;border:1px solid var(--border);border-radius:6px;padding:9px 12px 9px 36px;font-size:13.5px;font-family:inherit;outline:none;background:#fff;transition:.2s}
+.eqr-search input:focus{border-color:var(--red)}
+.eqr-search-icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--g500);font-size:14px}
+.eqr-add-btn{background:var(--red);color:#fff;border:none;padding:9px 18px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap}
+.eqr-cats{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:20px}
+.eqr-cat{padding:5px 12px;border-radius:4px;border:1px solid var(--border);background:#fff;color:var(--sub);font-size:12px;cursor:pointer;transition:.15s;font-family:inherit}
+.eqr-cat.on{background:var(--red);border-color:var(--red);color:#fff}
+.eqr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+.eqr-card{background:#fff;border:1px solid var(--border);border-radius:8px;padding:18px;transition:.2s;display:flex;flex-direction:column;gap:10px}
+.eqr-card:hover{border-color:var(--g300);box-shadow:0 2px 12px rgba(0,0,0,.07)}
+.eqr-card-top{display:flex;align-items:flex-start;gap:12px}
+.eqr-file-icon{width:40px;height:48px;background:var(--red-pale);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;color:var(--red-dark);font-weight:700;font-size:14px;border:1px solid #FCA5A5}
+.eqr-info{}
+.eqr-cat-tag{font-size:10px;font-weight:700;text-transform:uppercase;color:var(--red);letter-spacing:.06em;margin-bottom:3px}
+.eqr-title{font-size:14px;font-weight:700;color:var(--g900);line-height:1.35}
+.eqr-desc{font-size:12px;color:var(--sub);line-height:1.55}
+.eqr-meta{font-size:11px;color:var(--g500);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.eqr-actions{display:flex;gap:7px}
+.eqr-btn-view{flex:1;background:var(--red);color:#fff;border:none;padding:9px 10px;border-radius:5px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit;text-align:center;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:5px;transition:.2s}
+.eqr-btn-view:hover{background:var(--red-dark)}
+.eqr-btn-del{background:#fff0f0;color:var(--red-dark);border:1px solid #FCA5A5;padding:9px 10px;border-radius:5px;font-size:12px;cursor:pointer;font-family:inherit}
+.eqr-upload-notice{background:#FFFBEB;border:1px solid #FDE68A;border-radius:6px;padding:12px 16px;font-size:12.5px;color:#92400E;margin-bottom:16px;line-height:1.6}
+
+/* MODALS */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;align-items:center;justify-content:center}
+.modal-bg.show{display:flex}
+.modal{background:#fff;border-radius:10px;padding:28px;width:100%;max-width:520px;margin:20px;box-shadow:0 8px 40px rgba(0,0,0,.2);max-height:90vh;overflow-y:auto}
+.modal h3{font-size:16px;font-weight:700;color:var(--g900);margin-bottom:20px}
+.form-row{margin-bottom:12px}
+.form-row label{display:block;font-size:12px;color:var(--sub);margin-bottom:5px}
+.form-row input,.form-row textarea,.form-row select{width:100%;border:1px solid var(--border);border-radius:4px;padding:9px 12px;font-size:13.5px;font-family:inherit;outline:none;background:#fff;color:var(--text);transition:.15s}
+.form-row input:focus,.form-row textarea:focus,.form-row select:focus{border-color:var(--red)}
+.form-row textarea{resize:vertical;min-height:80px}
+.form-btns{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
+.btn-cancel{background:var(--off);color:var(--g700);border:1px solid var(--border);padding:9px 18px;border-radius:4px;font-size:13px;cursor:pointer;font-family:inherit}
+.btn-save{background:var(--red);color:#fff;border:none;padding:9px 20px;border-radius:4px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
+.btn-save.blue{background:var(--blue)}
+
+/* FOOTER */
+footer{background:var(--g900);padding:28px 5%;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.f-left{display:flex;align-items:center;gap:12px}
+.f-wm{font-size:18px;font-weight:900;color:#fff;letter-spacing:-.03em}
+.f-sep{width:1px;height:16px;background:rgba(255,255,255,.25)}
+.f-txt{font-size:12px;color:rgba(255,255,255,.45)}
+.f-back{background:rgba(255,255,255,.1);color:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.2);padding:8px 16px;border-radius:4px;font-size:13px;font-weight:600;text-decoration:none;transition:.2s}
+.f-back:hover{background:rgba(255,255,255,.18);color:#fff}
+
+/* RWD */
+@media(max-width:900px){
+  .nav-r{display:none}
+  .remote-grid{grid-template-columns:1fr}
+  .meet-btns{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-l">
+    <span class="wm">RICOH</span>
+    <div class="nsep"></div>
+    <span class="ntag">Smart Service Hub</span>
+    <span class="nav-badge">進階功能</span>
+  </div>
+  <ul class="nav-r">
+    <li><a href="#knowledge">維修知識庫</a></li>
+    <li><a href="#inventory">零件庫存</a></li>
+    <li><a href="#remote">遠端支援</a></li>
+    <li><a href="#eqr">EQR 手冊</a></li>
+    <li><a href="index.html" class="nav-home">← 回首頁</a></li>
+  </ul>
+</nav>
+
+<!-- PAGE HERO -->
+<div class="pg-hero">
+  <div class="pg-hero-inner">
+    <div>
+      <div class="pg-badge">Ricoh Smart Service Hub · Page 2</div>
+      <h1 class="pg-h1">進階功能<span> 模組</span></h1>
+      <p class="pg-desc">維修知識庫、零件庫存查詢、遠端支援、EQR 手冊。整合工程師所需的所有進階工具。</p>
+    </div>
+    <div class="pg-modules">
+      <a href="#knowledge" class="pg-mod active">📚 維修知識庫</a>
+      <a href="#inventory" class="pg-mod">📦 零件庫存</a>
+      <a href="#remote" class="pg-mod">🖥️ 遠端支援</a>
+      <a href="#eqr" class="pg-mod">📖 EQR 手冊</a>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     1. 維修知識庫
+══════════════════════════════════════ -->
+<section id="knowledge">
+  <div class="si">
+    <div class="sec-badge new">✦ 已開放</div>
+    <div class="ey"><div class="el"></div><span class="elb">維修案例知識庫</span></div>
+    <h2 class="stit">維修案例知識庫</h2>
+    <p class="sdesc">分享現場維修經驗，所有工程師可新增、搜尋、評分。資料即時同步共享。</p>
+
+    <div class="kb-stats">
+      <div class="kb-stat"><span class="kb-stat-n" id="kbTot">—</span>總案例</div>
+      <div class="kb-stat"><span class="kb-stat-n" id="kbSc">—</span>SC 代碼</div>
+      <div class="kb-stat"><span class="kb-stat-n" id="kbPart">—</span>料號類</div>
+      <div class="kb-stat"><span class="kb-stat-n" id="kbRep">—</span>維修技巧</div>
+    </div>
+
+    <div class="kb-toolbar">
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+        <div class="kb-search">
+          <span class="kb-search-icon">🔍</span>
+          <input id="kbSearchInput" placeholder="搜尋標題、機型、內容..." oninput="kbSearch()">
+        </div>
+        <div class="kb-filters">
+          <button class="kb-f on" onclick="kbFilter('all',this)">全部</button>
+          <button class="kb-f" onclick="kbFilter('sc',this)">SC 代碼</button>
+          <button class="kb-f" onclick="kbFilter('part',this)">料號</button>
+          <button class="kb-f" onclick="kbFilter('repair',this)">維修技巧</button>
+          <button class="kb-f" onclick="kbFilter('other',this)">其他</button>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button onclick="kbLoad()" style="background:var(--off);color:var(--g700);border:1px solid var(--border);padding:9px 14px;border-radius:4px;font-size:12px;cursor:pointer;font-family:inherit">↻ 重整</button>
+        <button class="kb-add-btn" onclick="kbOpenModal()">＋ 新增案例</button>
+      </div>
+    </div>
+
+    <div id="kbCards" class="kb-cards">
+      <div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--sub);font-size:13px">載入中...</div>
+    </div>
+  </div>
+</section>
+
+<!-- KB MODAL -->
+<div class="modal-bg" id="kbModal">
+  <div class="modal">
+    <h3 id="kbModalTitle">新增案例</h3>
+    <div class="form-row"><label>標題 *</label><input id="kbT" placeholder="例：IMC-3000 SC-301 定影器處理方式"></div>
+    <div class="form-row"><label>分類 *</label><select id="kbC"><option value="sc">SC 代碼</option><option value="part">料號查詢</option><option value="repair">維修技巧</option><option value="other">其他</option></select></div>
+    <div class="form-row"><label>適用機型</label><input id="kbMd" placeholder="例：IMC-3000、全機型通用"></div>
+    <div class="form-row"><label>案例內容 *</label><textarea id="kbB" placeholder="詳細描述問題症狀、排除步驟、使用料號或解決方法..."></textarea></div>
+    <div class="form-row"><label>分享者</label><input id="kbAu" placeholder="例：王工程師（可不填）"></div>
+    <div class="form-btns">
+      <button class="btn-cancel" onclick="kbCloseModal()">取消</button>
+      <button class="btn-save" onclick="kbSave()">儲存案例</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     2. 零件庫存查詢
+══════════════════════════════════════ -->
+<section id="inventory">
+  <div class="si">
+    <div class="sec-badge wip">⚙ 展示版・等待串接 API</div>
+    <div class="ey"><div class="el"></div><span class="elb">零件庫存查詢</span></div>
+    <h2 class="stit">零件庫存查詢</h2>
+    <p class="sdesc">查詢零件料號庫存狀態。目前為展示版，可手動維護資料，正式版將串接公司庫存系統 API。</p>
+
+    <div class="inv-notice">
+      ℹ️ <span>目前為<strong>展示版</strong>，資料由工程師手動維護。正式串接庫存系統 API 後，庫存數量將即時更新。如需申請 API 串接，請洽 IT 部門。</span>
+    </div>
+
+    <div class="inv-top">
+      <div class="inv-search-group" style="flex:2">
+        <label>料號 / 零件名稱搜尋</label>
+        <input id="invSearch" placeholder="輸入料號或零件名稱..." oninput="invRender()">
+      </div>
+      <div class="inv-search-group">
+        <label>適用機型篩選</label>
+        <select id="invModel" onchange="invRender()">
+          <option value="">全部機型</option>
+          <option>IMC-3000</option>
+          <option>IMC-5000</option>
+          <option>MPC-3003</option>
+          <option>MPC-5503</option>
+          <option>通用</option>
+        </select>
+      </div>
+      <div class="inv-search-group">
+        <label>庫存狀態</label>
+        <select id="invStatus" onchange="invRender()">
+          <option value="">全部</option>
+          <option value="ok">庫存充足</option>
+          <option value="low">庫存偏低</option>
+          <option value="out">缺貨</option>
+        </select>
+      </div>
+      <button class="inv-add-btn" onclick="invOpenModal()">＋ 新增料號</button>
+    </div>
+
+    <div class="inv-table-wrap">
+      <table class="inv-table">
+        <thead>
+          <tr>
+            <th>料號</th>
+            <th>零件名稱</th>
+            <th>適用機型</th>
+            <th>庫存數量</th>
+            <th>狀態</th>
+            <th>最後更新</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody id="invBody">
+          <tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--sub)">載入中...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- INV MODAL -->
+<div class="modal-bg" id="invModal">
+  <div class="modal">
+    <h3 id="invModalTitle">新增料號</h3>
+    <div class="form-row"><label>料號 *</label><input id="invPN" placeholder="例：AE01-1075、D039-2335"></div>
+    <div class="form-row"><label>零件名稱 *</label><input id="invName" placeholder="例：定影器總成、感光鼓"></div>
+    <div class="form-row"><label>適用機型</label><input id="invMdl" placeholder="例：IMC-3000、通用"></div>
+    <div class="form-row"><label>庫存數量 *</label><input id="invQty" type="number" min="0" placeholder="0"></div>
+    <div class="form-row"><label>安全庫存量（低於此數量顯示警告）</label><input id="invSafe" type="number" min="0" placeholder="5"></div>
+    <div class="form-row"><label>備註</label><input id="invNote" placeholder="例：替代料號 AE01-2080"></div>
+    <div class="form-btns">
+      <button class="btn-cancel" onclick="invCloseModal()">取消</button>
+      <button class="btn-save blue" onclick="invSave()">儲存</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     3. 遠端支援
+══════════════════════════════════════ -->
+<section id="remote">
+  <div class="si">
+    <div class="sec-badge new">✦ 可立即使用</div>
+    <div class="ey"><div class="el"></div><span class="elb">遠端支援</span></div>
+    <h2 class="stit">遠端支援</h2>
+    <p class="sdesc">視訊通話快速開啟遠端協助，或透過 AI 引導式流程逐步排除故障。</p>
+
+    <div class="remote-grid">
+      <!-- 視訊通話 -->
+      <div class="remote-card video">
+        <div class="remote-head">
+          <div class="remote-icon">📹</div>
+          <div>
+            <div class="remote-htit">視訊遠端支援</div>
+            <div class="remote-hsub">一鍵開啟視訊通話，遠端協助工程師</div>
+          </div>
+        </div>
+        <div class="remote-body">
+          <p class="remote-desc">選擇視訊平台，快速建立遠端支援通話。建立房間後將連結複製給需要支援的工程師。</p>
+          <div class="meet-link-area">
+            <div class="meet-link-label">自訂會議室連結（選填）</div>
+            <input class="meet-link-input" id="meetCustomLink" placeholder="貼上已有的會議連結，或直接點下方按鈕新建">
+          </div>
+          <div class="meet-btns">
+            <a href="https://meet.google.com/new" target="_blank" class="meet-btn google">📹 Google Meet</a>
+            <a href="https://zoom.us/start/videomeeting" target="_blank" class="meet-btn zoom">💻 Zoom</a>
+            <a href="https://teams.microsoft.com/l/meeting/new" target="_blank" class="meet-btn teams">🟦 MS Teams</a>
+            <button class="meet-btn copy" onclick="copyMeetLink()">📋 複製連結</button>
+          </div>
+          <p class="meet-note">💡 開啟視訊後，將連結複製給需要支援的工程師即可加入。建議使用 Google Meet（免費、免安裝）。</p>
+        </div>
+      </div>
+
+      <!-- AI 引導排除 -->
+      <div class="remote-card guide">
+        <div class="remote-head">
+          <div class="remote-icon">🤖</div>
+          <div>
+            <div class="remote-htit">AI 引導故障排除</div>
+            <div class="remote-hsub">逐步引導，快速定位問題根因</div>
+          </div>
+        </div>
+        <div class="remote-body">
+          <p class="remote-desc">透過 AI 引導式問答，逐步排除常見故障，適合電話支援時同步操作。</p>
+          <div class="guide-steps">
+            <div class="guide-step active" onclick="guideShow(0,this)">
+              <div class="guide-num">1</div>
+              <div class="guide-step-txt">確認錯誤代碼</div>
+            </div>
+            <div class="guide-step" onclick="guideShow(1,this)">
+              <div class="guide-num">2</div>
+              <div class="guide-step-txt">判斷故障分類</div>
+            </div>
+            <div class="guide-step" onclick="guideShow(2,this)">
+              <div class="guide-num">3</div>
+              <div class="guide-step-txt">執行排除步驟</div>
+            </div>
+            <div class="guide-step" onclick="guideShow(3,this)">
+              <div class="guide-num">4</div>
+              <div class="guide-step-txt">確認排除結果</div>
+            </div>
+          </div>
+          <div class="guide-content" id="guideContent">
+            <h4>步驟 1：確認錯誤代碼</h4>
+            <ul>
+              <li>請客戶讀出機台顯示的 SC 代碼</li>
+              <li>記錄代碼後 3-5 碼（如：SC-301、SC-542）</li>
+              <li>確認機型型號（IMC/MPC 系列）</li>
+              <li>詢問問題何時開始出現</li>
+            </ul>
+          </div>
+          <button class="guide-next" onclick="guideNext()">下一步 →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     4. EQR 手冊
+══════════════════════════════════════ -->
+<section id="eqr">
+  <div class="si">
+    <div class="sec-badge new">✦ 已開放</div>
+    <div class="ey"><div class="el"></div><span class="elb">EQR 相關手冊</span></div>
+    <h2 class="stit">EQR 相關手冊</h2>
+    <p class="sdesc">上傳 PDF 手冊，工程師可搜尋、查閱、下載。所有文件集中管理，隨時取用。</p>
+
+    <div class="eqr-upload-notice">
+      📄 手冊儲存在 Google Drive，請確認 PDF 設定為「知道連結的人均可檢視」後，再貼上連結新增至此。
+    </div>
+
+    <div class="eqr-top">
+      <div class="eqr-search">
+        <span class="eqr-search-icon">🔍</span>
+        <input id="eqrSearchInput" placeholder="搜尋手冊名稱、機型、關鍵字..." oninput="eqrRender()">
+      </div>
+      <button class="eqr-add-btn" onclick="eqrOpenModal()">＋ 新增手冊</button>
+    </div>
+
+    <div class="eqr-cats">
+      <button class="eqr-cat on" onclick="eqrFilter('all',this)">全部</button>
+      <button class="eqr-cat" onclick="eqrFilter('service',this)">服務手冊</button>
+      <button class="eqr-cat" onclick="eqrFilter('parts',this)">零件目錄</button>
+      <button class="eqr-cat" onclick="eqrFilter('setup',this)">安裝設定</button>
+      <button class="eqr-cat" onclick="eqrFilter('other',this)">其他</button>
+    </div>
+
+    <div id="eqrGrid" class="eqr-grid">
+      <div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--sub);font-size:13px">載入中...</div>
+    </div>
+  </div>
+</section>
+
+<!-- EQR MODAL -->
+<div class="modal-bg" id="eqrModal">
+  <div class="modal">
+    <h3 id="eqrModalTitle">新增手冊</h3>
+    <div class="form-row"><label>手冊名稱 *</label><input id="eqrT" placeholder="例：IMC-3000 服務手冊 v2.1"></div>
+    <div class="form-row"><label>分類 *</label><select id="eqrCat"><option value="service">服務手冊</option><option value="parts">零件目錄</option><option value="setup">安裝設定</option><option value="other">其他</option></select></div>
+    <div class="form-row"><label>適用機型</label><input id="eqrMd" placeholder="例：IMC-3000 系列、全機型通用"></div>
+    <div class="form-row"><label>Google Drive PDF 連結 *</label><input id="eqrUrl" placeholder="https://drive.google.com/file/d/..."></div>
+    <div class="form-row"><label>版本 / 日期</label><input id="eqrVer" placeholder="例：v2.1 / 2025-03"></div>
+    <div class="form-row"><label>說明</label><textarea id="eqrDesc" placeholder="簡短說明此手冊的內容與用途..."></textarea></div>
+    <div class="form-btns">
+      <button class="btn-cancel" onclick="eqrCloseModal()">取消</button>
+      <button class="btn-save" onclick="eqrSave()">儲存</button>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="f-left">
+    <span class="f-wm">RICOH</span>
+    <div class="f-sep"></div>
+    <span class="f-txt">Smart Service Hub · 進階功能頁 · © 2026 台灣理光</span>
+  </div>
+  <a href="index.html" class="f-back">← 回首頁</a>
+</footer>
+
+<script>
+// ══════ 維修知識庫 ══════
+let kbAll=[],kbFilter_='all',kbEditId=null,kbSearchQ='';
+const kbCatLabel={sc:'SC 代碼',part:'料號查詢',repair:'維修技巧',other:'其他'};
+const kbCatCls={sc:'kc-sc',part:'kc-part',repair:'kc-repair',other:'kc-other'};
+
+async function kbLoad(){
+  document.getElementById('kbCards').innerHTML='<div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--sub);font-size:13px">載入中...</div>';
+  try{
+    const r=await window.storage.list('case:');
+    const keys=r?r.keys:[];
+    kbAll=[];
+    for(const k of keys){try{const d=await window.storage.get(k,true);if(d)kbAll.push(JSON.parse(d.value));}catch(e){}}
+    kbAll.sort((a,b)=>b.ts-a.ts);
+  }catch(e){kbAll=[];}
+  kbUpdateStats();kbRender();
+}
+function kbUpdateStats(){
+  document.getElementById('kbTot').textContent=kbAll.length;
+  document.getElementById('kbSc').textContent=kbAll.filter(c=>c.cat==='sc').length;
+  document.getElementById('kbPart').textContent=kbAll.filter(c=>c.cat==='part').length;
+  document.getElementById('kbRep').textContent=kbAll.filter(c=>c.cat==='repair').length;
+}
+function kbSearch(){kbSearchQ=document.getElementById('kbSearchInput').value.toLowerCase();kbRender();}
+function kbFilter(cat,btn){kbFilter_=cat;document.querySelectorAll('.kb-f').forEach(b=>b.classList.remove('on'));btn.classList.add('on');kbRender();}
+function kbRender(){
+  let list=kbFilter_==='all'?kbAll:kbAll.filter(c=>c.cat===kbFilter_);
+  if(kbSearchQ)list=list.filter(c=>(c.title+c.body+(c.model||'')).toLowerCase().includes(kbSearchQ));
+  const area=document.getElementById('kbCards');
+  if(!list.length){area.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--sub);font-size:13px">沒有符合的案例，點「新增案例」開始分享！</div>';return;}
+  area.innerHTML=list.map(c=>`
+    <div class="kb-card">
+      <div class="kb-card-top">
+        <span class="kb-cat ${kbCatCls[c.cat]||'kc-other'}">${kbCatLabel[c.cat]||c.cat}</span>
+        ${c.model?`<span class="kb-model">${esc(c.model)}</span>`:''}
+      </div>
+      <div class="kb-title">${esc(c.title)}</div>
+      <div class="kb-body" id="kbb_${c.id}">${esc(c.body).replace(/\n/g,'<br>')}</div>
+      <div class="kb-foot">
+        <div>
+          <div class="kb-meta">${esc(c.author||'匿名')} · ${new Date(c.ts).toLocaleDateString('zh-TW')}</div>
+          <div class="kb-rating">⭐ ${c.rating||0} <span style="color:var(--g500);font-size:11px">(${c.rateCount||0}人評分)</span></div>
+        </div>
+        <div class="kb-acts">
+          <button class="kb-btn" onclick="kbToggle('kbb_${c.id}',this)">展開</button>
+          <button class="kb-btn-rate" onclick="kbRate('${c.id}')">👍 有用</button>
+          <button class="kb-btn" onclick="kbEditCase('${c.id}')">編輯</button>
+          <button class="kb-btn-del" onclick="kbDel('${c.id}')">刪除</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+function kbToggle(id,btn){const el=document.getElementById(id);if(el.classList.toggle('open'))btn.textContent='收起';else btn.textContent='展開';}
+function kbOpenModal(c){
+  kbEditId=c?c.id:null;
+  document.getElementById('kbModalTitle').textContent=c?'編輯案例':'新增案例';
+  document.getElementById('kbT').value=c?c.title:'';
+  document.getElementById('kbC').value=c?c.cat:'sc';
+  document.getElementById('kbMd').value=c?c.model||'':'';
+  document.getElementById('kbB').value=c?c.body:'';
+  document.getElementById('kbAu').value=c?c.author||'':'';
+  document.getElementById('kbModal').classList.add('show');
+}
+function kbCloseModal(){document.getElementById('kbModal').classList.remove('show');kbEditId=null;}
+async function kbSave(){
+  const t=document.getElementById('kbT').value.trim();
+  const b=document.getElementById('kbB').value.trim();
+  if(!t||!b){alert('請填寫標題和內容');return;}
+  const existing=kbEditId?kbAll.find(x=>x.id===kbEditId):{};
+  const c={id:kbEditId||'c'+Date.now(),title:t,body:b,cat:document.getElementById('kbC').value,model:document.getElementById('kbMd').value.trim(),author:document.getElementById('kbAu').value.trim(),ts:kbEditId?(existing.ts||Date.now()):Date.now(),rating:existing.rating||0,rateCount:existing.rateCount||0};
+  try{await window.storage.set('case:'+c.id,JSON.stringify(c),true);kbCloseModal();await kbLoad();}catch(e){alert('儲存失敗');}
+}
+function kbEditCase(id){const c=kbAll.find(x=>x.id===id);if(c)kbOpenModal(c);}
+async function kbDel(id){if(!confirm('確定要刪除？'))return;try{await window.storage.delete('case:'+id,true);await kbLoad();}catch(e){alert('刪除失敗');}}
+async function kbRate(id){
+  const c=kbAll.find(x=>x.id===id);if(!c)return;
+  c.rating=Math.round(((c.rating||0)*(c.rateCount||0)+5)/((c.rateCount||0)+1)*10)/10;
+  c.rateCount=(c.rateCount||0)+1;
+  try{await window.storage.set('case:'+c.id,JSON.stringify(c),true);kbRender();}catch(e){}
+}
+document.getElementById('kbModal').addEventListener('click',function(e){if(e.target===this)kbCloseModal();});
+
+// ══════ 零件庫存 ══════
+let invAll=[],invEditId=null;
+const invSampleData=[
+  {id:'inv1',pn:'AE01-1075',name:'定影器總成',model:'IMC-3000',qty:8,safe:3,note:'替代料號 AE01-2080',ts:Date.now()-86400000},
+  {id:'inv2',pn:'D039-2335',name:'感光鼓',model:'MPC-3003',qty:2,safe:5,note:'庫存偏低，需補貨',ts:Date.now()-172800000},
+  {id:'inv3',pn:'B2245510',name:'顯影劑',model:'通用',qty:0,safe:10,note:'已缺貨，待到貨',ts:Date.now()-259200000},
+  {id:'inv4',pn:'AE02-0187',name:'轉印帶',model:'IMC-5000',qty:15,safe:5,note:'',ts:Date.now()-345600000},
+  {id:'inv5',pn:'D1395510',name:'清潔刮刀',model:'MPC-5503',qty:6,safe:4,note:'',ts:Date.now()-432000000},
+];
+async function invLoad(){
+  try{
+    const r=await window.storage.list('inv:');
+    const keys=r?r.keys:[];
+    if(keys.length===0){
+      invAll=[...invSampleData];
+      for(const item of invAll)await window.storage.set('inv:'+item.id,JSON.stringify(item),true);
+    }else{
+      invAll=[];
+      for(const k of keys){try{const d=await window.storage.get(k,true);if(d)invAll.push(JSON.parse(d.value));}catch(e){}}
+    }
+  }catch(e){invAll=[...invSampleData];}
+  invRender();
+}
+function invRender(){
+  const q=(document.getElementById('invSearch').value||'').toLowerCase();
+  const m=document.getElementById('invModel').value;
+  const s=document.getElementById('invStatus').value;
+  let list=invAll.filter(item=>{
+    if(q&&!(item.pn+item.name+(item.model||'')+(item.note||'')).toLowerCase().includes(q))return false;
+    if(m&&item.model!==m)return false;
+    if(s){
+      const st=item.qty===0?'out':item.qty<=item.safe?'low':'ok';
+      if(st!==s)return false;
+    }
+    return true;
+  });
+  const tbody=document.getElementById('invBody');
+  if(!list.length){tbody.innerHTML='<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--sub)">沒有符合的料號</td></tr>';return;}
+  tbody.innerHTML=list.map(item=>{
+    const st=item.qty===0?'out':item.qty<=(item.safe||0)?'low':'ok';
+    const stLabel={ok:'庫存充足',low:'庫存偏低',out:'缺貨'}[st];
+    return `<tr>
+      <td><span class="inv-part-no">${esc(item.pn)}</span></td>
+      <td><strong>${esc(item.name)}</strong>${item.note?`<br><span style="font-size:11px;color:var(--sub)">${esc(item.note)}</span>`:''}
+      </td>
+      <td>${esc(item.model||'—')}</td>
+      <td style="font-weight:700;font-size:15px">${item.qty}</td>
+      <td><span class="inv-stock ${st}">${stLabel}</span></td>
+      <td style="font-size:11.5px;color:var(--sub)">${new Date(item.ts).toLocaleDateString('zh-TW')}</td>
+      <td><div class="inv-acts">
+        <button class="inv-btn" onclick="invEdit('${item.id}')">編輯</button>
+        <button class="inv-btn" onclick="invDel('${item.id}')">刪除</button>
+      </div></td>
+    </tr>`;
+  }).join('');
+}
+function invOpenModal(item){
+  invEditId=item?item.id:null;
+  document.getElementById('invModalTitle').textContent=item?'編輯料號':'新增料號';
+  document.getElementById('invPN').value=item?item.pn:'';
+  document.getElementById('invName').value=item?item.name:'';
+  document.getElementById('invMdl').value=item?item.model||'':'';
+  document.getElementById('invQty').value=item?item.qty:'';
+  document.getElementById('invSafe').value=item?item.safe||'':'';
+  document.getElementById('invNote').value=item?item.note||'':'';
+  document.getElementById('invModal').classList.add('show');
+}
+function invCloseModal(){document.getElementById('invModal').classList.remove('show');invEditId=null;}
+async function invSave(){
+  const pn=document.getElementById('invPN').value.trim();
+  const name=document.getElementById('invName').value.trim();
+  const qty=parseInt(document.getElementById('invQty').value)||0;
+  if(!pn||!name){alert('請填寫料號和零件名稱');return;}
+  const item={id:invEditId||'inv'+Date.now(),pn,name,model:document.getElementById('invMdl').value.trim(),qty,safe:parseInt(document.getElementById('invSafe').value)||0,note:document.getElementById('invNote').value.trim(),ts:Date.now()};
+  try{await window.storage.set('inv:'+item.id,JSON.stringify(item),true);invCloseModal();await invLoad();}catch(e){alert('儲存失敗');}
+}
+function invEdit(id){const item=invAll.find(x=>x.id===id);if(item)invOpenModal(item);}
+async function invDel(id){if(!confirm('確定要刪除？'))return;try{await window.storage.delete('inv:'+id,true);await invLoad();}catch(e){alert('刪除失敗');}}
+document.getElementById('invModal').addEventListener('click',function(e){if(e.target===this)invCloseModal();});
+
+// ══════ 遠端支援 ══════
+const guideData=[
+  {title:'步驟 1：確認錯誤代碼',items:['請客戶讀出機台顯示的 SC 代碼','記錄代碼後 3-5 碼（如：SC-301、SC-542）','確認機型型號（IMC/MPC 系列）','詢問問題何時開始出現']},
+  {title:'步驟 2：判斷故障分類',items:['A 級（低風險）：紙張卡紙、碳粉不足 → 引導客戶自行處理','B 級（中風險）：影像品質問題、SC 代碼 → 安排工程師到場','C 級（高風險）：冒煙、異味、無法開機 → 立即停機並緊急派工','記錄故障分類後，決定後續處理方式']},
+  {title:'步驟 3：執行排除步驟',items:['A 級：提供 SOP 引導客戶自行排除（參考 EQR 手冊）','B 級：使用 AI 查詢 SC 代碼，確認備料清單後出發','C 級：立即通知主管，填寫緊急派工單，攜帶完整備料','執行過程中記錄關鍵資訊']},
+  {title:'步驟 4：確認排除結果',items:['確認問題已排除，機台恢復正常運作','請客戶確認並簽署服務報告','將此次案例記錄至維修知識庫（按上方「維修知識庫」）','更新零件庫存數量（若有更換零件）']},
+];
+let guideStep=0;
+function guideShow(idx,el){
+  guideStep=idx;
+  document.querySelectorAll('.guide-step').forEach(s=>s.classList.remove('active'));
+  el.classList.add('active');
+  const d=guideData[idx];
+  document.getElementById('guideContent').innerHTML=`<h4>${d.title}</h4><ul>${d.items.map(i=>`<li>${i}</li>`).join('')}</ul>`;
+}
+function guideNext(){
+  guideStep=(guideStep+1)%guideData.length;
+  const steps=document.querySelectorAll('.guide-step');
+  guideShow(guideStep,steps[guideStep]);
+}
+function copyMeetLink(){
+  const link=document.getElementById('meetCustomLink').value||'https://meet.google.com/new';
+  navigator.clipboard.writeText(link).then(()=>alert('連結已複製！')).catch(()=>alert('請手動複製連結'));
+}
+
+// ══════ EQR 手冊 ══════
+let eqrAll=[],eqrFilter_='all',eqrEditId=null;
+const eqrCatLabel={service:'服務手冊',parts:'零件目錄',setup:'安裝設定',other:'其他'};
+const eqrSample=[
+  {id:'eqr1',title:'IMC-3000 服務手冊',cat:'service',model:'IMC-3000',url:'https://drive.google.com/file/d/sample1',ver:'v2.1',desc:'包含完整的 SC 代碼說明、零件更換程序與調整方法。',ts:Date.now()-86400000*10},
+  {id:'eqr2',title:'MPC-3003/5503 零件目錄',cat:'parts',model:'MPC-3003、MPC-5503',url:'https://drive.google.com/file/d/sample2',ver:'2025-01',desc:'完整零件料號清單，含替代料號對照表。',ts:Date.now()-86400000*20},
+];
+async function eqrLoad(){
+  try{
+    const r=await window.storage.list('eqr:');
+    const keys=r?r.keys:[];
+    if(keys.length===0){
+      eqrAll=[...eqrSample];
+      for(const item of eqrAll)await window.storage.set('eqr:'+item.id,JSON.stringify(item),true);
+    }else{
+      eqrAll=[];
+      for(const k of keys){try{const d=await window.storage.get(k,true);if(d)eqrAll.push(JSON.parse(d.value));}catch(e){}}
+    }
+  }catch(e){eqrAll=[...eqrSample];}
+  eqrRender();
+}
+function eqrFilter(cat,btn){eqrFilter_=cat;document.querySelectorAll('.eqr-cat').forEach(b=>b.classList.remove('on'));btn.classList.add('on');eqrRender();}
+function eqrRender(){
+  const q=(document.getElementById('eqrSearchInput').value||'').toLowerCase();
+  let list=eqrFilter_==='all'?eqrAll:eqrAll.filter(e=>e.cat===eqrFilter_);
+  if(q)list=list.filter(e=>(e.title+(e.model||'')+(e.desc||'')).toLowerCase().includes(q));
+  const grid=document.getElementById('eqrGrid');
+  if(!list.length){grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--sub);font-size:13px">沒有符合的手冊，點「新增手冊」上傳！</div>';return;}
+  grid.innerHTML=list.map(e=>`
+    <div class="eqr-card">
+      <div class="eqr-card-top">
+        <div class="eqr-file-icon">PDF</div>
+        <div class="eqr-info">
+          <div class="eqr-cat-tag">${eqrCatLabel[e.cat]||e.cat}</div>
+          <div class="eqr-title">${esc(e.title)}</div>
+        </div>
+      </div>
+      ${e.desc?`<div class="eqr-desc">${esc(e.desc)}</div>`:''}
+      <div class="eqr-meta">
+        ${e.model?`<span>📱 ${esc(e.model)}</span>`:''}
+        ${e.ver?`<span>📌 ${esc(e.ver)}</span>`:''}
+        <span>📅 ${new Date(e.ts).toLocaleDateString('zh-TW')}</span>
+      </div>
+      <div class="eqr-actions">
+        <a href="${e.url}" target="_blank" class="eqr-btn-view">📄 開啟 PDF</a>
+        <button class="eqr-btn-del" onclick="eqrEdit('${e.id}')">✏️</button>
+        <button class="eqr-btn-del" onclick="eqrDel('${e.id}')">🗑️</button>
+      </div>
+    </div>`).join('');
+}
+function eqrOpenModal(e){
+  eqrEditId=e?e.id:null;
+  document.getElementById('eqrModalTitle').textContent=e?'編輯手冊':'新增手冊';
+  document.getElementById('eqrT').value=e?e.title:'';
+  document.getElementById('eqrCat').value=e?e.cat:'service';
+  document.getElementById('eqrMd').value=e?e.model||'':'';
+  document.getElementById('eqrUrl').value=e?e.url||'':'';
+  document.getElementById('eqrVer').value=e?e.ver||'':'';
+  document.getElementById('eqrDesc').value=e?e.desc||'':'';
+  document.getElementById('eqrModal').classList.add('show');
+}
+function eqrCloseModal(){document.getElementById('eqrModal').classList.remove('show');eqrEditId=null;}
+async function eqrSave(){
+  const t=document.getElementById('eqrT').value.trim();
+  const url=document.getElementById('eqrUrl').value.trim();
+  if(!t||!url){alert('請填寫手冊名稱和連結');return;}
+  const item={id:eqrEditId||'eqr'+Date.now(),title:t,cat:document.getElementById('eqrCat').value,model:document.getElementById('eqrMd').value.trim(),url,ver:document.getElementById('eqrVer').value.trim(),desc:document.getElementById('eqrDesc').value.trim(),ts:eqrEditId?(eqrAll.find(x=>x.id===eqrEditId)||{}).ts||Date.now():Date.now()};
+  try{await window.storage.set('eqr:'+item.id,JSON.stringify(item),true);eqrCloseModal();await eqrLoad();}catch(e){alert('儲存失敗');}
+}
+function eqrEdit(id){const e=eqrAll.find(x=>x.id===id);if(e)eqrOpenModal(e);}
+async function eqrDel(id){if(!confirm('確定要刪除？'))return;try{await window.storage.delete('eqr:'+id,true);await eqrLoad();}catch(e){alert('刪除失敗');}}
+document.getElementById('eqrModal').addEventListener('click',function(e){if(e.target===this)eqrCloseModal();});
+
+// ══════ 共用 ══════
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+// 初始化
+kbLoad();
+invLoad();
+eqrLoad();
+</script>
+</body>
+</html>
