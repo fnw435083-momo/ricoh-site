@@ -3,317 +3,462 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>理光智慧客服與工程師支援系統</title>
+<title>Ricoh Smart Service Hub</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --red: #CC0000;
-    --red-dark: #A30000;
-    --red-pale: #FFF0F0;
-    --red-soft: #FFDDDD;
-    --white: #FFFFFF;
-    --off: #F7F7F7;
-    --g100: #F2F2F2;
-    --g200: #E5E5E5;
-    --g300: #CCCCCC;
-    --g500: #888;
-    --g700: #444;
-    --g900: #1A1A1A;
-    --text: #222;
-    --sub: #555;
-    --border: #E0E0E0;
-    --r: 4px;
-    --rl: 8px;
-    --sh: 0 2px 8px rgba(0,0,0,0.07);
-    --shm: 0 4px 20px rgba(0,0,0,0.1);
-  }
-  *{box-sizing:border-box;margin:0;padding:0}
-  html{scroll-behavior:smooth}
-  body{font-family:'Noto Sans TC','Helvetica Neue',sans-serif;background:#fff;color:var(--text);line-height:1.6;font-size:15px}
+:root{--red:#CC0000;--red-dark:#A30000;--red-pale:#FFF0F0;--off:#F7F7F7;--g100:#F2F2F2;--g200:#E5E5E5;--g300:#CCC;--g500:#888;--g700:#444;--g900:#1A1A1A;--text:#222;--sub:#555;--border:#E0E0E0}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Noto Sans TC','Helvetica Neue',sans-serif;background:#fff;color:var(--text);line-height:1.6;font-size:15px}
 
-  /* NAV */
-  .nav{background:var(--red);height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 5%;position:sticky;top:0;z-index:100}
-  .nav-l{display:flex;align-items:center;gap:14px}
-  .wordmark{font-size:26px;font-weight:900;color:#fff;letter-spacing:-0.03em;line-height:1}
-  .nav-sep{width:1px;height:20px;background:rgba(255,255,255,.35)}
-  .nav-tag{font-size:13px;font-weight:500;color:rgba(255,255,255,.88);letter-spacing:.02em}
-  .nav-r{display:flex;list-style:none;gap:0}
-  .nav-r a{color:rgba(255,255,255,.8);text-decoration:none;font-size:12.5px;padding:0 14px;height:54px;display:flex;align-items:center;transition:.15s;border-bottom:3px solid transparent}
-  .nav-r a:hover{color:#fff;border-bottom-color:rgba(255,255,255,.6);background:rgba(0,0,0,.1)}
+/* NAV */
+.nav{background:var(--red);height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 5%;position:sticky;top:0;z-index:200;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.nav-l{display:flex;align-items:center;gap:12px}
+.wm{font-size:22px;font-weight:900;color:#fff;letter-spacing:-.03em}
+.nsep{width:1px;height:18px;background:rgba(255,255,255,.35)}
+.ntag{font-size:12px;font-weight:500;color:rgba(255,255,255,.88)}
+.nav-r{display:flex;list-style:none}
+.nav-r a{color:rgba(255,255,255,.8);text-decoration:none;font-size:12.5px;padding:0 12px;height:54px;display:flex;align-items:center;transition:.15s;border-bottom:3px solid transparent}
+.nav-r a:hover{color:#fff;border-bottom-color:rgba(255,255,255,.6);background:rgba(0,0,0,.1)}
 
-  /* HERO */
-  .hero-wrap{display:grid;grid-template-columns:1fr 1fr;min-height:460px}
-  .hero-l{background:var(--red);padding:64px 6% 64px 5%;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden}
-  .hero-l::after{content:'';position:absolute;right:-55px;top:0;bottom:0;width:110px;background:var(--red);transform:skewX(-6deg);z-index:2}
-  .eyebrow{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:rgba(255,255,255,.65);margin-bottom:16px}
-  .hero-h1{font-size:clamp(26px,3.2vw,42px);font-weight:900;color:#fff;line-height:1.15;letter-spacing:-.025em;margin-bottom:18px}
-  .hero-h1 small{display:block;font-size:.6em;font-weight:400;color:rgba(255,255,255,.65);letter-spacing:0;margin-top:7px}
-  .concept{background:rgba(0,0,0,.18);border-left:3px solid rgba(255,255,255,.45);padding:13px 16px;margin-bottom:28px;font-size:13px;color:rgba(255,255,255,.78);line-height:1.65;border-radius:0 var(--r) var(--r) 0}
-  .concept strong{color:#fff;font-weight:700}
-  .cta-row{display:flex;gap:10px;flex-wrap:wrap}
-  .btn-w{background:#fff;color:var(--red);padding:11px 22px;font-size:13.5px;font-weight:700;text-decoration:none;border-radius:var(--r);transition:.2s;display:inline-flex;align-items:center;gap:6px}
-  .btn-w:hover{background:#ffe8e8;transform:translateY(-1px);box-shadow:var(--shm)}
-  .btn-g{background:transparent;color:rgba(255,255,255,.88);border:1.5px solid rgba(255,255,255,.45);padding:11px 20px;font-size:13.5px;font-weight:600;text-decoration:none;border-radius:var(--r);transition:.2s}
-  .btn-g:hover{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.8)}
+/* HERO */
+.hero{display:grid;grid-template-columns:1fr 1fr;min-height:440px}
+.hero-l{background:var(--red);padding:56px 6% 56px 5%;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden}
+.hero-l::after{content:'';position:absolute;right:-55px;top:0;bottom:0;width:110px;background:var(--red);transform:skewX(-6deg);z-index:2}
+.eyebrow{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:rgba(255,255,255,.65);margin-bottom:14px}
+.hero-h1{font-size:clamp(22px,2.8vw,36px);font-weight:900;color:#fff;line-height:1.15;letter-spacing:-.02em;margin-bottom:8px}
+.hero-h2{font-size:clamp(13px,1.4vw,17px);font-weight:400;color:rgba(255,255,255,.75);margin-bottom:18px;line-height:1.5}
+.concept{background:rgba(0,0,0,.18);border-left:3px solid rgba(255,255,255,.4);padding:11px 14px;margin-bottom:24px;font-size:12.5px;color:rgba(255,255,255,.78);line-height:1.6;border-radius:0 3px 3px 0}
+.concept strong{color:#fff}
+.hero-btns{display:flex;gap:10px;flex-wrap:wrap}
+.btn-w{background:#fff;color:var(--red);padding:10px 20px;font-size:13px;font-weight:700;text-decoration:none;border-radius:4px;transition:.2s;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.btn-w:hover{background:#ffe8e8;transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.15)}
+.btn-g{background:transparent;color:rgba(255,255,255,.9);border:1.5px solid rgba(255,255,255,.45);padding:10px 18px;font-size:13px;font-weight:600;text-decoration:none;border-radius:4px;transition:.2s;white-space:nowrap}
+.btn-g:hover{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.8)}
+.hero-r{background:var(--off);padding:44px 5% 44px 8%;display:flex;flex-direction:column;justify-content:center;gap:12px;position:relative;z-index:1}
+.hfi{background:#fff;border:1px solid var(--border);border-left:4px solid var(--red);border-radius:0 4px 4px 0;padding:13px 16px;transition:.2s}
+.hfi:hover{box-shadow:0 4px 16px rgba(0,0,0,.1)}
+.hfi-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--red);margin-bottom:7px}
+.hfi-steps{display:flex;flex-wrap:wrap;align-items:center;gap:4px}
+.sp{font-size:11.5px;color:var(--g700);background:var(--g100);padding:3px 8px;border-radius:3px}
+.sp.r{background:var(--red-pale);color:var(--red-dark);font-weight:600}
+.sarr{color:var(--g300);font-size:10px}
 
-  .hero-r{background:var(--off);padding:52px 5% 52px 9%;display:flex;flex-direction:column;justify-content:center;gap:14px;position:relative;z-index:1}
-  .hfi{background:#fff;border:1px solid var(--border);border-left:4px solid var(--red);border-radius:0 var(--r) var(--r) 0;padding:15px 18px;transition:.2s}
-  .hfi:hover{box-shadow:var(--shm);border-left-color:var(--red-dark)}
-  .hfi-lbl{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--red);margin-bottom:8px}
-  .hfi-steps{display:flex;flex-wrap:wrap;align-items:center;gap:5px}
-  .step{font-size:12px;color:var(--g700);background:var(--g100);padding:3px 9px;border-radius:3px}
-  .step.r{background:var(--red-pale);color:var(--red-dark);font-weight:600}
-  .arr{color:var(--g300);font-size:11px}
+/* QUICK LINKS */
+.ql{background:var(--g900);padding:20px 5%}
+.ql-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.ql-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.45);white-space:nowrap}
+.ql-btns{display:flex;gap:8px;flex-wrap:wrap}
+.ql-btn{background:rgba(255,255,255,.08);color:rgba(255,255,255,.8);border:1px solid rgba(255,255,255,.15);padding:7px 14px;font-size:12px;font-weight:600;text-decoration:none;border-radius:4px;transition:.2s;display:inline-flex;align-items:center;gap:5px}
+.ql-btn:hover{background:rgba(204,0,0,.4);border-color:rgba(204,0,0,.6);color:#fff}
+.ql-btn.active{background:var(--red);border-color:var(--red);color:#fff}
 
-  /* SECTION */
-  section{padding:72px 5%}
-  .si{max-width:1100px;margin:0 auto}
-  .ey{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-  .eline{width:28px;height:3px;background:var(--red);flex-shrink:0}
-  .elbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--red)}
-  .stitle{font-size:clamp(22px,2.8vw,32px);font-weight:900;color:var(--g900);line-height:1.2;letter-spacing:-.02em;margin-bottom:10px}
-  .sdesc{font-size:15px;color:var(--sub);max-width:560px;line-height:1.75}
-  .sh{margin-bottom:44px}
+/* SECTIONS */
+section{padding:64px 5%}
+.si{max-width:1100px;margin:0 auto}
+.ey{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.el{width:24px;height:3px;background:var(--red);flex-shrink:0}
+.elb{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--red)}
+.stit{font-size:clamp(20px,2.6vw,30px);font-weight:900;color:var(--g900);line-height:1.2;letter-spacing:-.02em;margin-bottom:8px}
+.sdesc{font-size:14.5px;color:var(--sub);max-width:560px;line-height:1.75;margin-bottom:36px}
 
-  /* FEATURES */
-  #features{background:#fff}
-  .fg{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden}
-  .fc{padding:30px 24px;border-right:1px solid var(--border);transition:.25s;position:relative;overflow:hidden;background:#fff}
-  .fc:last-child{border-right:none}
-  .fc::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--red);transform:scaleX(0);transform-origin:left;transition:transform .3s}
-  .fc:hover::before{transform:scaleX(1)}
-  .fc:hover{background:var(--red-pale)}
-  .fn{font-size:11px;font-weight:800;color:var(--red);letter-spacing:.08em;text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:7px}
-  .fb{width:22px;height:22px;background:var(--red);color:#fff;border-radius:50%;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center}
-  .ft{font-size:15.5px;font-weight:700;color:var(--g900);margin-bottom:10px;line-height:1.35}
-  .fd{font-size:13px;color:var(--sub);line-height:1.7;margin-bottom:14px}
-  .ftags{display:flex;flex-wrap:wrap;gap:5px}
-  .ftag{font-size:10.5px;font-weight:600;color:var(--red-dark);background:var(--red-pale);padding:2px 8px;border-radius:2px}
+/* ACTION CARDS */
+#actions{background:#fff}
+.action-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.action-card{border:1px solid var(--border);border-radius:10px;padding:28px 26px;transition:.25s;position:relative;overflow:hidden}
+.action-card:hover{box-shadow:0 6px 28px rgba(0,0,0,.1);transform:translateY(-2px)}
+.action-card.customer{border-top:4px solid var(--red)}
+.action-card.engineer{border-top:4px solid #1A56DB}
+.ac-badge{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;padding:3px 10px;border-radius:2px;display:inline-block;margin-bottom:14px}
+.customer .ac-badge{background:var(--red-pale);color:var(--red-dark)}
+.engineer .ac-badge{background:#EFF6FF;color:#1E40AF}
+.ac-title{font-size:18px;font-weight:900;color:var(--g900);margin-bottom:6px}
+.ac-sub{font-size:13px;color:var(--sub);margin-bottom:20px;line-height:1.6}
+.ac-btns{display:flex;flex-direction:column;gap:8px}
+.ac-btn{display:flex;align-items:center;gap:10px;padding:11px 16px;border-radius:6px;text-decoration:none;font-size:13px;font-weight:600;transition:.2s;border:1px solid transparent}
+.ac-btn.primary{background:var(--red);color:#fff}
+.ac-btn.primary:hover{background:var(--red-dark)}
+.ac-btn.primary.blue{background:#1A56DB}
+.ac-btn.primary.blue:hover{background:#1344B0}
+.ac-btn.secondary{background:var(--off);color:var(--g700);border-color:var(--border)}
+.ac-btn.secondary:hover{background:var(--g100);border-color:var(--g300)}
+.ac-btn-icon{font-size:16px;flex-shrink:0}
+.ac-btn-text{}
+.ac-btn-sub{font-size:11px;font-weight:400;color:inherit;opacity:.7;display:block}
 
-  /* COMPARISON */
-  #comparison{background:var(--off)}
-  .tabs{display:flex;border-bottom:2px solid var(--border);margin-bottom:30px}
-  .tab{padding:12px 26px;font-size:14px;font-weight:600;color:var(--sub);background:none;border:none;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:.2s;font-family:inherit}
-  .tab.on{color:var(--red);border-bottom-color:var(--red)}
-  .tab:hover:not(.on){color:var(--text);background:var(--g100)}
-  .ctable{width:100%;border-collapse:collapse;background:#fff;box-shadow:var(--sh);border-radius:var(--rl);overflow:hidden;font-size:13.5px}
-  .ctable thead tr{border-bottom:2px solid var(--border)}
-  .ctable th{padding:14px 20px;text-align:left;font-weight:700;font-size:12.5px;letter-spacing:.04em}
-  .ctable th:first-child{color:var(--g500);background:var(--off);width:18%;text-transform:uppercase}
-  .ctable th.cb{background:#FFF8E1;color:#8B6000}
-  .ctable th.ca{background:var(--red-pale);color:var(--red-dark)}
-  .ctable td{padding:14px 20px;vertical-align:top;border-top:1px solid var(--border);line-height:1.6}
-  .ctable td:first-child{background:var(--off);font-weight:700;font-size:12px;color:var(--g700);text-transform:uppercase;letter-spacing:.05em}
-  .ctable td:nth-child(2){color:#6B5000;background:#FFFEF7}
-  .ctable td:nth-child(3){color:var(--red-dark);background:var(--red-pale)}
-  .sl{display:flex;flex-direction:column;gap:5px}
-  .sr{display:flex;align-items:flex-start;gap:7px;font-size:13px}
-  .dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:5px}
-  .db{background:#D4A017}.da{background:var(--red)}
+/* FEATURES */
+#features{background:var(--off)}
+.fg{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--border);border-radius:8px;overflow:hidden;background:#fff}
+.fc{padding:26px 20px;border-right:1px solid var(--border);transition:.25s;position:relative;overflow:hidden;background:#fff}
+.fc:last-child{border-right:none}
+.fc::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--red);transform:scaleX(0);transform-origin:left;transition:transform .3s}
+.fc:hover::before{transform:scaleX(1)}
+.fc:hover{background:var(--red-pale)}
+.fn{font-size:10px;font-weight:800;color:var(--red);text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.fb{width:20px;height:20px;background:var(--red);color:#fff;border-radius:50%;font-size:9px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ft{font-size:14.5px;font-weight:700;color:var(--g900);margin-bottom:8px;line-height:1.3}
+.fd{font-size:12.5px;color:var(--sub);line-height:1.65;margin-bottom:12px}
+.ftags{display:flex;flex-wrap:wrap;gap:4px}
+.ftag{font-size:10px;font-weight:600;color:var(--red-dark);background:var(--red-pale);padding:2px 7px;border-radius:2px}
 
-  /* KPI */
-  #kpi{background:var(--red)}
-  #kpi .elbl{color:rgba(255,255,255,.65)}
-  #kpi .eline{background:rgba(255,255,255,.4)}
-  #kpi .stitle{color:#fff}
-  #kpi .sdesc{color:rgba(255,255,255,.65)}
-  .knums{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,.15);border-radius:var(--rl);overflow:hidden;margin-bottom:28px}
-  .kcard{background:rgba(0,0,0,.15);padding:26px 22px;text-align:center;transition:.2s}
-  .kcard:hover{background:rgba(0,0,0,.22)}
-  .kbig{font-size:38px;font-weight:900;color:#fff;line-height:1;margin-bottom:6px;letter-spacing:-.03em}
-  .kunit{font-size:20px}
-  .kdesc{font-size:12.5px;color:rgba(255,255,255,.65);line-height:1.5}
-  .klists{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-  .klist{background:rgba(0,0,0,.16);border-radius:var(--rl);padding:26px 24px;border:1px solid rgba(255,255,255,.1)}
-  .klh{font-size:14px;font-weight:700;color:#fff;margin-bottom:14px;padding-bottom:13px;border-bottom:1px solid rgba(255,255,255,.12);display:flex;align-items:center;gap:8px}
-  .klul{list-style:none;display:flex;flex-direction:column;gap:9px}
-  .klul li{display:flex;align-items:flex-start;gap:9px;font-size:13.5px;color:rgba(255,255,255,.72);line-height:1.5}
-  .kd{width:5px;height:5px;background:rgba(255,255,255,.5);border-radius:50%;flex-shrink:0;margin-top:7px}
+/* AI SECTION */
+#ai-assistant{background:#fff}
+.ai-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.ai-card{border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.ai-card-head{padding:18px 22px;display:flex;align-items:center;gap:12px}
+.customer .ai-card-head{background:var(--red)}
+.engineer-ai .ai-card-head{background:#1A3A6B}
+.ai-card-icon{width:40px;height:40px;background:rgba(255,255,255,.2);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.ai-card-title{font-size:15px;font-weight:700;color:#fff}
+.ai-card-sub{font-size:11.5px;color:rgba(255,255,255,.7)}
+.ai-card-body{padding:20px 22px;background:var(--off)}
+.ai-card-desc{font-size:13px;color:var(--sub);line-height:1.7;margin-bottom:16px}
+.ai-launch-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px;border-radius:6px;font-size:14px;font-weight:700;text-decoration:none;transition:.2s;border:none;cursor:pointer}
+.customer .ai-launch-btn{background:var(--red);color:#fff}
+.customer .ai-launch-btn:hover{background:var(--red-dark)}
+.engineer-ai .ai-launch-btn{background:#1A3A6B;color:#fff}
+.engineer-ai .ai-launch-btn:hover{background:#0F2548}
 
-  /* ARCH */
-  #architecture{background:#fff}
-  .awrap{background:var(--off);border:1px solid var(--border);border-radius:var(--rl);padding:44px;margin-top:36px}
-  .arow{display:grid;grid-template-columns:1fr 70px 1fr;align-items:center;margin-bottom:16px}
-  .anode{background:#fff;border:1px solid var(--border);border-radius:var(--rl);padding:18px 20px;text-align:center;transition:.22s}
-  .anode:hover{box-shadow:var(--shm);border-color:var(--red)}
-  .anode.red{border-color:var(--red);background:var(--red-pale)}
-  .ae{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px}
-  .anode:not(.red) .ae{color:var(--g500)}.anode.red .ae{color:var(--red)}
-  .an{font-size:14px;font-weight:700;color:var(--g900);margin-bottom:3px}
-  .as{font-size:12px;color:var(--sub)}
-  .aarr{display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--g300)}
-  .acenter{grid-column:1/-1;display:flex;justify-content:center;margin:8px 0}
-  .acore{background:var(--red);color:#fff;border-radius:var(--rl);padding:18px 44px;text-align:center;max-width:400px;width:100%}
-  .acore .ae{color:rgba(255,255,255,.6)}.acore .an{color:#fff;font-size:16px}.acore .as{color:rgba(255,255,255,.6)}
+/* CHAT ROOM */
+#chatroom{background:var(--off)}
+.chat-wrap{background:#fff;border:1px solid var(--border);border-radius:10px;overflow:hidden;max-width:800px;margin:0 auto}
+.chat-head{background:var(--g900);padding:16px 20px;display:flex;align-items:center;gap:12px}
+.chat-dot{width:10px;height:10px;border-radius:50%;background:#2ECC71;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.chat-head-title{font-size:14px;font-weight:700;color:#fff}
+.chat-head-sub{font-size:11.5px;color:rgba(255,255,255,.5)}
+.chat-msgs{height:360px;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:12px;background:#FAFAFA}
+.msg{display:flex;gap:10px;align-items:flex-start}
+.msg.me{flex-direction:row-reverse}
+.msg-avatar{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
+.msg.other .msg-avatar{background:var(--red);color:#fff}
+.msg.me .msg-avatar{background:#1A56DB;color:#fff}
+.msg.system .msg-avatar{background:var(--g300);color:var(--g700);font-size:11px}
+.msg-bubble{max-width:70%;padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.55}
+.msg.other .msg-bubble{background:#fff;border:1px solid var(--border);border-radius:0 12px 12px 12px;color:var(--text)}
+.msg.me .msg-bubble{background:#1A56DB;color:#fff;border-radius:12px 0 12px 12px}
+.msg.system .msg-bubble{background:var(--g100);color:var(--g500);font-size:12px;border-radius:8px;text-align:center;margin:0 auto}
+.msg-time{font-size:10px;color:var(--g500);margin-top:4px}
+.msg.me .msg-time{text-align:right}
+.chat-input-area{padding:14px 16px;background:#fff;border-top:1px solid var(--border);display:flex;gap:10px;align-items:center}
+.chat-input{flex:1;border:1px solid var(--border);border-radius:24px;padding:10px 16px;font-size:13.5px;font-family:inherit;outline:none;transition:.2s;resize:none}
+.chat-input:focus{border-color:var(--red)}
+.chat-send{background:var(--red);color:#fff;border:none;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.2s;flex-shrink:0;font-size:16px}
+.chat-send:hover{background:var(--red-dark)}
+.chat-notice{text-align:center;font-size:12px;color:var(--g500);padding:10px;background:var(--off);border-top:1px solid var(--border)}
 
-  /* INTEL */
-  #intelligence{background:var(--off)}
-  .ig{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:24px}
-  .ic{background:#fff;border:1px solid var(--border);border-radius:var(--rl);padding:26px 22px;transition:.22s}
-  .ic:hover{box-shadow:var(--shm);transform:translateY(-2px)}
-  .ibar{height:5px;border-radius:3px;margin-bottom:18px;width:44px}
-  .ic.a .ibar{background:#16A34A}.ic.b .ibar{background:#D97706}.ic.c .ibar{background:var(--red)}
-  .igrade{font-size:40px;font-weight:900;line-height:1;margin-bottom:5px;letter-spacing:-.04em}
-  .ic.a .igrade{color:#16A34A}.ic.b .igrade{color:#D97706}.ic.c .igrade{color:var(--red)}
-  .iname{font-size:16px;font-weight:700;color:var(--g900);margin-bottom:9px}
-  .idesc{font-size:13px;color:var(--sub);line-height:1.7;margin-bottom:13px}
-  .ipill{display:inline-block;padding:3px 11px;border-radius:2px;font-size:11px;font-weight:700;letter-spacing:.03em}
-  .ic.a .ipill{background:#DCFCE7;color:#14532D}.ic.b .ipill{background:#FEF3C7;color:#78350F}.ic.c .ipill{background:var(--red-pale);color:var(--red-dark)}
-  .iflow{background:#fff;border:1px solid var(--border);border-radius:var(--rl);padding:26px 28px}
-  .ift{font-size:14px;font-weight:700;color:var(--g900);margin-bottom:20px;display:flex;align-items:center;gap:9px}
-  .ift::before{content:'';width:18px;height:3px;background:var(--red);flex-shrink:0}
-  .frow{display:flex;align-items:stretch;gap:0}
-  .fsb{flex:1;background:var(--off);border:1px solid var(--border);border-radius:var(--rl);padding:16px 14px;text-align:center;transition:.2s}
-  .fsb:hover{border-color:var(--red);background:var(--red-pale)}
-  .fse{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--red);margin-bottom:5px}
-  .fsn{font-size:14px;font-weight:700;color:var(--g900);margin-bottom:4px}
-  .fss{font-size:12px;color:var(--sub);line-height:1.5}
-  .farr{display:flex;align-items:center;padding:0 9px;color:var(--g300);font-size:18px;flex-shrink:0}
+/* KPI */
+#kpi{background:var(--red)}
+#kpi .elb{color:rgba(255,255,255,.65)}
+#kpi .el{background:rgba(255,255,255,.4)}
+#kpi .stit{color:#fff}
+#kpi .sdesc{color:rgba(255,255,255,.65)}
+.knums{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,.15);border-radius:8px;overflow:hidden;margin-bottom:20px}
+.kcard{background:rgba(0,0,0,.15);padding:24px 20px;text-align:center;transition:.2s}
+.kcard:hover{background:rgba(0,0,0,.22)}
+.kbig{font-size:34px;font-weight:900;color:#fff;line-height:1;margin-bottom:5px;letter-spacing:-.03em}
+.kunit{font-size:18px}
+.kdesc{font-size:12px;color:rgba(255,255,255,.65);line-height:1.45}
+.klists{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.klist{background:rgba(0,0,0,.16);border-radius:8px;padding:22px 20px;border:1px solid rgba(255,255,255,.1)}
+.klh{font-size:13px;font-weight:700;color:#fff;margin-bottom:12px;padding-bottom:11px;border-bottom:1px solid rgba(255,255,255,.12)}
+.klul{list-style:none;display:flex;flex-direction:column;gap:8px}
+.klul li{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:rgba(255,255,255,.72);line-height:1.45}
+.kd{width:4px;height:4px;background:rgba(255,255,255,.5);border-radius:50%;flex-shrink:0;margin-top:6px}
 
-  /* FOOTER */
-  footer{background:var(--g900);color:rgba(255,255,255,.5);font-size:13px}
-  .fi{max-width:1100px;margin:0 auto}
-  .fb-body{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:48px;padding:48px 5%;border-bottom:1px solid rgba(255,255,255,.07)}
-  .fwm{font-size:22px;font-weight:900;color:#fff;letter-spacing:-.03em;display:block;margin-bottom:5px}
-  .fbsub{font-size:11px;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px}
-  .fbdesc{font-size:13px;color:rgba(255,255,255,.45);line-height:1.7;max-width:280px}
-  .fct{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:rgba(255,255,255,.4);margin-bottom:14px}
-  .fcol ul{list-style:none;display:flex;flex-direction:column;gap:8px}
-  .fcol a{color:rgba(255,255,255,.55);text-decoration:none;font-size:13.5px;transition:.2s}
-  .fcol a:hover{color:#fff}
-  .fbot{padding:18px 5%;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;font-size:12px}
-  .ftags{display:flex;gap:7px}
-  .ftg{background:rgba(204,0,0,.3);color:#FFAAAA;font-size:10.5px;font-weight:700;padding:2px 9px;border-radius:2px;letter-spacing:.04em;text-transform:uppercase}
+/* FUTURE */
+#future{background:var(--off)}
+.future-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.future-card{background:#fff;border:1px solid var(--border);border-radius:8px;padding:18px 14px;text-align:center;transition:.2s;text-decoration:none}
+.future-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.1);border-color:var(--g300)}
+.future-card.coming{opacity:.6;cursor:default}
+.future-icon{font-size:22px;margin-bottom:8px}
+.future-title{font-size:12.5px;font-weight:700;color:var(--g900);margin-bottom:4px;line-height:1.3}
+.future-badge{font-size:10px;font-weight:600;padding:2px 7px;border-radius:2px}
+.future-card.coming .future-badge{background:var(--g100);color:var(--g500)}
+.future-card.active .future-badge{background:var(--red-pale);color:var(--red-dark)}
 
-  /* ANIM */
-  @keyframes fu{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-  .fa{animation:fu .55s ease both}
-  .d1{animation-delay:.08s}.d2{animation-delay:.18s}.d3{animation-delay:.28s}.d4{animation-delay:.36s}
+/* FOOTER */
+footer{background:var(--g900);color:rgba(255,255,255,.5);font-size:13px}
+.fb{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:44px;padding:44px 5%;border-bottom:1px solid rgba(255,255,255,.07);max-width:1300px;margin:0 auto}
+.fwm{font-size:20px;font-weight:900;color:#fff;letter-spacing:-.03em;display:block;margin-bottom:4px}
+.fsub{font-size:10.5px;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px}
+.fdesc{font-size:12.5px;color:rgba(255,255,255,.45);line-height:1.7;max-width:280px}
+.fct{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:rgba(255,255,255,.4);margin-bottom:12px}
+.fcol ul{list-style:none;display:flex;flex-direction:column;gap:7px}
+.fcol a{color:rgba(255,255,255,.55);text-decoration:none;font-size:13px;transition:.2s}
+.fcol a:hover{color:#fff}
+.fbot{padding:16px 5%;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;font-size:11.5px;max-width:1300px;margin:0 auto}
+.ftags{display:flex;gap:6px}
+.ftg{background:rgba(204,0,0,.3);color:#FFAAAA;font-size:10px;font-weight:700;padding:2px 8px;border-radius:2px;text-transform:uppercase}
 
-  /* RWD */
-  @media(max-width:900px){
-    .nav-r{display:none}
-    .hero-wrap{grid-template-columns:1fr}
-    .hero-r{display:none}
-    .fg{grid-template-columns:1fr 1fr}
-    .fc:nth-child(2){border-right:none}
-    .knums{grid-template-columns:1fr 1fr}
-    .klists{grid-template-columns:1fr}
-    .ig{grid-template-columns:1fr}
-    .arow{grid-template-columns:1fr}
-    .aarr{transform:rotate(90deg)}
-    .acenter{margin:0}
-    .frow{flex-direction:column}
-    .farr{transform:rotate(90deg);justify-content:center;padding:4px 0}
-    .fb-body{grid-template-columns:1fr;gap:28px}
-  }
+/* COMPARISON */
+#comparison{background:#fff}
+.tabs{display:flex;border-bottom:2px solid var(--border);margin-bottom:28px}
+.tab{padding:11px 24px;font-size:13.5px;font-weight:600;color:var(--sub);background:none;border:none;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:.2s;font-family:inherit}
+.tab.on{color:var(--red);border-bottom-color:var(--red)}
+.tab:hover:not(.on){color:var(--text);background:var(--g100)}
+.ctable{width:100%;border-collapse:collapse;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.07);border-radius:8px;overflow:hidden;font-size:13px}
+.ctable thead tr{border-bottom:2px solid var(--border)}
+.ctable th{padding:13px 18px;text-align:left;font-weight:700;font-size:12px;letter-spacing:.04em}
+.ctable th:first-child{color:var(--g500);background:var(--off);width:18%;text-transform:uppercase}
+.ctable th.cb{background:#FFF8E1;color:#8B6000}
+.ctable th.ca{background:var(--red-pale);color:var(--red-dark)}
+.ctable td{padding:13px 18px;vertical-align:top;border-top:1px solid var(--border);line-height:1.6}
+.ctable td:first-child{background:var(--off);font-weight:700;font-size:11.5px;color:var(--g700);text-transform:uppercase;letter-spacing:.05em}
+.ctable td:nth-child(2){color:#6B5000;background:#FFFEF7}
+.ctable td:nth-child(3){color:var(--red-dark);background:var(--red-pale)}
+.sl{display:flex;flex-direction:column;gap:4px}
+.sr{display:flex;align-items:flex-start;gap:6px;font-size:12.5px}
+.dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.db{background:#D4A017}.da{background:var(--red)}
+
+/* RWD */
+@media(max-width:900px){
+  .nav-r{display:none}
+  .hero{grid-template-columns:1fr}
+  .hero-r{display:none}
+  .action-grid{grid-template-columns:1fr}
+  .fg{grid-template-columns:1fr 1fr}
+  .ai-grid{grid-template-columns:1fr}
+  .knums{grid-template-columns:1fr 1fr}
+  .klists{grid-template-columns:1fr}
+  .future-grid{grid-template-columns:repeat(2,1fr)}
+  .fb{grid-template-columns:1fr;gap:24px}
+}
 </style>
 </head>
 <body>
 
+<!-- NAV -->
 <nav class="nav">
   <div class="nav-l">
-    <span class="wordmark">RICOH</span>
-    <div class="nav-sep"></div>
-    <span class="nav-tag">智慧客服與工程師支援系統</span>
+    <span class="wm">RICOH</span>
+    <div class="nsep"></div>
+    <span class="ntag">Smart Service Hub</span>
   </div>
   <ul class="nav-r">
+    <li><a href="#actions">客服入口</a></li>
+    <li><a href="#ai-assistant">AI 助理</a></li>
+    <li><a href="#chatroom">即時聊天室</a></li>
     <li><a href="#features">四大功能</a></li>
-    <li><a href="#comparison">流程比較</a></li>
-    <li><a href="#kpi">預期效益</a></li>
-    <li><a href="#architecture">系統架構</a></li>
-    <li><a href="#intelligence">智慧判斷</a></li>
+    <li><a href="#kpi">效益</a></li>
+    <li><a href="#future">未來擴充</a></li>
   </ul>
 </nav>
 
 <!-- HERO -->
-<div class="hero-wrap">
+<div class="hero">
   <div class="hero-l">
-    <div class="eyebrow fa">數位服務轉型計畫 · 第一組</div>
-    <h1 class="hero-h1 fa d1">
-      理光智慧客服<br>工程師支援系統
-      <small>Smart Customer Service &amp; Engineer Support System</small>
-    </h1>
-    <div class="concept fa d2">
-      <strong>核心概念：</strong>客服 = 對外服務客戶 ＋ 對內支援客服／工程師<br>
-      打造涵蓋客服優化與知識整合的數位入口平台
+    <div class="eyebrow">Ricoh Smart Service Hub · 展示版</div>
+    <h1 class="hero-h1">理光智慧客服<br>工程師支援系統</h1>
+    <p class="hero-h2">Ricoh Customer Smart Assistant<br>Ricoh Engineer Smart Assistant</p>
+    <div class="concept">
+      <strong>外部客服 + 內部工程師查詢整合入口網站</strong><br>
+      客服 = 對外服務客戶 ＋ 對內支援客服／工程師
     </div>
-    <div class="cta-row fa d3">
-      <a href="https://sites.google.com/view/testtestricoh" target="_blank" class="btn-w">🌐 入口網站</a>
-      <a href="#features" class="btn-g">了解四大功能 ↓</a>
+    <div class="hero-btns">
+      <a href="#actions" class="btn-w">🚀 立即使用</a>
+      <a href="#ai-assistant" class="btn-g">AI 助理入口</a>
     </div>
   </div>
   <div class="hero-r">
-    <div class="hfi fa d1">
+    <div class="hfi">
       <div class="hfi-lbl">客戶報修流程（未來）</div>
       <div class="hfi-steps">
-        <span class="step">客戶發現問題</span><span class="arr">›</span>
-        <span class="step r">AI 簡易排除</span><span class="arr">›</span>
-        <span class="step">報修表單</span><span class="arr">›</span>
-        <span class="step r">自動派工</span>
+        <span class="sp">客戶發現問題</span><span class="sarr">›</span>
+        <span class="sp r">AI 簡易排除</span><span class="sarr">›</span>
+        <span class="sp">報修表單</span><span class="sarr">›</span>
+        <span class="sp r">自動派工</span>
       </div>
     </div>
-    <div class="hfi fa d2">
+    <div class="hfi">
       <div class="hfi-lbl">碳粉申請流程（未來）</div>
       <div class="hfi-steps">
-        <span class="step">客戶申請</span><span class="arr">›</span>
-        <span class="step r">線上表單</span><span class="arr">›</span>
-        <span class="step r">自動核對</span><span class="arr">›</span>
-        <span class="step">出貨</span>
+        <span class="sp">客戶申請</span><span class="sarr">›</span>
+        <span class="sp r">線上表單</span><span class="sarr">›</span>
+        <span class="sp r">自動核對</span><span class="sarr">›</span>
+        <span class="sp">出貨</span>
       </div>
     </div>
-    <div class="hfi fa d3">
+    <div class="hfi">
       <div class="hfi-lbl">工程師 SC 查詢（未來）</div>
       <div class="hfi-steps">
-        <span class="step">輸入機型 + 代碼</span><span class="arr">›</span>
-        <span class="step r">系統即時判斷</span><span class="arr">›</span>
-        <span class="step r">備料建議</span>
-      </div>
-    </div>
-    <div class="hfi fa d4">
-      <div class="hfi-lbl">相關表單快速連結</div>
-      <div class="hfi-steps">
-        <a href="https://reurl.cc/VmGznN" target="_blank" style="text-decoration:none"><span class="step r" style="cursor:pointer">📋 叫修表單</span></a>
-        <span class="arr">·</span>
-        <a href="https://reurl.cc/8brvYb" target="_blank" style="text-decoration:none"><span class="step r" style="cursor:pointer">🖨️ 碳粉申請</span></a>
+        <span class="sp">輸入機型 + 代碼</span><span class="sarr">›</span>
+        <span class="sp r">系統即時判斷</span><span class="sarr">›</span>
+        <span class="sp r">備料建議</span>
       </div>
     </div>
   </div>
 </div>
 
-<!-- FEATURES -->
-<section id="features">
-  <div class="si">
-    <div class="sh">
-      <div class="ey"><div class="eline"></div><span class="elbl">四大核心功能</span></div>
-      <h2 class="stitle">建立四大核心功能</h2>
-      <p class="sdesc">整合客戶端服務與工程師端知識查詢，涵蓋從叫修到派工、從代碼查詢到料號管理的完整數位化流程。</p>
+<!-- QUICK LINKS -->
+<div class="ql">
+  <div class="ql-inner">
+    <span class="ql-label">快速連結</span>
+    <div class="ql-btns">
+      <a href="https://chatgpt.com/g/g-69a047f9ab6c8191b65b9895bc75ede0-ricoh-smart-customer-assistant" target="_blank" class="ql-btn active">🤖 客戶 AI 客服</a>
+      <a href="https://chatgpt.com/g/g-69a08de59f8c81918a5e9fd36dd12559-gong-cheng-shi-sccha-zhao" target="_blank" class="ql-btn active">🔧 工程師 AI</a>
+      <a href="https://forms.gle/tSYdL94CXLajhsV16" target="_blank" class="ql-btn">📋 即時報修表單</a>
+      <a href="https://docs.google.com/spreadsheets/d/1NaKP7QopVzUW4jYL8vAYxtj2PrOQBd7ILVEfApvIPlo/edit?usp=sharing" target="_blank" class="ql-btn">🖨️ 碳粉表單</a>
+      <a href="https://docs.google.com/spreadsheets/d/1GCKgxN9ATKVScKnBGigCE1l7NbeRS05J47PF_fW6a4w/edit?usp=sharing" target="_blank" class="ql-btn">📊 AI 叫修表單</a>
+      <a href="https://docs.google.com/spreadsheets/d/1EwsuvbvFjTFfl2xFZgxQ6jM988iWfwpqq-1Xpy3ZsZQ/edit?usp=sharing" target="_blank" class="ql-btn">📑 即時報修表單</a>
     </div>
+  </div>
+</div>
+
+<!-- ACTION CARDS -->
+<section id="actions">
+  <div class="si">
+    <div class="ey"><div class="el"></div><span class="elb">服務入口</span></div>
+    <h2 class="stit">選擇你的服務入口</h2>
+    <p class="sdesc">客戶端報修與耗材申請，或工程師端 SC 代碼與料號查詢，一站整合。</p>
+    <div class="action-grid">
+      <!-- 客戶端 -->
+      <div class="action-card customer">
+        <div class="ac-badge">客戶端 Customer</div>
+        <div class="ac-title">報修 / 耗材申請</div>
+        <div class="ac-sub">AI 先行排除問題，符合條件導向報修表單，或直接申請碳粉耗材。</div>
+        <div class="ac-btns">
+          <a href="https://chatgpt.com/g/g-69a047f9ab6c8191b65b9895bc75ede0-ricoh-smart-customer-assistant" target="_blank" class="ac-btn primary">
+            <span class="ac-btn-icon">🤖</span>
+            <span class="ac-btn-text">開始使用 AI 客服<span class="ac-btn-sub">智慧報修 · AI 排除問題</span></span>
+          </a>
+          <a href="https://forms.gle/tSYdL94CXLajhsV16" target="_blank" class="ac-btn secondary">
+            <span class="ac-btn-icon">📋</span>
+            <span class="ac-btn-text">即時報修表單填寫<span class="ac-btn-sub">直接填寫報修資料</span></span>
+          </a>
+          <a href="https://docs.google.com/spreadsheets/d/1NaKP7QopVzUW4jYL8vAYxtj2PrOQBd7ILVEfApvIPlo/edit?usp=sharing" target="_blank" class="ac-btn secondary">
+            <span class="ac-btn-icon">🖨️</span>
+            <span class="ac-btn-text">碳粉耗材申請<span class="ac-btn-sub">填寫顏色與數量</span></span>
+          </a>
+        </div>
+      </div>
+      <!-- 工程師端 -->
+      <div class="action-card engineer">
+        <div class="ac-badge" style="background:#EFF6FF;color:#1E40AF">工程師端 Engineer</div>
+        <div class="ac-title">SC 代碼 / 料號查詢</div>
+        <div class="ac-sub">輸入機型與 SC 代碼，即時取得意義、分類與備料建議，取代翻閱手冊。</div>
+        <div class="ac-btns">
+          <a href="https://chatgpt.com/g/g-69a08de59f8c81918a5e9fd36dd12559-gong-cheng-shi-sccha-zhao" target="_blank" class="ac-btn primary blue">
+            <span class="ac-btn-icon">🔧</span>
+            <span class="ac-btn-text">工程師查詢 AI<span class="ac-btn-sub">SC 代碼 · 料號查詢</span></span>
+          </a>
+          <a href="https://docs.google.com/spreadsheets/d/1GCKgxN9ATKVScKnBGigCE1l7NbeRS05J47PF_fW6a4w/edit?usp=sharing" target="_blank" class="ac-btn secondary">
+            <span class="ac-btn-icon">📊</span>
+            <span class="ac-btn-text">AI 叫修表單記錄<span class="ac-btn-sub">查看 AI 叫修資料</span></span>
+          </a>
+          <a href="https://docs.google.com/spreadsheets/d/1EwsuvbvFjTFfl2xFZgxQ6jM988iWfwpqq-1Xpy3ZsZQ/edit?usp=sharing" target="_blank" class="ac-btn secondary">
+            <span class="ac-btn-icon">📑</span>
+            <span class="ac-btn-text">即時報修表單記錄<span class="ac-btn-sub">查看即時報修資料</span></span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AI ASSISTANT -->
+<section id="ai-assistant" style="background:var(--off)">
+  <div class="si">
+    <div class="ey"><div class="el"></div><span class="elb">AI 助理</span></div>
+    <h2 class="stit">直接在網站使用 AI</h2>
+    <p class="sdesc">點擊下方按鈕，直接開啟對應的 AI 助理，無需額外安裝任何工具。</p>
+    <div class="ai-grid">
+      <div class="ai-card customer">
+        <div class="ai-card-head">
+          <div class="ai-card-icon">🤖</div>
+          <div>
+            <div class="ai-card-title">Ricoh Smart Customer Assistant</div>
+            <div class="ai-card-sub">客戶智慧報修 AI</div>
+          </div>
+        </div>
+        <div class="ai-card-body">
+          <p class="ai-card-desc">輸入你的問題或設備狀況，AI 將協助排除問題、判斷是否需要報修，並引導你完成報修或耗材申請流程。</p>
+          <a href="https://chatgpt.com/g/g-69a047f9ab6c8191b65b9895bc75ede0-ricoh-smart-customer-assistant" target="_blank" class="ai-launch-btn customer">
+            🚀 開啟客戶 AI 客服
+          </a>
+        </div>
+      </div>
+      <div class="ai-card engineer-ai">
+        <div class="ai-card-head">
+          <div class="ai-card-icon">🔧</div>
+          <div>
+            <div class="ai-card-title">工程師 SC 查照 AI</div>
+            <div class="ai-card-sub">工程師智慧查詢助理</div>
+          </div>
+        </div>
+        <div class="ai-card-body">
+          <p class="ai-card-desc">輸入機型與 SC 代碼，AI 即時提供故障意義、分類、判斷條件，以及到場前的備料建議，取代翻閱厚重手冊。</p>
+          <a href="https://chatgpt.com/g/g-69a08de59f8c81918a5e9fd36dd12559-gong-cheng-shi-sccha-zhao" target="_blank" class="ai-launch-btn engineer-ai">
+            🔍 開啟工程師查詢 AI
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CHAT ROOM -->
+<section id="chatroom">
+  <div class="si">
+    <div class="ey"><div class="el"></div><span class="elb">新功能</span></div>
+    <h2 class="stit">工程師即時聊天室</h2>
+    <p class="sdesc">工程師之間即時交流，分享現場經驗與解決方案，快速取得同事支援。</p>
+    <div class="chat-wrap">
+      <div class="chat-head">
+        <div class="chat-dot"></div>
+        <div>
+          <div class="chat-head-title">工程師支援聊天室</div>
+          <div class="chat-head-sub">線上：3 位工程師</div>
+        </div>
+      </div>
+      <div class="chat-msgs" id="chatMsgs">
+        <div class="msg system">
+          <div class="msg-bubble">聊天室已開啟 · 歡迎使用</div>
+        </div>
+        <div class="msg other">
+          <div class="msg-avatar">王</div>
+          <div>
+            <div class="msg-bubble">大家好，IMC-3000 出現 SC-301 有人遇過嗎？</div>
+            <div class="msg-time">09:42</div>
+          </div>
+        </div>
+        <div class="msg me">
+          <div class="msg-avatar">我</div>
+          <div>
+            <div class="msg-bubble">有，那個通常是定影器溫度感測器的問題，先確認接線有沒有鬆掉</div>
+            <div class="msg-time">09:44</div>
+          </div>
+        </div>
+        <div class="msg other">
+          <div class="msg-avatar">李</div>
+          <div>
+            <div class="msg-bubble">同意，先用 AI 查一下 SC-301 的完整說明，再去備料比較穩</div>
+            <div class="msg-time">09:45</div>
+          </div>
+        </div>
+      </div>
+      <div class="chat-input-area">
+        <input class="chat-input" id="chatInput" placeholder="輸入訊息，按 Enter 送出..." onkeydown="sendMsg(event)">
+        <button class="chat-send" onclick="sendMsgBtn()">➤</button>
+      </div>
+      <div class="chat-notice">⚠️ 此為展示版聊天室，正式版將串接即時通訊服務</div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features" style="background:var(--off)">
+  <div class="si">
+    <div class="ey"><div class="el"></div><span class="elb">四大核心功能</span></div>
+    <h2 class="stit">建立四大核心功能</h2>
+    <p class="sdesc">整合客戶端服務與工程師端知識查詢，涵蓋從叫修到派工、從代碼查詢到料號管理的完整數位化流程。</p>
     <div class="fg">
-      <div class="fc">
-        <div class="fn"><span class="fb">1</span>功能一</div>
-        <div class="ft">客戶智慧報修</div>
-        <div class="fd">AI 先行排除問題，符合條件才導向報修表單，自動建立標準化工單資料，降低無效派工，提升一次完修率。</div>
-        <div class="ftags"><span class="ftag">AI 分流</span><span class="ftag">降低無效派工</span><span class="ftag">標準工單</span></div>
-      </div>
-      <div class="fc">
-        <div class="fn"><span class="fb">2</span>功能二</div>
-        <div class="ft">客戶碳粉申請</div>
-        <div class="fd">標準化填寫顏色與數量，自動寫入試算表資料庫，降低寄錯料風險，縮短客服溝通時間。</div>
-        <div class="ftags"><span class="ftag">線上申請</span><span class="ftag">自動資料庫</span><span class="ftag">降低出錯</span></div>
-      </div>
-      <div class="fc">
-        <div class="fn"><span class="fb">3</span>功能三</div>
-        <div class="ft">工程師 SC 代碼查詢</div>
-        <div class="fd">輸入機型與 SC 代碼，即時提供意義、分類與判斷條件，取代翻閱手冊，到場前掌握備料方向。</div>
-        <div class="ftags"><span class="ftag">即時查詢</span><span class="ftag">故障分類</span><span class="ftag">備料建議</span></div>
-      </div>
-      <div class="fc">
-        <div class="fn"><span class="fb">4</span>功能四</div>
-        <div class="ft">工程師料號查詢</div>
-        <div class="fd">統一主料號與替代料號，標準化零件命名，標示適用機型與版本限制，降低拿錯料風險。</div>
-        <div class="ftags"><span class="ftag">料號標準化</span><span class="ftag">替代料號</span><span class="ftag">版本管理</span></div>
-      </div>
+      <div class="fc"><div class="fn"><span class="fb">1</span>功能一</div><div class="ft">客戶智慧報修</div><div class="fd">AI 先行排除問題，符合條件才導向報修表單，自動建立標準化工單，降低無效派工。</div><div class="ftags"><span class="ftag">AI 分流</span><span class="ftag">標準工單</span></div></div>
+      <div class="fc"><div class="fn"><span class="fb">2</span>功能二</div><div class="ft">客戶耗材申請</div><div class="fd">標準化填寫顏色與數量，自動寫入試算表資料庫，降低寄錯料風險。</div><div class="ftags"><span class="ftag">線上申請</span><span class="ftag">自動資料庫</span></div></div>
+      <div class="fc"><div class="fn"><span class="fb">3</span>功能三</div><div class="ft">SC 代碼查詢</div><div class="fd">輸入機型與 SC 代碼，即時提供意義、分類與判斷條件，取代翻閱手冊。</div><div class="ftags"><span class="ftag">即時查詢</span><span class="ftag">備料建議</span></div></div>
+      <div class="fc"><div class="fn"><span class="fb">4</span>功能四</div><div class="ft">料號標準化查詢</div><div class="fd">統一主料號與替代料號，標準化命名，標示適用機型與版本限制。</div><div class="ftags"><span class="ftag">料號標準化</span><span class="ftag">版本管理</span></div></div>
     </div>
   </div>
 </section>
@@ -321,11 +466,9 @@
 <!-- COMPARISON -->
 <section id="comparison">
   <div class="si">
-    <div class="sh">
-      <div class="ey"><div class="eline"></div><span class="elbl">現行 vs 未來做法</span></div>
-      <h2 class="stitle">流程優化比較</h2>
-      <p class="sdesc">從電話排隊到 AI 分流，從手動查詢到系統自動化，全面改善服務效率。</p>
-    </div>
+    <div class="ey"><div class="el"></div><span class="elb">現行 vs 未來做法</span></div>
+    <h2 class="stit">流程優化比較</h2>
+    <p class="sdesc">從電話排隊到 AI 分流，從手動查詢到系統自動化。</p>
     <div class="tabs">
       <button class="tab on" onclick="switchTab('c',this)">📋 客戶端流程</button>
       <button class="tab" onclick="switchTab('e',this)">🔧 工程師端流程</button>
@@ -334,16 +477,8 @@
       <table class="ctable">
         <thead><tr><th></th><th class="cb">現行做法</th><th class="ca">未來做法（導入後）</th></tr></thead>
         <tbody>
-          <tr>
-            <td>設備報修</td>
-            <td><div class="sl"><div class="sr"><span class="dot db"></span>客戶發現問題 → 電話叫修</div><div class="sr"><span class="dot db"></span>等待接通 → 與客服反應</div><div class="sr"><span class="dot db"></span>簡易排除 → 派工</div></div></td>
-            <td><div class="sl"><div class="sr"><span class="dot da"></span>客戶發現問題 → <strong>AI 簡易排除</strong></div><div class="sr"><span class="dot da"></span>導向報修表單 → 客服核對</div><div class="sr"><span class="dot da"></span><strong>自動派工</strong></div></div></td>
-          </tr>
-          <tr>
-            <td>碳粉申請</td>
-            <td><div class="sl"><div class="sr"><span class="dot db"></span>電話申請 → 等待接通</div><div class="sr"><span class="dot db"></span>客服核對 SIS → 出貨</div></div></td>
-            <td><div class="sl"><div class="sr"><span class="dot da"></span><strong>線上表單申請</strong></div><div class="sr"><span class="dot da"></span><strong>自動核對</strong> → 出貨</div></div></td>
-          </tr>
+          <tr><td>設備報修</td><td><div class="sl"><div class="sr"><span class="dot db"></span>客戶發現問題 → 電話叫修</div><div class="sr"><span class="dot db"></span>等待接通 → 與客服反應</div><div class="sr"><span class="dot db"></span>簡易排除 → 派工</div></div></td><td><div class="sl"><div class="sr"><span class="dot da"></span>客戶發現問題 → <strong>AI 簡易排除</strong></div><div class="sr"><span class="dot da"></span>導向報修表單 → 客服核對</div><div class="sr"><span class="dot da"></span><strong>自動派工</strong></div></div></td></tr>
+          <tr><td>耗材申請</td><td><div class="sl"><div class="sr"><span class="dot db"></span>電話申請 → 等待接通</div><div class="sr"><span class="dot db"></span>客服核對 SIS → 出貨</div></div></td><td><div class="sl"><div class="sr"><span class="dot da"></span><strong>線上表單申請</strong></div><div class="sr"><span class="dot da"></span><strong>自動核對</strong> → 出貨</div></div></td></tr>
         </tbody>
       </table>
     </div>
@@ -351,16 +486,8 @@
       <table class="ctable">
         <thead><tr><th></th><th class="cb">現行做法</th><th class="ca">未來做法（導入後）</th></tr></thead>
         <tbody>
-          <tr>
-            <td>SC 代碼查詢</td>
-            <td><div class="sl"><div class="sr"><span class="dot db"></span>查 SC 代碼 → 翻閱手冊</div><div class="sr"><span class="dot db"></span>人工判讀分類</div></div></td>
-            <td><div class="sl"><div class="sr"><span class="dot da"></span>輸入機型 + SC 代碼</div><div class="sr"><span class="dot da"></span><strong>系統顯示意義、分類、判斷模型</strong></div><div class="sr"><span class="dot da"></span>建議備料方向</div></div></td>
-          </tr>
-          <tr>
-            <td>料號查詢</td>
-            <td><div class="sl"><div class="sr"><span class="dot db"></span>查料號 → 翻閱手冊</div><div class="sr"><span class="dot db"></span>人工核對版本適用性</div></div></td>
-            <td><div class="sl"><div class="sr"><span class="dot da"></span><strong>系統標準化輸出</strong></div><div class="sr"><span class="dot da"></span>顯示適用機型與版本限制</div><div class="sr"><span class="dot da"></span>主料號 + 替代料號一覽</div></div></td>
-          </tr>
+          <tr><td>SC 代碼</td><td><div class="sl"><div class="sr"><span class="dot db"></span>查 SC 代碼 → 翻閱手冊</div><div class="sr"><span class="dot db"></span>人工判讀分類</div></div></td><td><div class="sl"><div class="sr"><span class="dot da"></span>輸入機型 + SC 代碼</div><div class="sr"><span class="dot da"></span><strong>系統顯示意義、分類、判斷模型</strong></div><div class="sr"><span class="dot da"></span>建議備料方向</div></div></td></tr>
+          <tr><td>料號查詢</td><td><div class="sl"><div class="sr"><span class="dot db"></span>查料號 → 翻閱手冊</div><div class="sr"><span class="dot db"></span>人工核對版本適用性</div></div></td><td><div class="sl"><div class="sr"><span class="dot da"></span><strong>系統標準化輸出</strong></div><div class="sr"><span class="dot da"></span>顯示適用機型與版本限制</div><div class="sr"><span class="dot da"></span>主料號 + 替代料號一覽</div></div></td></tr>
         </tbody>
       </table>
     </div>
@@ -370,73 +497,62 @@
 <!-- KPI -->
 <section id="kpi">
   <div class="si">
-    <div class="sh">
-      <div class="ey"><div class="eline"></div><span class="elbl">預期效益 · KPI</span></div>
-      <h2 class="stitle">量化成果目標</h2>
-      <p class="sdesc">系統導入後預計達成的關鍵績效指標與服務效率提升。</p>
-    </div>
+    <div class="ey"><div class="el"></div><span class="elb">預期效益</span></div>
+    <h2 class="stit">效益（預估）</h2>
+    <p class="sdesc">系統導入後預計達成的關鍵績效指標。</p>
     <div class="knums">
-      <div class="kcard"><div class="kbig">30<span class="kunit">%</span></div><div class="kdesc">基礎客服電話量降低</div></div>
-      <div class="kcard"><div class="kbig">↑</div><div class="kdesc">客戶即時回應效率提升</div></div>
-      <div class="kcard"><div class="kbig">↑</div><div class="kdesc">工程師查詢速度加速</div></div>
-      <div class="kcard"><div class="kbig">✓</div><div class="kdesc">公司知識資料庫統整</div></div>
+      <div class="kcard"><div class="kbig">30<span class="kunit">%</span></div><div class="kdesc">降低基礎客服電話量</div></div>
+      <div class="kcard"><div class="kbig">↑</div><div class="kdesc">提升客戶即時回應效率</div></div>
+      <div class="kcard"><div class="kbig">↓</div><div class="kdesc">縮短排錯時間</div></div>
     </div>
     <div class="klists">
-      <div class="klist"><div class="klh">👥 客戶服務效率提升</div><ul class="klul"><li><span class="kd"></span>減少客戶電話等待時間</li><li><span class="kd"></span>基礎客服電話量降低 30%</li><li><span class="kd"></span>提升客戶即時回應效率</li><li><span class="kd"></span>縮短問題排除時間</li></ul></div>
-      <div class="klist"><div class="klh">🔧 工程師支援強化</div><ul class="klul"><li><span class="kd"></span>優化料號疊代管理</li><li><span class="kd"></span>加速工程師 SC 代碼查詢</li><li><span class="kd"></span>統整公司知識資料庫</li><li><span class="kd"></span>建立可擴充入口平台</li></ul></div>
+      <div class="klist"><div class="klh">👥 客戶服務效率提升</div><ul class="klul"><li><span class="kd"></span>降低 30% 基礎客服電話量</li><li><span class="kd"></span>提升客戶即時回應效率</li><li><span class="kd"></span>縮短問題排除時間</li><li><span class="kd"></span>減少客戶等待時間</li></ul></div>
+      <div class="klist"><div class="klh">🔧 工程師支援強化</div><ul class="klul"><li><span class="kd"></span>加速 SC 代碼查詢</li><li><span class="kd"></span>優化料號疊代管理</li><li><span class="kd"></span>統整公司知識資料庫</li><li><span class="kd"></span>建立可擴充入口平台</li></ul></div>
     </div>
   </div>
 </section>
 
-<!-- ARCHITECTURE -->
-<section id="architecture">
+<!-- FUTURE -->
+<section id="future">
   <div class="si">
-    <div class="sh">
-      <div class="ey"><div class="eline"></div><span class="elbl">系統架構概念</span></div>
-      <h2 class="stitle">智慧派工決策平台</h2>
-      <p class="sdesc">客戶端與工程師端雙軌並行，透過 AI 分流與知識庫整合，形成統一的智慧派工決策平台。</p>
-    </div>
-    <div class="awrap">
-      <div class="arow">
-        <div class="anode red"><div class="ae">客戶端</div><div class="an">客戶入口</div><div class="as">報修申請 · 碳粉申請</div></div>
-        <div class="aarr">→</div>
-        <div class="anode"><div class="ae">AI 分流</div><div class="an">表單資料庫</div><div class="as">Google Sheets 自動寫入</div></div>
+    <div class="ey"><div class="el"></div><span class="elb">未來擴充模組</span></div>
+    <h2 class="stit">未來擴充模組</h2>
+    <p class="sdesc">目前已開放四大核心功能，以下為規劃中的擴充模組。</p>
+    <div class="future-grid">
+      <a href="https://chatgpt.com/g/g-69a047f9ab6c8191b65b9895bc75ede0-ricoh-smart-customer-assistant" target="_blank" class="future-card active">
+        <div class="future-icon">🤖</div>
+        <div class="future-title">AI 客服助理</div>
+        <div class="future-badge active">已開放</div>
+      </a>
+      <a href="https://chatgpt.com/g/g-69a08de59f8c81918a5e9fd36dd12559-gong-cheng-shi-sccha-zhao" target="_blank" class="future-card active">
+        <div class="future-icon">🔧</div>
+        <div class="future-title">工程師 AI 查詢</div>
+        <div class="future-badge active">已開放</div>
+      </a>
+      <div class="future-card coming">
+        <div class="future-icon">📦</div>
+        <div class="future-title">零件庫存查詢</div>
+        <div class="future-badge">待更新</div>
       </div>
-      <div class="arow" style="margin-bottom:0">
-        <div class="acenter">
-          <div class="acore"><div class="ae">核心平台</div><div class="an">智慧派工決策平台</div><div class="as">整合客服、工程師、知識庫的統一入口</div></div>
-        </div>
+      <div class="future-card coming">
+        <div class="future-icon">📚</div>
+        <div class="future-title">維修案例知識庫</div>
+        <div class="future-badge">待更新</div>
       </div>
-      <div class="arow" style="margin-top:16px;margin-bottom:0">
-        <div class="anode"><div class="ae">工程師端</div><div class="an">SC 知識庫</div><div class="as">代碼意義 · 分類 · 判斷條件</div></div>
-        <div class="aarr">→</div>
-        <div class="anode red"><div class="ae">工程師端</div><div class="an">料號主檔</div><div class="as">主料號 · 替代料號 · 版本管理</div></div>
+      <div class="future-card coming">
+        <div class="future-icon">🖥️</div>
+        <div class="future-title">遠端支援</div>
+        <div class="future-badge">待更新</div>
       </div>
-    </div>
-  </div>
-</section>
-
-<!-- INTELLIGENCE -->
-<section id="intelligence">
-  <div class="si">
-    <div class="sh">
-      <div class="ey"><div class="eline"></div><span class="elbl">智慧判斷模型</span></div>
-      <h2 class="stitle">三層決策機制</h2>
-      <p class="sdesc">透過資訊確認、故障分類與排除結果判斷，形成派工前完整的風險評估機制。</p>
-    </div>
-    <div class="ig">
-      <div class="ic a"><div class="ibar"></div><div class="igrade">A</div><div class="iname">低風險</div><div class="idesc">可遠端引導客戶自行排除，無需現場派工，提供標準 SOP 指引，快速恢復正常使用。</div><div class="ipill">遠端排除</div></div>
-      <div class="ic b"><div class="ibar"></div><div class="igrade">B</div><div class="iname">中風險</div><div class="idesc">需工程師現場確認，問題方向明確，可預先備妥可能用到的料件，提高一次完修率。</div><div class="ipill">備料出發</div></div>
-      <div class="ic c"><div class="ibar"></div><div class="igrade">C</div><div class="iname">高風險</div><div class="idesc">複雜故障或潛在重大影響，需優先排程並攜帶完整備料，緊急派工全力處理。</div><div class="ipill">優先緊急</div></div>
-    </div>
-    <div class="iflow">
-      <div class="ift">三層決策流程</div>
-      <div class="frow">
-        <div class="fsb"><div class="fse">第一層</div><div class="fsn">資訊確認</div><div class="fss">收集設備、症狀與環境資訊</div></div>
-        <div class="farr">→</div>
-        <div class="fsb"><div class="fse">第二層</div><div class="fsn">故障分類</div><div class="fss">依風險從低到高 A / B / C 分級</div></div>
-        <div class="farr">→</div>
-        <div class="fsb"><div class="fse">第三層</div><div class="fsn">排除結果判斷</div><div class="fss">形成派工前完整風險評估</div></div>
+      <div class="future-card coming">
+        <div class="future-icon">📖</div>
+        <div class="future-title">EQR 相關手冊</div>
+        <div class="future-badge">待更新</div>
+      </div>
+      <div class="future-card coming">
+        <div class="future-icon">🔍</div>
+        <div class="future-title">AI OCR 自動化</div>
+        <div class="future-badge">待更新</div>
       </div>
     </div>
   </div>
@@ -444,20 +560,35 @@
 
 <!-- FOOTER -->
 <footer>
-  <div class="fi">
-    <div class="fb-body">
-      <div>
-        <span class="fwm">RICOH</span>
-        <div class="fbsub">智慧客服與工程師支援系統</div>
-        <div class="fbdesc">數位化客服與知識整合平台。整合 AI 分流、線上表單、知識庫查詢，打造可擴充的智慧派工決策入口。</div>
-      </div>
-      <div class="fcol"><div class="fct">相關連結</div><ul><li><a href="https://sites.google.com/view/testtestricoh" target="_blank">🌐 入口網站</a></li><li><a href="https://reurl.cc/VmGznN" target="_blank">📋 叫修表單</a></li><li><a href="https://reurl.cc/8brvYb" target="_blank">🖨️ 碳粉申請表單</a></li></ul></div>
-      <div class="fcol"><div class="fct">快速導覽</div><ul><li><a href="#features">四大核心功能</a></li><li><a href="#comparison">流程比較</a></li><li><a href="#kpi">預期效益 KPI</a></li><li><a href="#architecture">系統架構</a></li><li><a href="#intelligence">智慧判斷模型</a></li></ul></div>
+  <div class="fb">
+    <div>
+      <span class="fwm">RICOH</span>
+      <div class="fsub">Smart Service Hub · 展示版</div>
+      <div class="fdesc">理光智慧客服助理（展示版本）<br>外部客服 + 內部工程師查詢整合入口網站</div>
     </div>
-    <div class="fbot">
-      <span>© 2026 台灣理光 · 第一組報告 · 智慧客服與工程師支援系統</span>
-      <div class="ftags"><span class="ftg">AI 驅動</span><span class="ftg">數位轉型</span><span class="ftg">展示版</span></div>
+    <div class="fcol">
+      <div class="fct">功能入口</div>
+      <ul>
+        <li><a href="https://chatgpt.com/g/g-69a047f9ab6c8191b65b9895bc75ede0-ricoh-smart-customer-assistant" target="_blank">🤖 客戶 AI 客服</a></li>
+        <li><a href="https://chatgpt.com/g/g-69a08de59f8c81918a5e9fd36dd12559-gong-cheng-shi-sccha-zhao" target="_blank">🔧 工程師查詢 AI</a></li>
+        <li><a href="https://forms.gle/tSYdL94CXLajhsV16" target="_blank">📋 即時報修表單</a></li>
+        <li><a href="https://docs.google.com/spreadsheets/d/1NaKP7QopVzUW4jYL8vAYxtj2PrOQBd7ILVEfApvIPlo/edit?usp=sharing" target="_blank">🖨️ 碳粉表單</a></li>
+      </ul>
     </div>
+    <div class="fcol">
+      <div class="fct">快速導覽</div>
+      <ul>
+        <li><a href="#actions">服務入口</a></li>
+        <li><a href="#ai-assistant">AI 助理</a></li>
+        <li><a href="#chatroom">即時聊天室</a></li>
+        <li><a href="#features">四大功能</a></li>
+        <li><a href="#future">未來擴充</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="fbot">
+    <span>© 2026 台灣理光 · 第一組 · 智慧客服與工程師支援系統</span>
+    <div class="ftags"><span class="ftg">AI 驅動</span><span class="ftg">數位轉型</span><span class="ftg">展示版</span></div>
   </div>
 </footer>
 
@@ -467,6 +598,49 @@ function switchTab(id,btn){
   document.getElementById('te').style.display=id==='e'?'block':'none';
   document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
   btn.classList.add('on');
+}
+
+// Chat room
+const msgs = document.getElementById('chatMsgs');
+const input = document.getElementById('chatInput');
+
+function sendMsg(e){
+  if(e.key==='Enter' && !e.shiftKey){
+    e.preventDefault();
+    sendMsgBtn();
+  }
+}
+
+function sendMsgBtn(){
+  const text = input.value.trim();
+  if(!text) return;
+  const now = new Date();
+  const time = now.getHours()+':'+String(now.getMinutes()).padStart(2,'0');
+  const div = document.createElement('div');
+  div.className = 'msg me';
+  div.innerHTML = `<div class="msg-avatar">我</div><div><div class="msg-bubble">${text}</div><div class="msg-time">${time}</div></div>`;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+  input.value = '';
+
+  // Auto reply after 1.5s
+  setTimeout(()=>{
+    const replies = [
+      '收到！我等一下去確認看看',
+      '這個問題之前有遇過，要我把解決方法分享嗎？',
+      '建議先用 AI 查詢 SC 代碼，比較快',
+      '可以，我現在在哪台機器旁邊？',
+      '好的，我查一下料號給你'
+    ];
+    const reply = replies[Math.floor(Math.random()*replies.length)];
+    const names = ['王','李','陳'];
+    const name = names[Math.floor(Math.random()*names.length)];
+    const r = document.createElement('div');
+    r.className = 'msg other';
+    r.innerHTML = `<div class="msg-avatar">${name}</div><div><div class="msg-bubble">${reply}</div><div class="msg-time">${time}</div></div>`;
+    msgs.appendChild(r);
+    msgs.scrollTop = msgs.scrollHeight;
+  }, 1500);
 }
 </script>
 </body>
