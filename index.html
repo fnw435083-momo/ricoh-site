@@ -183,7 +183,25 @@ section{padding:64px 5%}
 .klul li{display:flex;align-items:flex-start;gap:7px;font-size:13px;color:rgba(255,255,255,.72);line-height:1.45}
 .kd{width:4px;height:4px;background:rgba(255,255,255,.5);border-radius:50%;flex-shrink:0;margin-top:6px}
 
-/* FUTURE */
+/* CASE SHARING */
+.cs-fbtn{padding:5px 12px;border-radius:4px;border:1px solid var(--border);background:#fff;color:var(--sub);font-size:12px;cursor:pointer;transition:.15s;font-family:inherit}
+.cs-fbtn.on{background:var(--red);border-color:var(--red);color:#fff}
+.cs-card{background:#fff;border:1px solid var(--border);border-radius:8px;padding:16px;transition:.2s}
+.cs-card:hover{border-color:var(--g300);box-shadow:0 2px 12px rgba(0,0,0,.07)}
+.cs-cat{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:2px 8px;border-radius:2px;display:inline-block;margin-bottom:8px}
+.cs-sc{background:#EFF6FF;color:#1E40AF}
+.cs-part{background:#F0FDF4;color:#14532D}
+.cs-repair{background:#FFF7ED;color:#C2410C}
+.cs-other{background:var(--off);color:var(--sub)}
+.cs-title{font-size:14px;font-weight:700;color:var(--g900);margin-bottom:6px;line-height:1.4}
+.cs-body{font-size:12.5px;color:var(--sub);line-height:1.6;margin-bottom:10px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical}
+.cs-body.open{display:block;-webkit-line-clamp:unset}
+.cs-foot{display:flex;align-items:center;justify-content:space-between;font-size:11px;color:var(--g500);flex-wrap:wrap;gap:6px}
+.cs-acts{display:flex;gap:5px}
+.cs-btn-sm{background:var(--off);color:var(--g700);border:1px solid var(--border);padding:4px 10px;border-radius:3px;font-size:11px;cursor:pointer;font-family:inherit}
+.cs-btn-del{background:#fff0f0;color:var(--red-dark);border:1px solid #f09595;padding:4px 10px;border-radius:3px;font-size:11px;cursor:pointer;font-family:inherit}
+
+/* CASE SHARING */
 .future-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
 .fcard{background:#fff;border:1px solid var(--border);border-radius:8px;padding:18px 14px;text-align:center;transition:.2s;text-decoration:none;display:block}
 .fcard:hover{box-shadow:0 4px 16px rgba(0,0,0,.09);border-color:var(--g300)}
@@ -241,6 +259,7 @@ footer{background:var(--g900);color:rgba(255,255,255,.5);font-size:13px}
     <li><a href="#chatroom">即時聊天室</a></li>
     <li><a href="#features">四大功能</a></li>
     <li><a href="#kpi">效益</a></li>
+    <li><a href="#cases">案例分享</a></li>
     <li><a href="#future">未來擴充</a></li>
   </ul>
 </nav>
@@ -453,6 +472,56 @@ footer{background:var(--g900);color:rgba(255,255,255,.5);font-size:13px}
   </div>
 </section>
 
+<!-- CASE SHARING -->
+<section id="cases" style="background:#fff">
+  <div class="si">
+    <div class="ey"><div class="el"></div><span class="elb">案例分享</span></div>
+    <h2 class="stit">工程師案例分享庫</h2>
+    <p class="sdesc" style="margin-bottom:28px">分享現場經驗與解決方案，所有人都可以新增、編輯、讀取。資料即時同步，共同建立知識庫。</p>
+
+    <div id="caseStats" style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px">
+      <div style="background:var(--off);border-radius:6px;padding:10px 16px;font-size:12px;color:var(--sub)"><span id="csTot" style="display:block;font-size:20px;font-weight:700;color:var(--g900)">—</span>總案例數</div>
+      <div style="background:var(--off);border-radius:6px;padding:10px 16px;font-size:12px;color:var(--sub)"><span id="csSc" style="display:block;font-size:20px;font-weight:700;color:var(--g900)">—</span>SC 代碼</div>
+      <div style="background:var(--off);border-radius:6px;padding:10px 16px;font-size:12px;color:var(--sub)"><span id="csPart" style="display:block;font-size:20px;font-weight:700;color:var(--g900)">—</span>料號類</div>
+      <div style="background:var(--off);border-radius:6px;padding:10px 16px;font-size:12px;color:var(--sub)"><span id="csRep" style="display:block;font-size:20px;font-weight:700;color:var(--g900)">—</span>維修技巧</div>
+    </div>
+
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px">
+      <div id="csFilters" style="display:flex;gap:7px;flex-wrap:wrap">
+        <button class="cs-fbtn on" onclick="csFilter('all',this)">全部</button>
+        <button class="cs-fbtn" onclick="csFilter('sc',this)">SC 代碼</button>
+        <button class="cs-fbtn" onclick="csFilter('part',this)">料號查詢</button>
+        <button class="cs-fbtn" onclick="csFilter('repair',this)">維修技巧</button>
+        <button class="cs-fbtn" onclick="csFilter('other',this)">其他</button>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button onclick="csLoad()" style="background:var(--off);color:var(--g700);border:1px solid var(--border);padding:8px 14px;border-radius:4px;font-size:12px;cursor:pointer;font-family:inherit">↻ 重新整理</button>
+        <button onclick="csOpenModal()" style="background:var(--red);color:#fff;border:none;padding:8px 18px;border-radius:4px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">＋ 新增案例</button>
+      </div>
+    </div>
+
+    <div id="csCards" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px">
+      <div style="text-align:center;padding:2rem;color:var(--sub);font-size:13px;grid-column:1/-1">載入中...</div>
+    </div>
+  </div>
+</section>
+
+<!-- CASE MODAL -->
+<div id="csMBg" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:500;align-items:center;justify-content:center">
+  <div style="background:#fff;border-radius:10px;padding:28px;width:100%;max-width:520px;margin:20px;box-shadow:0 8px 40px rgba(0,0,0,.2)">
+    <h3 id="csMTitle" style="font-size:16px;font-weight:700;color:var(--g900);margin-bottom:20px">新增案例</h3>
+    <div style="margin-bottom:12px"><label style="display:block;font-size:12px;color:var(--sub);margin-bottom:5px">標題 *</label><input id="csT" placeholder="例：IMC-3000 SC-301 處理方式" style="width:100%;border:1px solid var(--border);border-radius:4px;padding:9px 12px;font-size:13.5px;font-family:inherit;outline:none"></div>
+    <div style="margin-bottom:12px"><label style="display:block;font-size:12px;color:var(--sub);margin-bottom:5px">分類 *</label><select id="csC" style="width:100%;border:1px solid var(--border);border-radius:4px;padding:9px 12px;font-size:13.5px;font-family:inherit;outline:none;background:#fff"><option value="sc">SC 代碼</option><option value="part">料號查詢</option><option value="repair">維修技巧</option><option value="other">其他</option></select></div>
+    <div style="margin-bottom:12px"><label style="display:block;font-size:12px;color:var(--sub);margin-bottom:5px">適用機型</label><input id="csM" placeholder="例：IMC-3000、全機型通用" style="width:100%;border:1px solid var(--border);border-radius:4px;padding:9px 12px;font-size:13.5px;font-family:inherit;outline:none"></div>
+    <div style="margin-bottom:12px"><label style="display:block;font-size:12px;color:var(--sub);margin-bottom:5px">案例內容 *</label><textarea id="csB" placeholder="詳細描述問題症狀、排除步驟、使用料號或解決方法..." style="width:100%;border:1px solid var(--border);border-radius:4px;padding:9px 12px;font-size:13.5px;font-family:inherit;outline:none;resize:vertical;min-height:100px"></textarea></div>
+    <div style="margin-bottom:20px"><label style="display:block;font-size:12px;color:var(--sub);margin-bottom:5px">分享者</label><input id="csA" placeholder="例：王工程師（可不填）" style="width:100%;border:1px solid var(--border);border-radius:4px;padding:9px 12px;font-size:13.5px;font-family:inherit;outline:none"></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button onclick="csCloseModal()" style="background:var(--off);color:var(--g700);border:1px solid var(--border);padding:9px 18px;border-radius:4px;font-size:13px;cursor:pointer;font-family:inherit">取消</button>
+      <button onclick="csSave()" style="background:var(--red);color:#fff;border:none;padding:9px 20px;border-radius:4px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">儲存案例</button>
+    </div>
+  </div>
+</div>
+
 <!-- FUTURE -->
 <section id="future" style="background:var(--off)">
   <div class="si">
@@ -532,6 +601,80 @@ function sendMsgBtn(){
     msgs.appendChild(r);msgs.scrollTop=msgs.scrollHeight;
   },1500);
 }
+// ── 案例分享 ──
+let csAll=[], csCurFilter='all', csEditId=null;
+const csCatLabel={sc:'SC 代碼',part:'料號查詢',repair:'維修技巧',other:'其他'};
+const csCatCls={sc:'cs-sc',part:'cs-part',repair:'cs-repair',other:'cs-other'};
+
+async function csLoad(){
+  document.getElementById('csCards').innerHTML='<div style="text-align:center;padding:2rem;color:#888;font-size:13px;grid-column:1/-1">載入中...</div>';
+  try{
+    const r=await window.storage.list('case:');
+    const keys=r?r.keys:[];
+    csAll=[];
+    for(const k of keys){
+      try{const d=await window.storage.get(k,true);if(d)csAll.push(JSON.parse(d.value));}catch(e){}
+    }
+    csAll.sort((a,b)=>b.ts-a.ts);
+  }catch(e){csAll=[];}
+  csUpdateStats();csRender();
+}
+
+function csUpdateStats(){
+  document.getElementById('csTot').textContent=csAll.length;
+  document.getElementById('csSc').textContent=csAll.filter(c=>c.cat==='sc').length;
+  document.getElementById('csPart').textContent=csAll.filter(c=>c.cat==='part').length;
+  document.getElementById('csRep').textContent=csAll.filter(c=>c.cat==='repair').length;
+}
+
+function csRender(){
+  const list=csCurFilter==='all'?csAll:csAll.filter(c=>c.cat===csCurFilter);
+  const area=document.getElementById('csCards');
+  if(!list.length){area.innerHTML='<div style="text-align:center;padding:3rem;color:#888;font-size:13px;grid-column:1/-1">目前沒有案例，點「新增案例」開始分享！</div>';return;}
+  area.innerHTML=list.map(c=>`
+    <div class="cs-card">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:2px;gap:8px">
+        <span class="cs-cat ${csCatCls[c.cat]||'cs-other'}">${csCatLabel[c.cat]||c.cat}</span>
+        ${c.model?`<span style="font-size:11px;color:#666;background:#f2f2f2;padding:2px 7px;border-radius:3px">${csEsc(c.model)}</span>`:''}
+      </div>
+      <div class="cs-title">${csEsc(c.title)}</div>
+      <div class="cs-body" id="csb_${c.id}">${csEsc(c.body).replace(/\n/g,'<br>')}</div>
+      <div class="cs-foot">
+        <span>${csEsc(c.author||'匿名')} · ${new Date(c.ts).toLocaleDateString('zh-TW')}</span>
+        <div class="cs-acts">
+          <button class="cs-btn-sm" onclick="csToggle('csb_${c.id}',this)">展開</button>
+          <button class="cs-btn-sm" onclick="csEdit('${c.id}')">編輯</button>
+          <button class="cs-btn-del" onclick="csDel('${c.id}')">刪除</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function csEsc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function csToggle(id,btn){const el=document.getElementById(id);if(el.classList.toggle('open'))btn.textContent='收起';else btn.textContent='展開';}
+function csFilter(cat,btn){csCurFilter=cat;document.querySelectorAll('.cs-fbtn').forEach(b=>b.classList.remove('on'));btn.classList.add('on');csRender();}
+function csOpenModal(c){
+  csEditId=c?c.id:null;
+  document.getElementById('csMTitle').textContent=c?'編輯案例':'新增案例';
+  document.getElementById('csT').value=c?c.title:'';
+  document.getElementById('csC').value=c?c.cat:'sc';
+  document.getElementById('csM').value=c?c.model||'':'';
+  document.getElementById('csB').value=c?c.body:'';
+  document.getElementById('csA').value=c?c.author||'':'';
+  document.getElementById('csMBg').style.display='flex';
+}
+function csCloseModal(){document.getElementById('csMBg').style.display='none';csEditId=null;}
+async function csSave(){
+  const t=document.getElementById('csT').value.trim();
+  const b=document.getElementById('csB').value.trim();
+  if(!t||!b){alert('請填寫標題和內容');return;}
+  const c={id:csEditId||'c'+Date.now(),title:t,body:b,cat:document.getElementById('csC').value,model:document.getElementById('csM').value.trim(),author:document.getElementById('csA').value.trim(),ts:csEditId?(csAll.find(x=>x.id===csEditId)||{}).ts||Date.now():Date.now()};
+  try{await window.storage.set('case:'+c.id,JSON.stringify(c),true);csCloseModal();await csLoad();}catch(e){alert('儲存失敗，請再試一次');}
+}
+function csEdit(id){const c=csAll.find(x=>x.id===id);if(c)csOpenModal(c);}
+async function csDel(id){if(!confirm('確定要刪除這個案例嗎？'))return;try{await window.storage.delete('case:'+id,true);await csLoad();}catch(e){alert('刪除失敗');}}
+document.getElementById('csMBg').addEventListener('click',function(e){if(e.target===this)csCloseModal();});
+csLoad();
 </script>
 </body>
 </html>
