@@ -405,7 +405,7 @@ footer{background:var(--g900);color:rgba(255,255,255,.5);font-size:13px}
     <p class="sdesc">輸入名字進入聊天室，所有人即時互通訊息。輸入 <strong>@AI</strong> 呼叫 AI 助理。</p>
     <div class="chat-outer">
       <!-- 登入畫面 -->
-      <div class="chat-login" id="chatLogin">
+      <div class="chat-" id="chat">
         <h3>👋 請先輸入你的名字</h3>
         <p>讓同事知道是誰在說話</p>
         <div class="chat-login-form">
@@ -688,7 +688,7 @@ function chatJoin(){
   localStorage.setItem('ricoh_chat_name',n);
   localStorage.setItem('ricoh_chat_dept',dept);
 
-  document.getElementById('chatLogin').style.display='none';
+  document.getElementById('chatLogin').style.display='flex';
   document.getElementById('chatWrap').style.display='flex';
   document.getElementById('myTag').textContent='👤 '+n+' · '+dept;
 
