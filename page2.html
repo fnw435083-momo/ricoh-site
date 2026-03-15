@@ -170,6 +170,26 @@ section{padding:64px 5%}
 .eqr-btn-view:hover{background:var(--red-dark)}
 .eqr-btn-del{background:#fff0f0;color:var(--red-dark);border:1px solid #FCA5A5;padding:9px 10px;border-radius:5px;font-size:12px;cursor:pointer;font-family:inherit}
 .eqr-upload-notice{background:#FFFBEB;border:1px solid #FDE68A;border-radius:6px;padding:12px 16px;font-size:12.5px;color:#92400E;margin-bottom:16px;line-height:1.6}
+/* 事務機手冊 */
+.manu-mbtn{padding:5px 12px;border-radius:4px;border:1px solid var(--border);background:#fff;color:var(--sub);font-size:12px;cursor:pointer;transition:.15s;font-family:inherit}
+.manu-mbtn.on{background:#1A56DB;border-color:#1A56DB;color:#fff}
+.manu-item{background:#fff;border:1px solid var(--border);border-radius:8px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;transition:.2s}
+.manu-item:hover{border-color:#BFDBFE;box-shadow:0 2px 10px rgba(0,0,0,.06)}
+.manu-item-l{display:flex;align-items:flex-start;gap:12px;min-width:0}
+.manu-pdf-icon{width:36px;height:42px;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#1E40AF;flex-shrink:0}
+.manu-info{}
+.manu-type-tag{font-size:10px;font-weight:700;text-transform:uppercase;color:#1A56DB;letter-spacing:.06em;margin-bottom:2px}
+.manu-title{font-size:13.5px;font-weight:700;color:var(--g900);line-height:1.3}
+.manu-meta{font-size:11px;color:var(--sub);margin-top:3px}
+.manu-item-r{display:flex;gap:6px;flex-shrink:0}
+.manu-btn-open{background:#1A56DB;color:#fff;border:none;padding:7px 14px;border-radius:5px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;text-decoration:none;white-space:nowrap;transition:.2s}
+.manu-btn-open:hover{background:#1344B0}
+.manu-btn-edit{background:var(--off);color:var(--g700);border:1px solid var(--border);padding:7px 10px;border-radius:5px;font-size:12px;cursor:pointer;font-family:inherit}
+.manu-btn-del{background:#fff0f0;color:var(--red-dark);border:1px solid #FCA5A5;padding:7px 10px;border-radius:5px;font-size:12px;cursor:pointer;font-family:inherit}
+/* EQR list style */
+.eqr-list-item{background:#fff;border:1px solid var(--border);border-radius:8px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;transition:.2s}
+.eqr-list-item:hover{border-color:#FCA5A5;box-shadow:0 2px 10px rgba(0,0,0,.06)}
+
 
 /* MODALS */
 .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;align-items:center;justify-content:center}
@@ -465,31 +485,60 @@ footer{background:var(--g900);padding:28px 5%;display:flex;align-items:center;ju
   <div class="si">
     <div class="sec-badge new">✦ 已開放</div>
     <div class="ey"><div class="el"></div><span class="elb">EQR 相關手冊</span></div>
-    <h2 class="stit">EQR 相關手冊</h2>
-    <p class="sdesc">上傳 PDF 手冊，工程師可搜尋、查閱、下載。所有文件集中管理，隨時取用。</p>
+    <h2 class="stit">EQR 相關手冊 ＋ 事務機手冊庫</h2>
+    <p class="sdesc">左側管理 EQR 相關文件；右側為事務機各機型手冊快速查閱。</p>
 
-    <div class="eqr-upload-notice">
-      📄 手冊儲存在 Google Drive，請確認 PDF 設定為「知道連結的人均可檢視」後，再貼上連結新增至此。
-    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start">
 
-    <div class="eqr-top">
-      <div class="eqr-search">
-        <span class="eqr-search-icon">🔍</span>
-        <input id="eqrSearchInput" placeholder="搜尋手冊名稱、機型、關鍵字..." oninput="eqrRender()">
+      <!-- 左側：EQR 管理 -->
+      <div>
+        <div style="font-size:13px;font-weight:700;color:var(--g900);margin-bottom:14px;display:flex;align-items:center;gap:8px">
+          <span style="background:var(--red);color:#fff;padding:2px 10px;border-radius:3px;font-size:11px">EQR 管理</span>
+          工程師現場文件
+        </div>
+        <div class="eqr-upload-notice" style="margin-bottom:14px">
+          📄 將 Google Drive PDF 連結貼上即可新增。請確認設定為「知道連結的人均可檢視」。
+        </div>
+        <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+          <div class="eqr-search" style="flex:1;min-width:0">
+            <span class="eqr-search-icon">🔍</span>
+            <input id="eqrSearchInput" placeholder="搜尋手冊..." oninput="eqrRender()">
+          </div>
+          <button class="eqr-add-btn" onclick="eqrOpenModal()">＋ 新增</button>
+        </div>
+        <div class="eqr-cats" style="margin-bottom:14px">
+          <button class="eqr-cat on" onclick="eqrFilterFn('all',this)">全部</button>
+          <button class="eqr-cat" onclick="eqrFilterFn('service',this)">服務手冊</button>
+          <button class="eqr-cat" onclick="eqrFilterFn('parts',this)">零件目錄</button>
+          <button class="eqr-cat" onclick="eqrFilterFn('setup',this)">安裝設定</button>
+          <button class="eqr-cat" onclick="eqrFilterFn('other',this)">其他</button>
+        </div>
+        <div id="eqrGrid" style="display:flex;flex-direction:column;gap:10px">
+          <div style="text-align:center;padding:2rem;color:var(--sub);font-size:13px">載入中...</div>
+        </div>
       </div>
-      <button class="eqr-add-btn" onclick="eqrOpenModal()">＋ 新增手冊</button>
-    </div>
 
-    <div class="eqr-cats">
-      <button class="eqr-cat on" onclick="eqrFilterFn('all',this)">全部</button>
-      <button class="eqr-cat" onclick="eqrFilterFn('service',this)">服務手冊</button>
-      <button class="eqr-cat" onclick="eqrFilterFn('parts',this)">零件目錄</button>
-      <button class="eqr-cat" onclick="eqrFilterFn('setup',this)">安裝設定</button>
-      <button class="eqr-cat" onclick="eqrFilterFn('other',this)">其他</button>
-    </div>
+      <!-- 右側：事務機手冊庫 -->
+      <div>
+        <div style="font-size:13px;font-weight:700;color:var(--g900);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap">
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="background:#1A56DB;color:#fff;padding:2px 10px;border-radius:3px;font-size:11px">手冊庫</span>
+            事務機相關手冊
+          </div>
+          <button onclick="manuOpenModal()" style="background:#1A56DB;color:#fff;border:none;padding:6px 14px;border-radius:4px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit">＋ 新增手冊</button>
+        </div>
 
-    <div id="eqrGrid" class="eqr-grid">
-      <div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--sub);font-size:13px">載入中...</div>
+        <!-- 機型篩選 -->
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px" id="manuModelBtns">
+          <button class="manu-mbtn on" onclick="manuFilter('all',this)">全部機型</button>
+        </div>
+
+        <!-- 手冊列表 -->
+        <div id="manuList" style="display:flex;flex-direction:column;gap:8px">
+          <div style="text-align:center;padding:2rem;color:var(--sub);font-size:13px">載入中...</div>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
@@ -507,6 +556,23 @@ footer{background:var(--g900);padding:28px 5%;display:flex;align-items:center;ju
     <div class="form-btns">
       <button class="btn-cancel" onclick="eqrCloseModal()">取消</button>
       <button class="btn-save" onclick="eqrSave()">儲存</button>
+    </div>
+  </div>
+</div>
+
+<!-- 事務機手冊 MODAL -->
+<div class="modal-bg" id="manuModal">
+  <div class="modal">
+    <h3 id="manuModalTitle">新增事務機手冊</h3>
+    <div class="form-row"><label>手冊名稱 *</label><input id="manuT" placeholder="例：IMC-3000 操作手冊"></div>
+    <div class="form-row"><label>機型 *</label><input id="manuModel" placeholder="例：IMC-3000、MPC-3003"></div>
+    <div class="form-row"><label>手冊種類</label><select id="manuType"><option value="operation">操作手冊</option><option value="service">服務手冊</option><option value="parts">零件目錄</option><option value="network">網路設定</option><option value="other">其他</option></select></div>
+    <div class="form-row"><label>PDF 連結 *（Google Drive）</label><input id="manuUrl" placeholder="https://drive.google.com/file/d/..."></div>
+    <div class="form-row"><label>版本</label><input id="manuVer" placeholder="例：v3.2"></div>
+    <div class="form-row"><label>說明</label><textarea id="manuDesc" placeholder="說明此手冊適用範圍或特別注意事項..."></textarea></div>
+    <div class="form-btns">
+      <button class="btn-cancel" onclick="manuCloseModal()">取消</button>
+      <button class="btn-save blue" onclick="manuSave()">儲存</button>
     </div>
   </div>
 </div>
@@ -554,7 +620,7 @@ function kbRender(){
         ${c.model?`<span class="kb-model">${esc(c.model)}</span>`:''}
       </div>
       <div class="kb-title">${esc(c.title)}</div>
-      <div class="kb-body" id="kbb_${c.id}">${esc(c.body).replace(/\n/g,'<br>')}</div>
+      <div class="kb-body" id="kbb_${c.id}">${esc(c.body).split('\n').join('<br>')}</div>
       <div class="kb-foot">
         <div>
           <div class="kb-meta">${esc(c.author||'匿名')} · ${new Date(c.ts).toLocaleDateString('zh-TW')}</div>
@@ -597,10 +663,9 @@ function kbEditCase(id){const c=kbAll.find(x=>x.id===id);if(c)kbOpenModal(c);}
 function kbDel(id){if(!confirm('確定要刪除？'))return;kbAll=kbAll.filter(x=>x.id!==id);kbSaveAll();kbUpdateStats();kbRender();}
 function kbRate(id){
   const c=kbAll.find(x=>x.id===id);if(!c)return;
-  const newCount=(c.rateCount||0)+1;
-  c.rating=Math.round(((c.rating||0)*(c.rateCount||0)+5)/newCount*10)/10;
-  c.rateCount=newCount;
-  kbSaveAll();kbRender();
+  const nc=(c.rateCount||0)+1;
+  c.rating=Math.round(((c.rating||0)*(c.rateCount||0)+5)/nc*10)/10;
+  c.rateCount=nc;kbSaveAll();kbRender();
 }
 document.getElementById('kbModal').addEventListener('click',function(e){if(e.target===this)kbCloseModal();});
 
@@ -706,8 +771,8 @@ function copyMeetLink(){
 let eqrAll=[],eqrFilter_='all',eqrEditId=null;
 const eqrCatLabel={service:'服務手冊',parts:'零件目錄',setup:'安裝設定',other:'其他'};
 const eqrSample=[
-  {id:'eqr1',title:'IMC-3000 服務手冊',cat:'service',model:'IMC-3000',url:'https://drive.google.com/file/d/PASTE_YOUR_FILE_ID_HERE/view',ver:'v2.1',desc:'包含完整的 SC 代碼說明、零件更換程序與調整方法。',ts:Date.now()-86400000*10},
-  {id:'eqr2',title:'MPC-3003/5503 零件目錄',cat:'parts',model:'MPC-3003、MPC-5503',url:'https://drive.google.com/file/d/PASTE_YOUR_FILE_ID_HERE/view',ver:'2025-01',desc:'完整零件料號清單，含替代料號對照表。',ts:Date.now()-86400000*20},
+  {id:'eqr1',title:'IMC-3000 EQR 服務手冊',cat:'service',model:'IMC-3000',url:'https://drive.google.com/file/d/PASTE_ID/view',ver:'v2.1',desc:'包含完整的 SC 代碼說明、零件更換程序。',ts:Date.now()-86400000*10},
+  {id:'eqr2',title:'MPC-3003/5503 零件目錄',cat:'parts',model:'MPC-3003、MPC-5503',url:'https://drive.google.com/file/d/PASTE_ID/view',ver:'2025-01',desc:'完整零件料號清單，含替代料號對照表。',ts:Date.now()-86400000*20},
 ];
 function eqrLoad(){
   try{
@@ -718,36 +783,37 @@ function eqrLoad(){
   eqrRender();
 }
 function eqrSaveAll(){localStorage.setItem('ricoh_eqr',JSON.stringify(eqrAll));}
-function eqrFilterFn(cat,btn){eqrFilter_=cat;document.querySelectorAll('.eqr-cat').forEach(b=>b.classList.remove('on'));btn.classList.add('on');eqrRender();}
+function eqrFilterFn(cat,btn){
+  eqrFilter_=cat;
+  document.querySelectorAll('.eqr-cat').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  eqrRender();
+}
 function eqrRender(){
   const q=(document.getElementById('eqrSearchInput').value||'').toLowerCase();
   let list=eqrFilter_==='all'?eqrAll:eqrAll.filter(e=>e.cat===eqrFilter_);
   if(q)list=list.filter(e=>(e.title+(e.model||'')+(e.desc||'')).toLowerCase().includes(q));
   const grid=document.getElementById('eqrGrid');
-  if(!list.length){grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--sub);font-size:13px">沒有符合的手冊，點「新增手冊」上傳！</div>';return;}
+  if(!list.length){grid.innerHTML='<div style="text-align:center;padding:2rem;color:var(--sub);font-size:13px">沒有符合的手冊，點「新增」上傳！</div>';return;}
   grid.innerHTML=list.map(e=>`
-    <div class="eqr-card">
-      <div class="eqr-card-top">
+    <div class="eqr-list-item">
+      <div style="display:flex;align-items:flex-start;gap:10px;min-width:0;flex:1">
         <div class="eqr-file-icon">PDF</div>
-        <div class="eqr-info">
+        <div style="min-width:0">
           <div class="eqr-cat-tag">${esc(eqrCatLabel[e.cat]||e.cat)}</div>
-          <div class="eqr-title">${esc(e.title)}</div>
+          <div class="eqr-title" style="font-size:13px">${esc(e.title)}</div>
+          <div style="font-size:11px;color:var(--sub);margin-top:2px">${e.model?esc(e.model)+' · ':''}${e.ver?esc(e.ver):''}</div>
         </div>
       </div>
-      ${e.desc?`<div class="eqr-desc">${esc(e.desc)}</div>`:''}
-      <div class="eqr-meta">
-        ${e.model?`<span>📱 ${esc(e.model)}</span>`:''}
-        ${e.ver?`<span>📌 ${esc(e.ver)}</span>`:''}
-        <span>📅 ${new Date(e.ts).toLocaleDateString('zh-TW')}</span>
-      </div>
-      <div class="eqr-actions">
-        <a href="${e.url}" target="_blank" class="eqr-btn-view">📄 開啟 PDF</a>
-        <button class="eqr-btn-del" onclick="eqrOpenModal(eqrAll.find(x=>x.id==='${e.id}'))" style="background:#EFF6FF;color:#1E40AF;border:1px solid #BFDBFE">✏️</button>
-        <button class="eqr-btn-del" onclick="eqrDel('${e.id}')">🗑️</button>
+      <div style="display:flex;gap:5px;flex-shrink:0">
+        <a href="${e.url}" target="_blank" class="eqr-btn-view" style="font-size:11.5px;padding:6px 10px">📄 開啟</a>
+        <button class="eqr-btn-del" style="font-size:11.5px;padding:6px 8px;background:#EFF6FF;color:#1E40AF;border-color:#BFDBFE" onclick='eqrOpenModal(${JSON.stringify(e).replace(/'/g,"&#39;")})'>✏️</button>
+        <button class="eqr-btn-del" style="font-size:11.5px;padding:6px 8px" onclick="eqrDel('${e.id}')">🗑️</button>
       </div>
     </div>`).join('');
 }
 function eqrOpenModal(e){
+  if(typeof e==='string')e=eqrAll.find(x=>x.id===e);
   eqrEditId=e?e.id:null;
   document.getElementById('eqrModalTitle').textContent=e?'編輯手冊':'新增手冊';
   document.getElementById('eqrT').value=e?e.title:'';
@@ -764,8 +830,8 @@ function eqrSave(){
   const url=document.getElementById('eqrUrl').value.trim();
   if(!t||!url){alert('請填寫手冊名稱和連結');return;}
   const item={
-    id:eqrEditId||'eqr'+Date.now(),
-    title:t,cat:document.getElementById('eqrCat').value,
+    id:eqrEditId||'eqr'+Date.now(),title:t,
+    cat:document.getElementById('eqrCat').value,
     model:document.getElementById('eqrMd').value.trim(),
     url,ver:document.getElementById('eqrVer').value.trim(),
     desc:document.getElementById('eqrDesc').value.trim(),
@@ -778,12 +844,87 @@ function eqrSave(){
 function eqrDel(id){if(!confirm('確定要刪除？'))return;eqrAll=eqrAll.filter(x=>x.id!==id);eqrSaveAll();eqrRender();}
 document.getElementById('eqrModal').addEventListener('click',function(e){if(e.target===this)eqrCloseModal();});
 
-
+// ══════ 事務機手冊庫（localStorage）══════
+let manuAll=[],manuFilter_='all',manuEditId=null;
+const manuTypeLabel={operation:'操作手冊',service:'服務手冊',parts:'零件目錄',network:'網路設定',other:'其他'};
+const manuSample=[
+  {id:'m1',title:'IMC-3000 操作說明書',model:'IMC-3000',type:'operation',url:'https://drive.google.com/file/d/PASTE_ID/view',ver:'v3.0',desc:'完整操作說明，包含基本功能與進階設定。',ts:Date.now()-86400000*5},
+  {id:'m2',title:'MPC-3003 網路設定手冊',model:'MPC-3003',type:'network',url:'https://drive.google.com/file/d/PASTE_ID/view',ver:'v1.2',desc:'TCP/IP 設定、掃描至資料夾、Email 設定。',ts:Date.now()-86400000*8},
+  {id:'m3',title:'IMC-5000 服務手冊',model:'IMC-5000',type:'service',url:'https://drive.google.com/file/d/PASTE_ID/view',ver:'v2.0',desc:'工程師專用，含完整維修流程與零件更換說明。',ts:Date.now()-86400000*12},
+];
+function manuLoad(){
+  try{
+    const raw=localStorage.getItem('ricoh_manuals');
+    if(raw){manuAll=JSON.parse(raw);}
+    else{manuAll=[...manuSample];localStorage.setItem('ricoh_manuals',JSON.stringify(manuAll));}
+  }catch(e){manuAll=[...manuSample];}
+  manuUpdateModelBtns();
+  manuRender();
+}
+function manuSaveAll(){localStorage.setItem('ricoh_manuals',JSON.stringify(manuAll));}
+function manuUpdateModelBtns(){
+  const models=['all',...new Set(manuAll.map(m=>m.model).filter(Boolean))];
+  const container=document.getElementById('manuModelBtns');
+  container.innerHTML=models.map(m=>`<button class="manu-mbtn${m===manuFilter_?' on':''}" onclick="manuFilter('${m}',this)">${m==='all'?'全部機型':m}</button>`).join('');
+}
+function manuFilter(model,btn){
+  manuFilter_=model;
+  document.querySelectorAll('.manu-mbtn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  manuRender();
+}
+function manuRender(){
+  let list=manuFilter_==='all'?manuAll:manuAll.filter(m=>m.model===manuFilter_);
+  const area=document.getElementById('manuList');
+  if(!list.length){area.innerHTML='<div style="text-align:center;padding:2rem;color:var(--sub);font-size:13px">沒有手冊，點「新增手冊」上傳！</div>';return;}
+  area.innerHTML=list.map(m=>`
+    <div class="manu-item">
+      <div class="manu-item-l">
+        <div class="manu-pdf-icon">PDF</div>
+        <div class="manu-info">
+          <div class="manu-type-tag">${esc(manuTypeLabel[m.type]||m.type)}</div>
+          <div class="manu-title">${esc(m.title)}</div>
+          <div class="manu-meta">${esc(m.model)}${m.ver?' · '+esc(m.ver):''}</div>
+        </div>
+      </div>
+      <div class="manu-item-r">
+        <a href="${m.url}" target="_blank" class="manu-btn-open">📄 開啟</a>
+        <button class="manu-btn-edit" onclick="manuEditFn('${m.id}')">✏️</button>
+        <button class="manu-btn-del" onclick="manuDel('${m.id}')">🗑️</button>
+      </div>
+    </div>`).join('');
+}
+function manuOpenModal(m){
+  manuEditId=m?m.id:null;
+  document.getElementById('manuModalTitle').textContent=m?'編輯手冊':'新增事務機手冊';
+  document.getElementById('manuT').value=m?m.title:'';
+  document.getElementById('manuModel').value=m?m.model||'':'';
+  document.getElementById('manuType').value=m?m.type:'operation';
+  document.getElementById('manuUrl').value=m?m.url||'':'';
+  document.getElementById('manuVer').value=m?m.ver||'':'';
+  document.getElementById('manuDesc').value=m?m.desc||'':'';
+  document.getElementById('manuModal').classList.add('show');
+}
+function manuCloseModal(){document.getElementById('manuModal').classList.remove('show');manuEditId=null;}
+function manuSave(){
+  const t=document.getElementById('manuT').value.trim();
+  const model=document.getElementById('manuModel').value.trim();
+  const url=document.getElementById('manuUrl').value.trim();
+  if(!t||!url){alert('請填寫手冊名稱和連結');return;}
+  const item={id:manuEditId||'m'+Date.now(),title:t,model,type:document.getElementById('manuType').value,url,ver:document.getElementById('manuVer').value.trim(),desc:document.getElementById('manuDesc').value.trim(),ts:Date.now()};
+  if(manuEditId){const idx=manuAll.findIndex(x=>x.id===manuEditId);if(idx>-1)manuAll[idx]=item;}
+  else manuAll.unshift(item);
+  manuSaveAll();manuCloseModal();manuUpdateModelBtns();manuRender();
+}
+function manuEditFn(id){const m=manuAll.find(x=>x.id===id);if(m)manuOpenModal(m);}
+function manuDel(id){if(!confirm('確定要刪除？'))return;manuAll=manuAll.filter(x=>x.id!==id);manuSaveAll();manuUpdateModelBtns();manuRender();}
+document.getElementById('manuModal').addEventListener('click',function(e){if(e.target===this)manuCloseModal();});
 
 // 初始化
 kbLoad();
 invLoad();
 eqrLoad();
+manuLoad();
 </script>
 </body>
 </html>
