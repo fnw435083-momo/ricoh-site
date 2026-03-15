@@ -104,35 +104,54 @@ section{padding:64px 5%}
 
 /* CHAT */
 #chatroom{background:#fff}
-.chat-wrap{background:#fff;border:1px solid var(--border);border-radius:10px;overflow:hidden;max-width:800px;margin:0 auto}
+.chat-outer{max-width:860px;margin:0 auto}
+.chat-login{background:#fff;border:1px solid var(--border);border-radius:10px;padding:28px;margin-bottom:0;text-align:center}
+.chat-login h3{font-size:16px;font-weight:700;color:var(--g900);margin-bottom:6px}
+.chat-login p{font-size:13px;color:var(--sub);margin-bottom:20px}
+.chat-login-form{display:flex;flex-direction:column;gap:12px;max-width:340px;margin:0 auto}
+.chat-login-row{display:flex;gap:8px}
+.chat-name-input{flex:1;border:1px solid var(--border);border-radius:6px;padding:10px 14px;font-size:14px;font-family:inherit;outline:none;transition:.2s}
+.chat-name-input:focus{border-color:var(--red)}
+.chat-dept-select{border:1px solid var(--border);border-radius:6px;padding:10px 12px;font-size:13px;font-family:inherit;outline:none;background:#fff;color:var(--text)}
+.chat-join-btn{background:var(--red);color:#fff;border:none;padding:11px 24px;border-radius:6px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;transition:.2s;width:100%}
+.chat-join-btn:hover{background:var(--red-dark)}
+.chat-wrap{background:#fff;border:1px solid var(--border);border-radius:10px;overflow:hidden;display:none}
 .chat-head{background:var(--g900);padding:14px 20px;display:flex;align-items:center;gap:12px}
-.cdot{width:10px;height:10px;border-radius:50%;background:#2ECC71;animation:pulse 2s infinite}
+.cdot{width:10px;height:10px;border-radius:50%;background:#2ECC71;animation:pulse 2s infinite;flex-shrink:0}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 .cht{font-size:14px;font-weight:700;color:#fff}
 .chs{font-size:11.5px;color:rgba(255,255,255,.5)}
-.chat-msgs{height:320px;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:11px;background:#FAFAFA}
+.chat-user-tag{background:rgba(255,255,255,.15);border-radius:4px;padding:4px 10px;font-size:11.5px;color:#fff;display:flex;align-items:center;gap:6px}
+.chat-msgs{height:360px;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;background:#FAFAFA}
 .msg{display:flex;gap:9px;align-items:flex-start}
 .msg.me{flex-direction:row-reverse}
 .msg.sys{justify-content:center}
-.av{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
-.msg.other .av{background:var(--red);color:#fff}
-.msg.me .av{background:#1A56DB;color:#fff}
-.bub{max-width:70%;padding:9px 13px;border-radius:10px;font-size:13px;line-height:1.55}
-.msg.other .bub{background:#fff;border:1px solid var(--border);border-radius:0 10px 10px 10px}
+.av{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;color:#fff}
+.msg.other .av{background:var(--red)}
+.msg.me .av{background:#1A56DB}
+.msg.ai .av{background:#7C3AED}
+.bub{max-width:72%;padding:9px 13px;border-radius:10px;font-size:13px;line-height:1.55}
+.msg.other .bub{background:#fff;border:1px solid var(--border);border-radius:0 10px 10px 10px;color:var(--text)}
 .msg.me .bub{background:#1A56DB;color:#fff;border-radius:10px 0 10px 10px}
-.msg.sys .bub{background:var(--g100);color:var(--g500);font-size:11.5px;border-radius:6px;padding:6px 12px}
+.msg.sys .bub{background:var(--g100);color:var(--g500);font-size:11.5px;border-radius:6px;padding:6px 12px;max-width:100%}
+.msg.ai .bub{background:#F5F3FF;border:1px solid #DDD6FE;color:#4C1D95;border-radius:0 10px 10px 10px}
+.msg-name{font-size:10.5px;color:var(--g500);margin-bottom:2px}
+.msg.me .msg-name{text-align:right}
 .mt{font-size:10px;color:var(--g500);margin-top:3px}
 .msg.me .mt{text-align:right}
+.chat-toolbar{padding:10px 14px;background:#fff;border-top:1px solid var(--border);display:flex;gap:8px;align-items:center}
+.ai-sel-btns{display:flex;gap:6px}
+.ai-sel-btn{padding:5px 12px;border-radius:14px;font-size:11.5px;font-weight:600;cursor:pointer;border:1.5px solid transparent;font-family:inherit;transition:.15s}
+.ai-sel-btn.claude{background:#F5F3FF;color:#6D28D9;border-color:#DDD6FE}
+.ai-sel-btn.gpt{background:#F0FDF4;color:#166534;border-color:#BBF7D0}
+.ai-sel-btn.active-claude{background:#7C3AED;color:#fff;border-color:#7C3AED}
+.ai-sel-btn.active-gpt{background:#16A34A;color:#fff;border-color:#16A34A}
 .chat-in{padding:12px 14px;background:#fff;border-top:1px solid var(--border);display:flex;gap:9px;align-items:center}
 .cinput{flex:1;border:1px solid var(--border);border-radius:20px;padding:9px 15px;font-size:13.5px;font-family:inherit;outline:none;transition:.2s}
 .cinput:focus{border-color:var(--red)}
 .csend{background:var(--red);color:#fff;border:none;border-radius:50%;width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px;transition:.2s;flex-shrink:0}
 .csend:hover{background:var(--red-dark)}
-.msg.ai .av{background:#7C3AED;color:#fff}
-.ai-bub{background:#F5F3FF!important;border:1px solid #DDD6FE!important;color:#4C1D95!important;border-radius:0 10px 10px 10px!important}
-.msg.ai{flex-direction:row}
-
-
+.chat-note{text-align:center;font-size:11.5px;padding:8px 14px;border-top:1px solid var(--border);background:#EFF6FF;color:#1E40AF}
 /* FEATURES */
 .fg{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--border);border-radius:8px;overflow:hidden}
 .fc{padding:26px 20px;border-right:1px solid var(--border);background:#fff;position:relative;overflow:hidden;transition:.25s}
@@ -381,30 +400,53 @@ footer{background:var(--g900);color:rgba(255,255,255,.5);font-size:13px}
   <div class="si">
     <div class="ey"><div class="el"></div><span class="elb">新功能</span></div>
     <h2 class="stit">工程師即時聊天室 × AI 助理</h2>
-    <p class="sdesc">輸入問題，AI 助理即時回答；也可以與同事交流分享現場經驗。輸入 <strong>@AI</strong> 開頭讓 AI 回覆。</p>
-    <div class="chat-wrap">
-      <div class="chat-head">
-        <div class="cdot"></div>
-        <div style="flex:1"><div class="cht">工程師支援聊天室</div><div class="chs">AI 助理上線中 · 輸入 @AI 問題 呼叫助理</div></div>
-        <div style="background:rgba(255,255,255,.1);border-radius:4px;padding:4px 10px;font-size:11px;color:rgba(255,255,255,.7)">🤖 AI 已連線</div>
-      </div>
-      <div class="chat-msgs" id="chatMsgs">
-        <div class="msg sys"><div class="bub">聊天室已開啟 · 輸入 @AI 問題 可呼叫 AI 助理</div></div>
-        <div class="msg other">
-          <div class="av">王</div>
-          <div><div class="bub">大家好，IMC-3000 出現 SC-301 有人遇過嗎？</div><div class="mt">09:42</div></div>
+    <p class="sdesc">輸入名字進入聊天室，與同事交流並呼叫 AI 助理回答 SC 代碼、料號等問題。</p>
+    <div class="chat-outer">
+
+      <!-- 登入畫面 -->
+      <div class="chat-login" id="chatLogin">
+        <h3>👋 請先輸入你的名字</h3>
+        <p>讓同事知道是誰在說話</p>
+        <div class="chat-login-form">
+          <input class="chat-name-input" id="myNameInput" placeholder="輸入你的名字，例：王工程師" maxlength="10">
+          <select class="chat-dept-select" id="myDeptInput">
+            <option value="北區工程師">北區工程師</option>
+            <option value="南區工程師">南區工程師</option>
+            <option value="中區工程師">中區工程師</option>
+            <option value="客服人員">客服人員</option>
+            <option value="主管">主管</option>
+          </select>
+          <button class="chat-join-btn" onclick="chatJoin()">進入聊天室 →</button>
         </div>
-        <div class="msg ai">
-          <div class="av ai-av">AI</div>
-          <div><div class="bub ai-bub">SC-301 通常是定影器溫度感測器異常。建議先確認感測器接線是否鬆脫，再以三用電表量測阻值。如需更換，請查詢料號 AE01-1075。</div><div class="mt">09:43</div></div>
+      </div>
+
+      <!-- 聊天室 -->
+      <div class="chat-wrap" id="chatWrap">
+        <div class="chat-head">
+          <div class="cdot"></div>
+          <div style="flex:1">
+            <div class="cht">工程師支援聊天室</div>
+            <div class="chs" id="chatSubtitle">AI 助理上線中</div>
+          </div>
+          <div class="chat-user-tag" id="myTag">👤 未登入</div>
+          <button onclick="chatLogout()" style="background:rgba(255,255,255,.1);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.2);padding:4px 10px;border-radius:4px;font-size:11px;cursor:pointer;margin-left:8px;font-family:inherit">離開</button>
         </div>
+        <div class="chat-msgs" id="chatMsgs"></div>
+        <div id="aiTyping" style="display:none;padding:6px 16px;font-size:12px;color:#6D28D9;background:#F5F3FF;border-top:1px solid #EDE9FE">🤖 AI 正在回答...</div>
+        <div class="chat-toolbar">
+          <span style="font-size:11.5px;color:var(--sub);white-space:nowrap">呼叫 AI：</span>
+          <div class="ai-sel-btns">
+            <button class="ai-sel-btn claude active-claude" id="btnClaude" onclick="selectAI('claude')">🟣 Claude（直接回答）</button>
+            <button class="ai-sel-btn gpt" id="btnGPT" onclick="selectAI('gpt')">🟢 我的 GPT（開新視窗）</button>
+          </div>
+        </div>
+        <div class="chat-in">
+          <input class="cinput" id="chatInput" placeholder="輸入訊息（@AI 問題 呼叫 AI）按 Enter 送出..." onkeydown="sendMsg(event)">
+          <button class="csend" onclick="sendMsgBtn()">➤</button>
+        </div>
+        <div class="chat-note">🤖 輸入 <strong>@AI [問題]</strong> 呼叫 AI · 上方可切換 Claude 或你的 GPT</div>
       </div>
-      <div id="aiTyping" style="display:none;padding:8px 16px;font-size:12px;color:var(--sub)">🤖 AI 正在輸入...</div>
-      <div class="chat-in">
-        <input class="cinput" id="chatInput" placeholder="輸入訊息（@AI 問題 呼叫 AI 助理）按 Enter 送出..." onkeydown="sendMsg(event)">
-        <button class="csend" onclick="sendMsgBtn()">➤</button>
-      </div>
-      <div class="chat-note" style="background:#EFF6FF;border-top:1px solid #BFDBFE;color:#1E40AF">🤖 輸入 <strong>@AI [你的問題]</strong> 即可讓 AI 助理回答 SC 代碼、料號等問題</div>
+
     </div>
   </div>
 </section>
@@ -584,24 +626,83 @@ function switchTab(id,btn){
   btn.classList.add('on');
 }
 
-// ── 聊天室 + AI ──
-const msgs=document.getElementById('chatMsgs');
-const chatInp=document.getElementById('chatInput');
+// ══════ 聊天室 ══════
+let myName='', myDept='', myAI='claude';
+const GPT_URL='https://chatgpt.com/g/g-69a08de59f8c81918a5e9fd36dd12559-gong-cheng-shi-sccha-zhao';
+
 function getTime(){const n=new Date();return n.getHours()+':'+String(n.getMinutes()).padStart(2,'0');}
-function appendMsg(cls,avText,avCls,bubText,bubCls){
-  const d=document.createElement('div');d.className='msg '+cls;
-  d.innerHTML=`<div class="av ${avCls||''}">${avText}</div><div><div class="bub ${bubCls||''}">${bubText}</div><div class="mt">${getTime()}</div></div>`;
-  msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;
+
+function avatarColor(name){
+  const colors=['#CC0000','#1A56DB','#0F766E','#C2410C','#7C3AED','#0369A1','#15803D'];
+  let h=0;for(let i=0;i<name.length;i++)h=(h*31+name.charCodeAt(i))%colors.length;
+  return colors[h];
 }
+
+function addMsg(cls, avText, nameLabel, bubHTML, bubCls){
+  const msgs=document.getElementById('chatMsgs');
+  if(!msgs)return;
+  const d=document.createElement('div');
+  d.className='msg '+cls;
+  const avBg=cls==='me'?avatarColor(myName):cls==='ai'?'#7C3AED':'#CC0000';
+  const avStyle=`style="background:${avBg}"`;
+  const nameHTML=nameLabel?`<div class="msg-name">${nameLabel}</div>`:'';
+  if(cls==='sys'){
+    d.innerHTML=`<div class="bub">${bubHTML}</div>`;
+  }else if(cls==='me'){
+    d.innerHTML=`<div ${avStyle} class="av">${avText}</div><div>${nameHTML}<div class="bub ${bubCls||''}">${bubHTML}</div><div class="mt">${getTime()}</div></div>`;
+  }else{
+    d.innerHTML=`<div ${avStyle} class="av">${avText}</div><div>${nameHTML}<div class="bub ${bubCls||''}">${bubHTML}</div><div class="mt">${getTime()}</div></div>`;
+  }
+  msgs.appendChild(d);
+  msgs.scrollTop=msgs.scrollHeight;
+}
+
+function chatJoin(){
+  const n=document.getElementById('myNameInput').value.trim();
+  const dept=document.getElementById('myDeptInput').value;
+  if(!n){alert('請輸入你的名字');return;}
+  myName=n; myDept=dept;
+  localStorage.setItem('ricoh_chat_name',n);
+  localStorage.setItem('ricoh_chat_dept',dept);
+  document.getElementById('chatLogin').style.display='none';
+  document.getElementById('chatWrap').style.display='block';
+  document.getElementById('myTag').textContent='👤 '+n+' · '+dept;
+  document.getElementById('chatSubtitle').textContent='已登入：'+n+' · '+dept+' · @AI 呼叫助理';
+  const msgs=document.getElementById('chatMsgs');
+  msgs.innerHTML='';
+  addMsg('sys','','','歡迎 '+n+'（'+dept+'）加入聊天室 · 輸入 @AI 問題 呼叫 AI 助理');
+}
+
+function chatLogout(){
+  document.getElementById('chatLogin').style.display='block';
+  document.getElementById('chatWrap').style.display='none';
+  myName=''; myDept='';
+}
+
+function selectAI(type){
+  myAI=type;
+  document.getElementById('btnClaude').className='ai-sel-btn claude'+(type==='claude'?' active-claude':'');
+  document.getElementById('btnGPT').className='ai-sel-btn gpt'+(type==='gpt'?' active-gpt':'');
+}
+
 function sendMsg(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsgBtn();}}
+
 async function sendMsgBtn(){
-  const text=chatInp.value.trim();if(!text)return;
-  chatInp.value='';
-  appendMsg('me','我','','text','');
-  // Fix: use actual text not string 'text'
-  msgs.lastChild.querySelector('.bub').textContent=text;
+  if(!myName){alert('請先輸入名字登入');return;}
+  const inp=document.getElementById('chatInput');
+  const text=inp.value.trim();if(!text)return;
+  inp.value='';
+  const initials=myName.slice(0,1);
+  addMsg('me',initials,myName,text.replace(/</g,'&lt;'),'');
+
   if(text.toLowerCase().startsWith('@ai')){
     const q=text.replace(/^@[Aa][Ii]\s*/,'');
+    if(myAI==='gpt'){
+      addMsg('ai','AI','AI 助理（GPT）','正在開啟你的 GPT 助理... <a href="'+GPT_URL+'" target="_blank" style="color:#7C3AED;font-weight:700">點此開啟 ↗</a>','');
+      window.open(GPT_URL,'_blank');
+      return;
+    }
+    // Claude API
     document.getElementById('aiTyping').style.display='block';
     try{
       const res=await fetch('https://api.anthropic.com/v1/messages',{
@@ -609,23 +710,31 @@ async function sendMsgBtn(){
         headers:{'Content-Type':'application/json'},
         body:JSON.stringify({
           model:'claude-sonnet-4-20250514',max_tokens:600,
-          system:'你是理光（Ricoh）印表機工程師的 AI 助理。專門回答 SC 錯誤代碼、零件料號、維修技巧等問題。用繁體中文簡潔回答，如有料號請列出，條列式呈現重點。',
+          system:'你是理光（Ricoh）印表機工程師的 AI 助理，名字叫 Ricoh AI。專門回答 SC 錯誤代碼、零件料號、維修技巧等問題。用繁體中文簡潔條列式回答，如有料號請列出。',
           messages:[{role:'user',content:q}]
         })
       });
       const data=await res.json();
       document.getElementById('aiTyping').style.display='none';
-      const reply=(data.content||[]).map(i=>i.text||'').join('') || '抱歉，AI 暫時無法回應。';
-      appendMsg('ai','AI','ai-av',reply.replace(/
-/g,'<br>'),'ai-bub');
+      const reply=(data.content||[]).map(i=>i.text||'').join('')||'抱歉，AI 暫時無法回應。';
+      addMsg('ai','AI','Ricoh AI 助理',reply.replace(/
+/g,'<br>').replace(/</g,'&lt;').replace(/&lt;br>/g,'<br>'),'');
     }catch(e){
       document.getElementById('aiTyping').style.display='none';
-      appendMsg('ai','AI','ai-av','AI 暫時無法連線，請稍後再試。','ai-bub');
+      addMsg('ai','AI','Ricoh AI 助理','AI 暫時無法連線，請稍後再試。','');
     }
   }
 }
 
-// ── 案例分享（localStorage）──
+// 自動填入上次名字
+(function(){
+  const n=localStorage.getItem('ricoh_chat_name');
+  const d=localStorage.getItem('ricoh_chat_dept');
+  if(n)document.getElementById('myNameInput').value=n;
+  if(d)document.getElementById('myDeptInput').value=d;
+})();
+
+// ══════ 案例分享（localStorage）══════
 let csAll=[],csCurFilter='all',csEditId=null;
 const csCatLabel={sc:'SC 代碼',part:'料號查詢',repair:'維修技巧',other:'其他'};
 const csCatCls={sc:'cs-sc',part:'cs-part',repair:'cs-repair',other:'cs-other'};
@@ -651,7 +760,8 @@ function csRender(){
         ${c.model?`<span style="font-size:11px;color:#666;background:#f2f2f2;padding:2px 7px;border-radius:3px">${csEsc(c.model)}</span>`:''}
       </div>
       <div class="cs-title">${csEsc(c.title)}</div>
-      <div class="cs-body" id="csb_${c.id}">${csEsc(c.body).replace(/\n/g,'<br>')}</div>
+      <div class="cs-body" id="csb_${c.id}">${csEsc(c.body).replace(/
+/g,'<br>')}</div>
       <div class="cs-foot">
         <span>${csEsc(c.author||'匿名')} · ${new Date(c.ts).toLocaleDateString('zh-TW')}</span>
         <div class="cs-acts">
