@@ -260,6 +260,8 @@ footer{background:var(--g900);color:rgba(255,255,255,.5);font-size:13px}
   .flag{width:64px}
 }
 </style>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 </head>
 <body>
 
@@ -616,9 +618,6 @@ footer{background:var(--g900);color:rgba(255,255,255,.5);font-size:13px}
   </div>
 </footer>
 
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 <script>
 function switchTab(id,btn){
   document.getElementById('tc').style.display=id==='c'?'block':'none';
@@ -627,63 +626,55 @@ function switchTab(id,btn){
   btn.classList.add('on');
 }
 
-// ══════ Firebase 設定 ══════
+// ── Firebase 設定 ──
 const firebaseConfig = {
-  apiKey: "AIzaSyDemo-ReplaceWithYourKey",
-  authDomain: "ricoh-chat.firebaseapp.com",
+  apiKey: "AIzaSyDm03V3PmdtHgpkKeRUgsaDIHBM_51NG18",
+  authDomain: "ricoh-smartservice.firebaseapp.com",
   databaseURL: "https://ricoh-smartservice-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "ricoh-chat",
-  storageBucket: "ricoh-chat.appspot.com",
-  messagingSenderId: "000000000000",
-  appId: "1:000000000000:web:0000000000000000"
+  projectId: "ricoh-smartservice",
+  storageBucket: "ricoh-smartservice.firebasestorage.app",
+  messagingSenderId: "88237602288",
+  appId: "1:88237602288:web:ae176d6a4aeda1e556d935",
+  measurementId: "G-NDTCZBNN1X"
 };
 
-let db = null;
-let chatRef = null;
-let onlineRef = null;
-let myOnlineRef = null;
-let chatListener = null;
-let onlineListener = null;
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+const chatRef = db.ref('messages');
+const onlineRef = db.ref('online');
 
-function initFirebase(){
-  try{
-    if(!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-    db = firebase.database();
-    chatRef = db.ref('ricoh_chat/messages');
-    onlineRef = db.ref('ricoh_chat/online');
-    console.log('Firebase connected');
-    return true;
-  }catch(e){
-    console.warn('Firebase init failed:', e);
-    return false;
-  }
-}
-
-// ══════ 聊天室 ══════
-let myName='', myDept='', myAI='claude';
+// ── 聊天室 ──
+let myName='', myDept='', myAI='claude', myOnlineRef=null;
 const GPT_URL='https://chatgpt.com/g/g-69a08de59f8c81918a5e9fd36dd12559-gong-cheng-shi-sccha-zhao';
-const lastMsgIds = new Set();
+const shownIds=new Set();
 
-function getTime(){const n=new Date();return n.getHours()+':'+String(n.getMinutes()).padStart(2,'0');}
+function getTime(){
+  const n=new Date();
+  return n.getHours()+':'+String(n.getMinutes()).padStart(2,'0');
+}
 
 function avatarColor(name){
   const colors=['#CC0000','#1A56DB','#0F766E','#C2410C','#7C3AED','#0369A1','#15803D','#B45309'];
-  let h=0;for(let i=0;i<name.length;i++)h=(h*31+name.charCodeAt(i))%colors.length;
+  let h=0;
+  for(let i=0;i<name.length;i++) h=(h*31+name.charCodeAt(i))%colors.length;
   return colors[h];
 }
 
-function addMsgToDOM(cls, avText, nameLabel, bubHTML, bubCls, isOwn){
+function addMsgDOM(isMe,isAI,isSys,avText,nameLabel,bubHTML){
   const msgs=document.getElementById('chatMsgs');
-  if(!msgs)return;
+  if(!msgs) return;
   const d=document.createElement('div');
-  d.className='msg '+(isOwn?'me':cls);
-  const avBg=cls==='ai'?'#7C3AED':avatarColor(nameLabel||avText);
-  const avStyle='style="background:'+avBg+'"';
-  const nameHTML=nameLabel?'<div class="msg-name">'+nameLabel+'</div>':'';
-  if(cls==='sys'){
+  if(isSys){
+    d.className='msg sys';
     d.innerHTML='<div class="bub">'+bubHTML+'</div>';
-  }else{
-    d.innerHTML='<div '+avStyle+' class="av">'+avText+'</div><div>'+nameHTML+'<div class="bub '+(bubCls||'')+'">'+bubHTML+'</div><div class="mt">'+getTime()+'</div></div>';
+  } else {
+    d.className='msg '+(isMe?'me':isAI?'ai':'other');
+    const avBg=isAI?'#7C3AED':avatarColor(nameLabel||avText);
+    const nameHTML=nameLabel?'<div class="msg-name">'+nameLabel+'</div>':'';
+    const bubCls=isAI?'ai-bub':'';
+    d.innerHTML='<div class="av" style="background:'+avBg+'">'+avText+'</div>'
+      +'<div>'+nameHTML+'<div class="bub '+bubCls+'">'+bubHTML+'</div>'
+      +'<div class="mt">'+getTime()+'</div></div>';
   }
   msgs.appendChild(d);
   msgs.scrollTop=msgs.scrollHeight;
@@ -692,7 +683,7 @@ function addMsgToDOM(cls, avText, nameLabel, bubHTML, bubCls, isOwn){
 function chatJoin(){
   const n=document.getElementById('myNameInput').value.trim();
   const dept=document.getElementById('myDeptInput').value;
-  if(!n){alert('請輸入你的名字');return;}
+  if(!n){ alert('請輸入你的名字'); return; }
   myName=n; myDept=dept;
   localStorage.setItem('ricoh_chat_name',n);
   localStorage.setItem('ricoh_chat_dept',dept);
@@ -700,63 +691,47 @@ function chatJoin(){
   document.getElementById('chatLogin').style.display='none';
   document.getElementById('chatWrap').style.display='flex';
   document.getElementById('myTag').textContent='👤 '+n+' · '+dept;
-  document.getElementById('chatSubtitle').textContent='已登入：'+n+' · '+dept;
 
-  const msgs=document.getElementById('chatMsgs');
-  msgs.innerHTML='';
+  document.getElementById('chatMsgs').innerHTML='';
+  shownIds.clear();
 
-  // 嘗試連接 Firebase
-  const fbOk = initFirebase();
-  if(fbOk && db){
-    setupFirebaseChat();
-  } else {
-    // Fallback: localStorage 模式
-    document.getElementById('chatSubtitle').textContent='離線模式（僅本機）';
-    addMsgToDOM('sys','','','⚠️ 無法連接即時服務，目前為單機模式。請設定 Firebase 以啟用多人聊天。','',false);
-  }
-}
-
-function setupFirebaseChat(){
   // 登記上線
   myOnlineRef = onlineRef.push();
-  myOnlineRef.set({name: myName, dept: myDept, ts: Date.now()});
+  myOnlineRef.set({name:n, dept:dept, ts:Date.now()});
   myOnlineRef.onDisconnect().remove();
 
   // 監聽在線人數
-  onlineListener = onlineRef.on('value', snap => {
-    const count = snap.numChildren();
-    document.getElementById('onlineCount').textContent = '👥 '+count+' 人在線';
-    document.getElementById('chatSubtitle').textContent = '已登入：'+myName+' · '+myDept+' · '+count+'人在線';
+  onlineRef.on('value', snap=>{
+    const count=snap.numChildren();
+    document.getElementById('onlineCount').textContent='👥 '+count+' 人在線';
+    document.getElementById('chatSubtitle').textContent='已登入：'+n+' · '+dept+' · '+count+' 人在線';
   });
 
-  // 載入最近 50 條訊息並監聽新訊息
-  addMsgToDOM('sys','','','歡迎 '+myName+'（'+myDept+'）加入聊天室 · 輸入 @AI 問題 呼叫 AI 助理','',false);
+  // 系統訊息
+  addMsgDOM(false,false,true,'','','歡迎 '+n+'（'+dept+'）加入聊天室 · 輸入 @AI 問題 呼叫 AI 助理');
 
-  chatRef.limitToLast(50).on('child_added', snap => {
-    const msg = snap.val();
-    const id = snap.key;
-    if(lastMsgIds.has(id)) return;
-    lastMsgIds.add(id);
-
-    const isOwn = (msg.name === myName && msg.dept === myDept);
-    if(msg.type === 'sys'){
-      addMsgToDOM('sys','','',msg.text,'',false);
-    } else if(msg.type === 'ai'){
-      addMsgToDOM('ai','AI','Ricoh AI 助理',msg.text,'',false);
+  // 監聽訊息（最近 80 條）
+  chatRef.limitToLast(80).on('child_added', snap=>{
+    const id=snap.key;
+    if(shownIds.has(id)) return;
+    shownIds.add(id);
+    const m=snap.val();
+    const isOwn=(m.name===myName && m.dept===myDept);
+    if(m.type==='sys'){
+      addMsgDOM(false,false,true,'','',m.text);
+    } else if(m.type==='ai'){
+      addMsgDOM(false,true,false,'AI','Ricoh AI 助理',m.text);
     } else {
-      const initials = (msg.name||'?').slice(0,1);
-      addMsgToDOM('user',initials,msg.name+'（'+msg.dept+'）',msg.text,'',isOwn);
+      addMsgDOM(isOwn,false,false,(m.name||'?').slice(0,1),m.name+'（'+m.dept+'）',m.text);
     }
   });
 }
 
 function chatLogout(){
-  // 清除 Firebase 監聽
   if(myOnlineRef) myOnlineRef.remove();
-  if(chatRef && chatListener) chatRef.off('child_added', chatListener);
-  if(onlineRef && onlineListener) onlineRef.off('value', onlineListener);
-  lastMsgIds.clear();
-
+  chatRef.off();
+  onlineRef.off();
+  shownIds.clear();
   document.getElementById('chatLogin').style.display='block';
   document.getElementById('chatWrap').style.display='none';
   myName=''; myDept='';
@@ -768,38 +743,24 @@ function selectAI(type){
   document.getElementById('btnGPT').className='ai-sel-btn gpt'+(type==='gpt'?' active-gpt':'');
 }
 
-function sendMsg(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsgBtn();}}
+function sendMsg(e){
+  if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); sendMsgBtn(); }
+}
 
 async function sendMsgBtn(){
-  if(!myName){alert('請先輸入名字登入');return;}
+  if(!myName){ alert('請先輸入名字登入'); return; }
   const inp=document.getElementById('chatInput');
-  const text=inp.value.trim();if(!text)return;
+  const text=inp.value.trim();
+  if(!text) return;
   inp.value='';
 
-  const isAI = text.toLowerCase().startsWith('@ai');
-  const msgData = {
-    type: 'user',
-    name: myName,
-    dept: myDept,
-    text: text.replace(/</g,'&lt;'),
-    ts: Date.now()
-  };
-
-  // 發送到 Firebase（或本機fallback）
-  if(db && chatRef){
-    chatRef.push(msgData);
-  } else {
-    // 本機 fallback
-    const initials = myName.slice(0,1);
-    addMsgToDOM('user',initials,myName+'（'+myDept+'）',text.replace(/</g,'&lt;'),'',true);
-  }
+  const isAI=text.toLowerCase().startsWith('@ai');
+  chatRef.push({type:'user', name:myName, dept:myDept, text:text.replace(/</g,'&lt;'), ts:Date.now()});
 
   if(isAI){
-    const q=text.replace(/^@[Aa][Ii]\s*/,'');
+    const q=text.replace(/^@[Aa][Ii] */,'');
     if(myAI==='gpt'){
-      const gptMsg = {type:'ai',name:'AI',dept:'',text:'正在開啟 GPT 助理... <a href="'+GPT_URL+'" target="_blank" style="color:#7C3AED;font-weight:700">點此開啟 ↗</a>',ts:Date.now()};
-      if(db && chatRef) chatRef.push(gptMsg);
-      else addMsgToDOM('ai','AI','Ricoh AI 助理',gptMsg.text,'',false);
+      chatRef.push({type:'ai', name:'AI', dept:'', text:'正在開啟 GPT 助理... <a href="'+GPT_URL+'" target="_blank" style="color:#7C3AED;font-weight:700">點此開啟 ↗</a>', ts:Date.now()});
       window.open(GPT_URL,'_blank');
       return;
     }
@@ -809,7 +770,8 @@ async function sendMsgBtn(){
         method:'POST',
         headers:{'Content-Type':'application/json'},
         body:JSON.stringify({
-          model:'claude-sonnet-4-20250514',max_tokens:600,
+          model:'claude-sonnet-4-20250514',
+          max_tokens:600,
           system:'你是理光（Ricoh）印表機工程師的 AI 助理，名字叫 Ricoh AI。專門回答 SC 錯誤代碼、零件料號、維修技巧等問題。用繁體中文簡潔條列式回答，如有料號請列出。',
           messages:[{role:'user',content:q}]
         })
@@ -817,15 +779,11 @@ async function sendMsgBtn(){
       const data=await res.json();
       document.getElementById('aiTyping').style.display='none';
       const reply=(data.content||[]).map(i=>i.text||'').join('')||'抱歉，AI 暫時無法回應。';
-      const aiMsg={type:'ai',name:'AI',dept:'',text:reply.split('
-').join('<br>'),ts:Date.now()};
-      if(db && chatRef) chatRef.push(aiMsg);
-      else addMsgToDOM('ai','AI','Ricoh AI 助理',aiMsg.text,'',false);
+      chatRef.push({type:'ai', name:'AI', dept:'', text:reply.split('
+').join('<br>'), ts:Date.now()});
     }catch(e){
       document.getElementById('aiTyping').style.display='none';
-      const errMsg={type:'ai',name:'AI',dept:'',text:'AI 暫時無法連線，請稍後再試。',ts:Date.now()};
-      if(db && chatRef) chatRef.push(errMsg);
-      else addMsgToDOM('ai','AI','Ricoh AI 助理',errMsg.text,'',false);
+      chatRef.push({type:'ai', name:'AI', dept:'', text:'AI 暫時無法連線，請稍後再試。', ts:Date.now()});
     }
   }
 }
@@ -838,13 +796,13 @@ async function sendMsgBtn(){
   if(d) document.getElementById('myDeptInput').value=d;
 })();
 
-// ══════ 案例分享（localStorage）══════
+// ── 案例分享（localStorage）──
 let csAll=[],csCurFilter='all',csEditId=null;
 const csCatLabel={sc:'SC 代碼',part:'料號查詢',repair:'維修技巧',other:'其他'};
 const csCatCls={sc:'cs-sc',part:'cs-part',repair:'cs-repair',other:'cs-other'};
 function csLoad(){
   try{const raw=localStorage.getItem('ricoh_cases');csAll=raw?JSON.parse(raw):[];}catch(e){csAll=[];}
-  csAll.sort((a,b)=>b.ts-a.ts);csUpdateStats();csRender();
+  csAll.sort((a,b)=>b.ts-a.ts); csUpdateStats(); csRender();
 }
 function csSaveAll(){localStorage.setItem('ricoh_cases',JSON.stringify(csAll));}
 function csUpdateStats(){
@@ -856,9 +814,29 @@ function csUpdateStats(){
 function csRender(){
   const list=csCurFilter==='all'?csAll:csAll.filter(c=>c.cat===csCurFilter);
   const area=document.getElementById('csCards');
-  if(!list.length){area.innerHTML='<div style="text-align:center;padding:3rem;color:#888;font-size:13px;grid-column:1/-1">目前沒有案例，點「新增案例」開始分享！</div>';return;}
-  area.innerHTML=list.map(c=>'<div class="cs-card"><div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px;gap:8px"><span class="cs-cat '+(csCatCls[c.cat]||'cs-other')+'">'+csEsc(csCatLabel[c.cat]||c.cat)+'</span>'+(c.model?'<span style="font-size:11px;color:#666;background:#f2f2f2;padding:2px 7px;border-radius:3px">'+csEsc(c.model)+'</span>':'')+'</div><div class="cs-title">'+csEsc(c.title)+'</div><div class="cs-body" id="csb_'+c.id+'">'+csEsc(c.body).split('
-').join('<br>')+'</div><div class="cs-foot"><span>'+csEsc(c.author||'匿名')+' · '+new Date(c.ts).toLocaleDateString('zh-TW')+'</span><div class="cs-acts"><button class="cs-btn-sm" onclick="csToggle('csb_'+c.id+'',this)">展開</button><button class="cs-btn-sm" onclick="csEditFn(''+c.id+'')">編輯</button><button class="cs-btn-del" onclick="csDel(''+c.id+'')">刪除</button></div></div></div>').join('');
+  if(!list.length){
+    area.innerHTML='<div style="text-align:center;padding:3rem;color:#888;font-size:13px;grid-column:1/-1">目前沒有案例，點「新增案例」開始分享！</div>';
+    return;
+  }
+  area.innerHTML=list.map(c=>{
+    const cat=csCatCls[c.cat]||'cs-other';
+    const catLbl=csEsc(csCatLabel[c.cat]||c.cat);
+    const model=c.model?'<span style="font-size:11px;color:#666;background:#f2f2f2;padding:2px 7px;border-radius:3px">'+csEsc(c.model)+'</span>':'';
+    const body=csEsc(c.body).split('
+').join('<br>');
+    return '<div class="cs-card">'
+      +'<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px;gap:8px">'
+      +'<span class="cs-cat '+cat+'">'+catLbl+'</span>'+model+'</div>'
+      +'<div class="cs-title">'+csEsc(c.title)+'</div>'
+      +'<div class="cs-body" id="csb_'+c.id+'">'+body+'</div>'
+      +'<div class="cs-foot">'
+      +'<span>'+csEsc(c.author||'匿名')+' · '+new Date(c.ts).toLocaleDateString('zh-TW')+'</span>'
+      +'<div class="cs-acts">'
+      +'<button class="cs-btn-sm" onclick="csToggle('csb_'+c.id+'',this)">展開</button>'
+      +'<button class="cs-btn-sm" onclick="csEditFn(''+c.id+'')">編輯</button>'
+      +'<button class="cs-btn-del" onclick="csDel(''+c.id+'')">刪除</button>'
+      +'</div></div></div>';
+  }).join('');
 }
 function csEsc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function csToggle(id,btn){const el=document.getElementById(id);if(el.classList.toggle('open'))btn.textContent='收起';else btn.textContent='展開';}
@@ -880,14 +858,25 @@ function csSave(){
   if(!t||!b){alert('請填寫標題和內容');return;}
   if(csEditId){
     const idx=csAll.findIndex(x=>x.id===csEditId);
-    if(idx>-1)csAll[idx]={...csAll[idx],title:t,body:b,cat:document.getElementById('csC').value,model:document.getElementById('csM').value.trim(),author:document.getElementById('csA').value.trim()};
+    if(idx>-1) csAll[idx]={...csAll[idx],title:t,body:b,
+      cat:document.getElementById('csC').value,
+      model:document.getElementById('csM').value.trim(),
+      author:document.getElementById('csA').value.trim()};
   }else{
-    csAll.unshift({id:'c'+Date.now(),title:t,body:b,cat:document.getElementById('csC').value,model:document.getElementById('csM').value.trim(),author:document.getElementById('csA').value.trim(),ts:Date.now()});
+    csAll.unshift({id:'c'+Date.now(),title:t,body:b,
+      cat:document.getElementById('csC').value,
+      model:document.getElementById('csM').value.trim(),
+      author:document.getElementById('csA').value.trim(),
+      ts:Date.now()});
   }
-  csSaveAll();csCloseModal();csUpdateStats();csRender();
+  csSaveAll(); csCloseModal(); csUpdateStats(); csRender();
 }
 function csEditFn(id){const c=csAll.find(x=>x.id===id);if(c)csOpenModal(c);}
-function csDel(id){if(!confirm('確定要刪除這個案例嗎？'))return;csAll=csAll.filter(x=>x.id!==id);csSaveAll();csUpdateStats();csRender();}
+function csDel(id){
+  if(!confirm('確定要刪除這個案例嗎？')) return;
+  csAll=csAll.filter(x=>x.id!==id);
+  csSaveAll(); csUpdateStats(); csRender();
+}
 document.getElementById('csMBg').addEventListener('click',function(e){if(e.target===this)csCloseModal();});
 csLoad();
 </script>
