@@ -481,11 +481,11 @@ footer{background:var(--g900);padding:28px 5%;display:flex;align-items:center;ju
     </div>
 
     <div class="eqr-cats">
-      <button class="eqr-cat on" onclick="eqrFilter('all',this)">全部</button>
-      <button class="eqr-cat" onclick="eqrFilter('service',this)">服務手冊</button>
-      <button class="eqr-cat" onclick="eqrFilter('parts',this)">零件目錄</button>
-      <button class="eqr-cat" onclick="eqrFilter('setup',this)">安裝設定</button>
-      <button class="eqr-cat" onclick="eqrFilter('other',this)">其他</button>
+      <button class="eqr-cat on" onclick="eqrFilterFn('all',this)">全部</button>
+      <button class="eqr-cat" onclick="eqrFilterFn('service',this)">服務手冊</button>
+      <button class="eqr-cat" onclick="eqrFilterFn('parts',this)">零件目錄</button>
+      <button class="eqr-cat" onclick="eqrFilterFn('setup',this)">安裝設定</button>
+      <button class="eqr-cat" onclick="eqrFilterFn('other',this)">其他</button>
     </div>
 
     <div id="eqrGrid" class="eqr-grid">
@@ -522,22 +522,18 @@ footer{background:var(--g900);padding:28px 5%;display:flex;align-items:center;ju
 </footer>
 
 <script>
-// ══════ 維修知識庫 ══════
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+// ══════ 維修知識庫（localStorage）══════
 let kbAll=[],kbFilter_='all',kbEditId=null,kbSearchQ='';
 const kbCatLabel={sc:'SC 代碼',part:'料號查詢',repair:'維修技巧',other:'其他'};
 const kbCatCls={sc:'kc-sc',part:'kc-part',repair:'kc-repair',other:'kc-other'};
 
-async function kbLoad(){
-  document.getElementById('kbCards').innerHTML='<div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--sub);font-size:13px">載入中...</div>';
-  try{
-    const r=await window.storage.list('case:');
-    const keys=r?r.keys:[];
-    kbAll=[];
-    for(const k of keys){try{const d=await window.storage.get(k,true);if(d)kbAll.push(JSON.parse(d.value));}catch(e){}}
-    kbAll.sort((a,b)=>b.ts-a.ts);
-  }catch(e){kbAll=[];}
-  kbUpdateStats();kbRender();
+function kbLoad(){
+  try{const raw=localStorage.getItem('ricoh_cases');kbAll=raw?JSON.parse(raw):[];}catch(e){kbAll=[];}
+  kbAll.sort((a,b)=>b.ts-a.ts);kbUpdateStats();kbRender();
 }
+function kbSaveAll(){localStorage.setItem('ricoh_cases',JSON.stringify(kbAll));}
 function kbUpdateStats(){
   document.getElementById('kbTot').textContent=kbAll.length;
   document.getElementById('kbSc').textContent=kbAll.filter(c=>c.cat==='sc').length;
@@ -554,7 +550,7 @@ function kbRender(){
   area.innerHTML=list.map(c=>`
     <div class="kb-card">
       <div class="kb-card-top">
-        <span class="kb-cat ${kbCatCls[c.cat]||'kc-other'}">${kbCatLabel[c.cat]||c.cat}</span>
+        <span class="kb-cat ${kbCatCls[c.cat]||'kc-other'}">${esc(kbCatLabel[c.cat]||c.cat)}</span>
         ${c.model?`<span class="kb-model">${esc(c.model)}</span>`:''}
       </div>
       <div class="kb-title">${esc(c.title)}</div>
@@ -562,7 +558,7 @@ function kbRender(){
       <div class="kb-foot">
         <div>
           <div class="kb-meta">${esc(c.author||'匿名')} · ${new Date(c.ts).toLocaleDateString('zh-TW')}</div>
-          <div class="kb-rating">⭐ ${c.rating||0} <span style="color:var(--g500);font-size:11px">(${c.rateCount||0}人評分)</span></div>
+          <div class="kb-rating">⭐ ${(c.rating||0).toFixed(1)} <span style="color:var(--g500);font-size:11px">(${c.rateCount||0}人評分)</span></div>
         </div>
         <div class="kb-acts">
           <button class="kb-btn" onclick="kbToggle('kbb_${c.id}',this)">展開</button>
@@ -585,47 +581,47 @@ function kbOpenModal(c){
   document.getElementById('kbModal').classList.add('show');
 }
 function kbCloseModal(){document.getElementById('kbModal').classList.remove('show');kbEditId=null;}
-async function kbSave(){
+function kbSave(){
   const t=document.getElementById('kbT').value.trim();
   const b=document.getElementById('kbB').value.trim();
   if(!t||!b){alert('請填寫標題和內容');return;}
-  const existing=kbEditId?kbAll.find(x=>x.id===kbEditId):{};
-  const c={id:kbEditId||'c'+Date.now(),title:t,body:b,cat:document.getElementById('kbC').value,model:document.getElementById('kbMd').value.trim(),author:document.getElementById('kbAu').value.trim(),ts:kbEditId?(existing.ts||Date.now()):Date.now(),rating:existing.rating||0,rateCount:existing.rateCount||0};
-  try{await window.storage.set('case:'+c.id,JSON.stringify(c),true);kbCloseModal();await kbLoad();}catch(e){alert('儲存失敗');}
+  if(kbEditId){
+    const idx=kbAll.findIndex(x=>x.id===kbEditId);
+    if(idx>-1)kbAll[idx]={...kbAll[idx],title:t,body:b,cat:document.getElementById('kbC').value,model:document.getElementById('kbMd').value.trim(),author:document.getElementById('kbAu').value.trim()};
+  }else{
+    kbAll.unshift({id:'c'+Date.now(),title:t,body:b,cat:document.getElementById('kbC').value,model:document.getElementById('kbMd').value.trim(),author:document.getElementById('kbAu').value.trim(),ts:Date.now(),rating:0,rateCount:0});
+  }
+  kbSaveAll();kbCloseModal();kbUpdateStats();kbRender();
 }
 function kbEditCase(id){const c=kbAll.find(x=>x.id===id);if(c)kbOpenModal(c);}
-async function kbDel(id){if(!confirm('確定要刪除？'))return;try{await window.storage.delete('case:'+id,true);await kbLoad();}catch(e){alert('刪除失敗');}}
-async function kbRate(id){
+function kbDel(id){if(!confirm('確定要刪除？'))return;kbAll=kbAll.filter(x=>x.id!==id);kbSaveAll();kbUpdateStats();kbRender();}
+function kbRate(id){
   const c=kbAll.find(x=>x.id===id);if(!c)return;
-  c.rating=Math.round(((c.rating||0)*(c.rateCount||0)+5)/((c.rateCount||0)+1)*10)/10;
-  c.rateCount=(c.rateCount||0)+1;
-  try{await window.storage.set('case:'+c.id,JSON.stringify(c),true);kbRender();}catch(e){}
+  const newCount=(c.rateCount||0)+1;
+  c.rating=Math.round(((c.rating||0)*(c.rateCount||0)+5)/newCount*10)/10;
+  c.rateCount=newCount;
+  kbSaveAll();kbRender();
 }
 document.getElementById('kbModal').addEventListener('click',function(e){if(e.target===this)kbCloseModal();});
 
-// ══════ 零件庫存 ══════
+// ══════ 零件庫存（localStorage）══════
 let invAll=[],invEditId=null;
-const invSampleData=[
-  {id:'inv1',pn:'AE01-1075',name:'定影器總成',model:'IMC-3000',qty:8,safe:3,note:'替代料號 AE01-2080',ts:Date.now()-86400000},
-  {id:'inv2',pn:'D039-2335',name:'感光鼓',model:'MPC-3003',qty:2,safe:5,note:'庫存偏低，需補貨',ts:Date.now()-172800000},
-  {id:'inv3',pn:'B2245510',name:'顯影劑',model:'通用',qty:0,safe:10,note:'已缺貨，待到貨',ts:Date.now()-259200000},
-  {id:'inv4',pn:'AE02-0187',name:'轉印帶',model:'IMC-5000',qty:15,safe:5,note:'',ts:Date.now()-345600000},
-  {id:'inv5',pn:'D1395510',name:'清潔刮刀',model:'MPC-5503',qty:6,safe:4,note:'',ts:Date.now()-432000000},
+const invSample=[
+  {id:'inv1',pn:'AE01-1075',name:'定影器總成',model:'IMC-3000',qty:8,safe:3,note:'替代料號 AE01-2080',ts:Date.now()-86400000*1},
+  {id:'inv2',pn:'D039-2335',name:'感光鼓',model:'MPC-3003',qty:2,safe:5,note:'庫存偏低，需補貨',ts:Date.now()-86400000*2},
+  {id:'inv3',pn:'B2245510',name:'顯影劑',model:'通用',qty:0,safe:10,note:'已缺貨，待到貨',ts:Date.now()-86400000*3},
+  {id:'inv4',pn:'AE02-0187',name:'轉印帶',model:'IMC-5000',qty:15,safe:5,note:'',ts:Date.now()-86400000*4},
+  {id:'inv5',pn:'D1395510',name:'清潔刮刀',model:'MPC-5503',qty:6,safe:4,note:'',ts:Date.now()-86400000*5},
 ];
-async function invLoad(){
+function invLoad(){
   try{
-    const r=await window.storage.list('inv:');
-    const keys=r?r.keys:[];
-    if(keys.length===0){
-      invAll=[...invSampleData];
-      for(const item of invAll)await window.storage.set('inv:'+item.id,JSON.stringify(item),true);
-    }else{
-      invAll=[];
-      for(const k of keys){try{const d=await window.storage.get(k,true);if(d)invAll.push(JSON.parse(d.value));}catch(e){}}
-    }
-  }catch(e){invAll=[...invSampleData];}
+    const raw=localStorage.getItem('ricoh_inventory');
+    if(raw){invAll=JSON.parse(raw);}
+    else{invAll=[...invSample];localStorage.setItem('ricoh_inventory',JSON.stringify(invAll));}
+  }catch(e){invAll=[...invSample];}
   invRender();
 }
+function invSaveAll(){localStorage.setItem('ricoh_inventory',JSON.stringify(invAll));}
 function invRender(){
   const q=(document.getElementById('invSearch').value||'').toLowerCase();
   const m=document.getElementById('invModel').value;
@@ -633,10 +629,7 @@ function invRender(){
   let list=invAll.filter(item=>{
     if(q&&!(item.pn+item.name+(item.model||'')+(item.note||'')).toLowerCase().includes(q))return false;
     if(m&&item.model!==m)return false;
-    if(s){
-      const st=item.qty===0?'out':item.qty<=item.safe?'low':'ok';
-      if(st!==s)return false;
-    }
+    if(s){const st=item.qty===0?'out':item.qty<=(item.safe||0)?'low':'ok';if(st!==s)return false;}
     return true;
   });
   const tbody=document.getElementById('invBody');
@@ -646,8 +639,7 @@ function invRender(){
     const stLabel={ok:'庫存充足',low:'庫存偏低',out:'缺貨'}[st];
     return `<tr>
       <td><span class="inv-part-no">${esc(item.pn)}</span></td>
-      <td><strong>${esc(item.name)}</strong>${item.note?`<br><span style="font-size:11px;color:var(--sub)">${esc(item.note)}</span>`:''}
-      </td>
+      <td><strong>${esc(item.name)}</strong>${item.note?`<br><span style="font-size:11px;color:var(--sub)">${esc(item.note)}</span>`:''}</td>
       <td>${esc(item.model||'—')}</td>
       <td style="font-weight:700;font-size:15px">${item.qty}</td>
       <td><span class="inv-stock ${st}">${stLabel}</span></td>
@@ -665,22 +657,24 @@ function invOpenModal(item){
   document.getElementById('invPN').value=item?item.pn:'';
   document.getElementById('invName').value=item?item.name:'';
   document.getElementById('invMdl').value=item?item.model||'':'';
-  document.getElementById('invQty').value=item?item.qty:'';
+  document.getElementById('invQty').value=item!=null?item.qty:'';
   document.getElementById('invSafe').value=item?item.safe||'':'';
   document.getElementById('invNote').value=item?item.note||'':'';
   document.getElementById('invModal').classList.add('show');
 }
 function invCloseModal(){document.getElementById('invModal').classList.remove('show');invEditId=null;}
-async function invSave(){
+function invSave(){
   const pn=document.getElementById('invPN').value.trim();
   const name=document.getElementById('invName').value.trim();
   const qty=parseInt(document.getElementById('invQty').value)||0;
   if(!pn||!name){alert('請填寫料號和零件名稱');return;}
   const item={id:invEditId||'inv'+Date.now(),pn,name,model:document.getElementById('invMdl').value.trim(),qty,safe:parseInt(document.getElementById('invSafe').value)||0,note:document.getElementById('invNote').value.trim(),ts:Date.now()};
-  try{await window.storage.set('inv:'+item.id,JSON.stringify(item),true);invCloseModal();await invLoad();}catch(e){alert('儲存失敗');}
+  if(invEditId){const idx=invAll.findIndex(x=>x.id===invEditId);if(idx>-1)invAll[idx]=item;}
+  else invAll.unshift(item);
+  invSaveAll();invCloseModal();invRender();
 }
 function invEdit(id){const item=invAll.find(x=>x.id===id);if(item)invOpenModal(item);}
-async function invDel(id){if(!confirm('確定要刪除？'))return;try{await window.storage.delete('inv:'+id,true);await invLoad();}catch(e){alert('刪除失敗');}}
+function invDel(id){if(!confirm('確定要刪除？'))return;invAll=invAll.filter(x=>x.id!==id);invSaveAll();invRender();}
 document.getElementById('invModal').addEventListener('click',function(e){if(e.target===this)invCloseModal();});
 
 // ══════ 遠端支援 ══════
@@ -688,7 +682,7 @@ const guideData=[
   {title:'步驟 1：確認錯誤代碼',items:['請客戶讀出機台顯示的 SC 代碼','記錄代碼後 3-5 碼（如：SC-301、SC-542）','確認機型型號（IMC/MPC 系列）','詢問問題何時開始出現']},
   {title:'步驟 2：判斷故障分類',items:['A 級（低風險）：紙張卡紙、碳粉不足 → 引導客戶自行處理','B 級（中風險）：影像品質問題、SC 代碼 → 安排工程師到場','C 級（高風險）：冒煙、異味、無法開機 → 立即停機並緊急派工','記錄故障分類後，決定後續處理方式']},
   {title:'步驟 3：執行排除步驟',items:['A 級：提供 SOP 引導客戶自行排除（參考 EQR 手冊）','B 級：使用 AI 查詢 SC 代碼，確認備料清單後出發','C 級：立即通知主管，填寫緊急派工單，攜帶完整備料','執行過程中記錄關鍵資訊']},
-  {title:'步驟 4：確認排除結果',items:['確認問題已排除，機台恢復正常運作','請客戶確認並簽署服務報告','將此次案例記錄至維修知識庫（按上方「維修知識庫」）','更新零件庫存數量（若有更換零件）']},
+  {title:'步驟 4：確認排除結果',items:['確認問題已排除，機台恢復正常運作','請客戶確認並簽署服務報告','將此次案例記錄至維修知識庫','更新零件庫存數量（若有更換零件）']},
 ];
 let guideStep=0;
 function guideShow(idx,el){
@@ -708,28 +702,23 @@ function copyMeetLink(){
   navigator.clipboard.writeText(link).then(()=>alert('連結已複製！')).catch(()=>alert('請手動複製連結'));
 }
 
-// ══════ EQR 手冊 ══════
+// ══════ EQR 手冊（localStorage）══════
 let eqrAll=[],eqrFilter_='all',eqrEditId=null;
 const eqrCatLabel={service:'服務手冊',parts:'零件目錄',setup:'安裝設定',other:'其他'};
 const eqrSample=[
-  {id:'eqr1',title:'IMC-3000 服務手冊',cat:'service',model:'IMC-3000',url:'https://drive.google.com/file/d/sample1',ver:'v2.1',desc:'包含完整的 SC 代碼說明、零件更換程序與調整方法。',ts:Date.now()-86400000*10},
-  {id:'eqr2',title:'MPC-3003/5503 零件目錄',cat:'parts',model:'MPC-3003、MPC-5503',url:'https://drive.google.com/file/d/sample2',ver:'2025-01',desc:'完整零件料號清單，含替代料號對照表。',ts:Date.now()-86400000*20},
+  {id:'eqr1',title:'IMC-3000 服務手冊',cat:'service',model:'IMC-3000',url:'https://drive.google.com/file/d/PASTE_YOUR_FILE_ID_HERE/view',ver:'v2.1',desc:'包含完整的 SC 代碼說明、零件更換程序與調整方法。',ts:Date.now()-86400000*10},
+  {id:'eqr2',title:'MPC-3003/5503 零件目錄',cat:'parts',model:'MPC-3003、MPC-5503',url:'https://drive.google.com/file/d/PASTE_YOUR_FILE_ID_HERE/view',ver:'2025-01',desc:'完整零件料號清單，含替代料號對照表。',ts:Date.now()-86400000*20},
 ];
-async function eqrLoad(){
+function eqrLoad(){
   try{
-    const r=await window.storage.list('eqr:');
-    const keys=r?r.keys:[];
-    if(keys.length===0){
-      eqrAll=[...eqrSample];
-      for(const item of eqrAll)await window.storage.set('eqr:'+item.id,JSON.stringify(item),true);
-    }else{
-      eqrAll=[];
-      for(const k of keys){try{const d=await window.storage.get(k,true);if(d)eqrAll.push(JSON.parse(d.value));}catch(e){}}
-    }
+    const raw=localStorage.getItem('ricoh_eqr');
+    if(raw){eqrAll=JSON.parse(raw);}
+    else{eqrAll=[...eqrSample];localStorage.setItem('ricoh_eqr',JSON.stringify(eqrAll));}
   }catch(e){eqrAll=[...eqrSample];}
   eqrRender();
 }
-function eqrFilter(cat,btn){eqrFilter_=cat;document.querySelectorAll('.eqr-cat').forEach(b=>b.classList.remove('on'));btn.classList.add('on');eqrRender();}
+function eqrSaveAll(){localStorage.setItem('ricoh_eqr',JSON.stringify(eqrAll));}
+function eqrFilterFn(cat,btn){eqrFilter_=cat;document.querySelectorAll('.eqr-cat').forEach(b=>b.classList.remove('on'));btn.classList.add('on');eqrRender();}
 function eqrRender(){
   const q=(document.getElementById('eqrSearchInput').value||'').toLowerCase();
   let list=eqrFilter_==='all'?eqrAll:eqrAll.filter(e=>e.cat===eqrFilter_);
@@ -741,7 +730,7 @@ function eqrRender(){
       <div class="eqr-card-top">
         <div class="eqr-file-icon">PDF</div>
         <div class="eqr-info">
-          <div class="eqr-cat-tag">${eqrCatLabel[e.cat]||e.cat}</div>
+          <div class="eqr-cat-tag">${esc(eqrCatLabel[e.cat]||e.cat)}</div>
           <div class="eqr-title">${esc(e.title)}</div>
         </div>
       </div>
@@ -753,7 +742,7 @@ function eqrRender(){
       </div>
       <div class="eqr-actions">
         <a href="${e.url}" target="_blank" class="eqr-btn-view">📄 開啟 PDF</a>
-        <button class="eqr-btn-del" onclick="eqrEdit('${e.id}')">✏️</button>
+        <button class="eqr-btn-del" onclick="eqrOpenModal(eqrAll.find(x=>x.id==='${e.id}'))" style="background:#EFF6FF;color:#1E40AF;border:1px solid #BFDBFE">✏️</button>
         <button class="eqr-btn-del" onclick="eqrDel('${e.id}')">🗑️</button>
       </div>
     </div>`).join('');
@@ -770,19 +759,26 @@ function eqrOpenModal(e){
   document.getElementById('eqrModal').classList.add('show');
 }
 function eqrCloseModal(){document.getElementById('eqrModal').classList.remove('show');eqrEditId=null;}
-async function eqrSave(){
+function eqrSave(){
   const t=document.getElementById('eqrT').value.trim();
   const url=document.getElementById('eqrUrl').value.trim();
   if(!t||!url){alert('請填寫手冊名稱和連結');return;}
-  const item={id:eqrEditId||'eqr'+Date.now(),title:t,cat:document.getElementById('eqrCat').value,model:document.getElementById('eqrMd').value.trim(),url,ver:document.getElementById('eqrVer').value.trim(),desc:document.getElementById('eqrDesc').value.trim(),ts:eqrEditId?(eqrAll.find(x=>x.id===eqrEditId)||{}).ts||Date.now():Date.now()};
-  try{await window.storage.set('eqr:'+item.id,JSON.stringify(item),true);eqrCloseModal();await eqrLoad();}catch(e){alert('儲存失敗');}
+  const item={
+    id:eqrEditId||'eqr'+Date.now(),
+    title:t,cat:document.getElementById('eqrCat').value,
+    model:document.getElementById('eqrMd').value.trim(),
+    url,ver:document.getElementById('eqrVer').value.trim(),
+    desc:document.getElementById('eqrDesc').value.trim(),
+    ts:eqrEditId?(eqrAll.find(x=>x.id===eqrEditId)||{}).ts||Date.now():Date.now()
+  };
+  if(eqrEditId){const idx=eqrAll.findIndex(x=>x.id===eqrEditId);if(idx>-1)eqrAll[idx]=item;}
+  else eqrAll.unshift(item);
+  eqrSaveAll();eqrCloseModal();eqrRender();
 }
-function eqrEdit(id){const e=eqrAll.find(x=>x.id===id);if(e)eqrOpenModal(e);}
-async function eqrDel(id){if(!confirm('確定要刪除？'))return;try{await window.storage.delete('eqr:'+id,true);await eqrLoad();}catch(e){alert('刪除失敗');}}
+function eqrDel(id){if(!confirm('確定要刪除？'))return;eqrAll=eqrAll.filter(x=>x.id!==id);eqrSaveAll();eqrRender();}
 document.getElementById('eqrModal').addEventListener('click',function(e){if(e.target===this)eqrCloseModal();});
 
-// ══════ 共用 ══════
-function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
 
 // 初始化
 kbLoad();
