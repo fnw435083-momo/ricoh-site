@@ -128,7 +128,10 @@ section{padding:64px 5%}
 .cinput:focus{border-color:var(--red)}
 .csend{background:var(--red);color:#fff;border:none;border-radius:50%;width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px;transition:.2s;flex-shrink:0}
 .csend:hover{background:var(--red-dark)}
-.chat-note{text-align:center;font-size:11.5px;color:var(--g500);padding:8px;background:var(--off);border-top:1px solid var(--border)}
+.msg.ai .av{background:#7C3AED;color:#fff}
+.ai-bub{background:#F5F3FF!important;border:1px solid #DDD6FE!important;color:#4C1D95!important;border-radius:0 10px 10px 10px!important}
+.msg.ai{flex-direction:row}
+
 
 /* FEATURES */
 .fg{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--border);border-radius:8px;overflow:hidden}
@@ -165,23 +168,23 @@ section{padding:64px 5%}
 .db{background:#D4A017}.da{background:var(--red)}
 
 /* KPI */
-#kpi{background:var(--red)}
-#kpi .elb{color:rgba(255,255,255,.65)}
-#kpi .el{background:rgba(255,255,255,.4)}
-#kpi .stit{color:#fff}
-#kpi .sdesc{color:rgba(255,255,255,.65)}
-.knums{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,.15);border-radius:8px;overflow:hidden;margin-bottom:20px}
-.kcard{background:rgba(0,0,0,.15);padding:22px 18px;text-align:center;transition:.2s}
-.kcard:hover{background:rgba(0,0,0,.22)}
-.kbig{font-size:32px;font-weight:900;color:#fff;line-height:1;margin-bottom:4px}
-.kunit{font-size:17px}
-.kdesc{font-size:12px;color:rgba(255,255,255,.65);line-height:1.45}
-.klists{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.klist{background:rgba(0,0,0,.16);border-radius:8px;padding:20px 18px;border:1px solid rgba(255,255,255,.1)}
-.klh{font-size:13px;font-weight:700;color:#fff;margin-bottom:11px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,.12)}
-.klul{list-style:none;display:flex;flex-direction:column;gap:7px}
-.klul li{display:flex;align-items:flex-start;gap:7px;font-size:13px;color:rgba(255,255,255,.72);line-height:1.45}
-.kd{width:4px;height:4px;background:rgba(255,255,255,.5);border-radius:50%;flex-shrink:0;margin-top:6px}
+#kpi{background:var(--off)}
+#kpi .elb{color:var(--red)}
+#kpi .el{background:var(--red)}
+#kpi .stit{color:var(--g900)}
+#kpi .sdesc{color:var(--sub)}
+.knums{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}
+.kcard{background:#fff;border:1px solid var(--border);border-radius:10px;padding:28px 20px;text-align:center;transition:.2s;border-top:4px solid var(--red)}
+.kcard:hover{box-shadow:0 4px 20px rgba(0,0,0,.08);transform:translateY(-2px)}
+.kbig{font-size:40px;font-weight:900;color:var(--red);line-height:1;margin-bottom:6px}
+.kunit{font-size:22px}
+.kdesc{font-size:13px;color:var(--sub);line-height:1.45}
+.klists{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.klist{background:#fff;border-radius:10px;padding:24px 22px;border:1px solid var(--border)}
+.klh{font-size:14px;font-weight:700;color:var(--g900);margin-bottom:14px;padding-bottom:12px;border-bottom:2px solid var(--red)}
+.klul{list-style:none;display:flex;flex-direction:column;gap:9px}
+.klul li{display:flex;align-items:flex-start;gap:9px;font-size:13.5px;color:var(--sub);line-height:1.5}
+.kd{width:6px;height:6px;background:var(--red);border-radius:50%;flex-shrink:0;margin-top:6px}
 
 /* CASE SHARING */
 .cs-fbtn{padding:5px 12px;border-radius:4px;border:1px solid var(--border);background:#fff;color:var(--sub);font-size:12px;cursor:pointer;transition:.15s;font-family:inherit}
@@ -377,33 +380,31 @@ footer{background:var(--g900);color:rgba(255,255,255,.5);font-size:13px}
 <section id="chatroom">
   <div class="si">
     <div class="ey"><div class="el"></div><span class="elb">新功能</span></div>
-    <h2 class="stit">工程師即時聊天室</h2>
-    <p class="sdesc">工程師之間即時交流，分享現場經驗與解決方案。</p>
+    <h2 class="stit">工程師即時聊天室 × AI 助理</h2>
+    <p class="sdesc">輸入問題，AI 助理即時回答；也可以與同事交流分享現場經驗。輸入 <strong>@AI</strong> 開頭讓 AI 回覆。</p>
     <div class="chat-wrap">
       <div class="chat-head">
         <div class="cdot"></div>
-        <div><div class="cht">工程師支援聊天室</div><div class="chs">線上：3 位工程師</div></div>
+        <div style="flex:1"><div class="cht">工程師支援聊天室</div><div class="chs">AI 助理上線中 · 輸入 @AI 問題 呼叫助理</div></div>
+        <div style="background:rgba(255,255,255,.1);border-radius:4px;padding:4px 10px;font-size:11px;color:rgba(255,255,255,.7)">🤖 AI 已連線</div>
       </div>
       <div class="chat-msgs" id="chatMsgs">
-        <div class="msg sys"><div class="bub">聊天室已開啟 · 歡迎使用</div></div>
+        <div class="msg sys"><div class="bub">聊天室已開啟 · 輸入 @AI 問題 可呼叫 AI 助理</div></div>
         <div class="msg other">
           <div class="av">王</div>
           <div><div class="bub">大家好，IMC-3000 出現 SC-301 有人遇過嗎？</div><div class="mt">09:42</div></div>
         </div>
-        <div class="msg me">
-          <div class="av">我</div>
-          <div><div class="bub">有，通常是定影器溫度感測器問題，先確認接線有沒有鬆掉</div><div class="mt">09:44</div></div>
-        </div>
-        <div class="msg other">
-          <div class="av">李</div>
-          <div><div class="bub">同意，先用 AI 查一下 SC-301 的完整說明再去備料比較穩</div><div class="mt">09:45</div></div>
+        <div class="msg ai">
+          <div class="av ai-av">AI</div>
+          <div><div class="bub ai-bub">SC-301 通常是定影器溫度感測器異常。建議先確認感測器接線是否鬆脫，再以三用電表量測阻值。如需更換，請查詢料號 AE01-1075。</div><div class="mt">09:43</div></div>
         </div>
       </div>
+      <div id="aiTyping" style="display:none;padding:8px 16px;font-size:12px;color:var(--sub)">🤖 AI 正在輸入...</div>
       <div class="chat-in">
-        <input class="cinput" id="chatInput" placeholder="輸入訊息，按 Enter 送出..." onkeydown="sendMsg(event)">
+        <input class="cinput" id="chatInput" placeholder="輸入訊息（@AI 問題 呼叫 AI 助理）按 Enter 送出..." onkeydown="sendMsg(event)">
         <button class="csend" onclick="sendMsgBtn()">➤</button>
       </div>
-      <div class="chat-note">⚠️ 此為展示版聊天室，正式版將串接即時通訊服務</div>
+      <div class="chat-note" style="background:#EFF6FF;border-top:1px solid #BFDBFE;color:#1E40AF">🤖 輸入 <strong>@AI [你的問題]</strong> 即可讓 AI 助理回答 SC 代碼、料號等問題</div>
     </div>
   </div>
 </section>
@@ -582,60 +583,71 @@ function switchTab(id,btn){
   document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
   btn.classList.add('on');
 }
+
+// ── 聊天室 + AI ──
 const msgs=document.getElementById('chatMsgs');
-const input=document.getElementById('chatInput');
-function sendMsg(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsgBtn();}}
-function sendMsgBtn(){
-  const text=input.value.trim();if(!text)return;
-  const now=new Date();
-  const time=now.getHours()+':'+String(now.getMinutes()).padStart(2,'0');
-  const d=document.createElement('div');
-  d.className='msg me';
-  d.innerHTML=`<div class="av">我</div><div><div class="bub">${text}</div><div class="mt">${time}</div></div>`;
-  msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;input.value='';
-  setTimeout(()=>{
-    const rs=['收到！我等一下確認看看','建議先用 AI 查詢 SC 代碼，比較快','好的，我查一下料號給你','這個問題之前有遇過，要我分享解法嗎？'];
-    const ns=['王','李','陳'];
-    const r=document.createElement('div');
-    r.className='msg other';
-    r.innerHTML=`<div class="av">${ns[Math.floor(Math.random()*ns.length)]}</div><div><div class="bub">${rs[Math.floor(Math.random()*rs.length)]}</div><div class="mt">${time}</div></div>`;
-    msgs.appendChild(r);msgs.scrollTop=msgs.scrollHeight;
-  },1500);
+const chatInp=document.getElementById('chatInput');
+function getTime(){const n=new Date();return n.getHours()+':'+String(n.getMinutes()).padStart(2,'0');}
+function appendMsg(cls,avText,avCls,bubText,bubCls){
+  const d=document.createElement('div');d.className='msg '+cls;
+  d.innerHTML=`<div class="av ${avCls||''}">${avText}</div><div><div class="bub ${bubCls||''}">${bubText}</div><div class="mt">${getTime()}</div></div>`;
+  msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;
 }
-// ── 案例分享 ──
-let csAll=[], csCurFilter='all', csEditId=null;
+function sendMsg(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsgBtn();}}
+async function sendMsgBtn(){
+  const text=chatInp.value.trim();if(!text)return;
+  chatInp.value='';
+  appendMsg('me','我','','text','');
+  // Fix: use actual text not string 'text'
+  msgs.lastChild.querySelector('.bub').textContent=text;
+  if(text.toLowerCase().startsWith('@ai')){
+    const q=text.replace(/^@[Aa][Ii]\s*/,'');
+    document.getElementById('aiTyping').style.display='block';
+    try{
+      const res=await fetch('https://api.anthropic.com/v1/messages',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          model:'claude-sonnet-4-20250514',max_tokens:600,
+          system:'你是理光（Ricoh）印表機工程師的 AI 助理。專門回答 SC 錯誤代碼、零件料號、維修技巧等問題。用繁體中文簡潔回答，如有料號請列出，條列式呈現重點。',
+          messages:[{role:'user',content:q}]
+        })
+      });
+      const data=await res.json();
+      document.getElementById('aiTyping').style.display='none';
+      const reply=(data.content||[]).map(i=>i.text||'').join('') || '抱歉，AI 暫時無法回應。';
+      appendMsg('ai','AI','ai-av',reply.replace(/
+/g,'<br>'),'ai-bub');
+    }catch(e){
+      document.getElementById('aiTyping').style.display='none';
+      appendMsg('ai','AI','ai-av','AI 暫時無法連線，請稍後再試。','ai-bub');
+    }
+  }
+}
+
+// ── 案例分享（localStorage）──
+let csAll=[],csCurFilter='all',csEditId=null;
 const csCatLabel={sc:'SC 代碼',part:'料號查詢',repair:'維修技巧',other:'其他'};
 const csCatCls={sc:'cs-sc',part:'cs-part',repair:'cs-repair',other:'cs-other'};
-
-async function csLoad(){
-  document.getElementById('csCards').innerHTML='<div style="text-align:center;padding:2rem;color:#888;font-size:13px;grid-column:1/-1">載入中...</div>';
-  try{
-    const r=await window.storage.list('case:');
-    const keys=r?r.keys:[];
-    csAll=[];
-    for(const k of keys){
-      try{const d=await window.storage.get(k,true);if(d)csAll.push(JSON.parse(d.value));}catch(e){}
-    }
-    csAll.sort((a,b)=>b.ts-a.ts);
-  }catch(e){csAll=[];}
-  csUpdateStats();csRender();
+function csLoad(){
+  try{const raw=localStorage.getItem('ricoh_cases');csAll=raw?JSON.parse(raw):[];}catch(e){csAll=[];}
+  csAll.sort((a,b)=>b.ts-a.ts);csUpdateStats();csRender();
 }
-
+function csSaveAll(){localStorage.setItem('ricoh_cases',JSON.stringify(csAll));}
 function csUpdateStats(){
   document.getElementById('csTot').textContent=csAll.length;
   document.getElementById('csSc').textContent=csAll.filter(c=>c.cat==='sc').length;
   document.getElementById('csPart').textContent=csAll.filter(c=>c.cat==='part').length;
   document.getElementById('csRep').textContent=csAll.filter(c=>c.cat==='repair').length;
 }
-
 function csRender(){
   const list=csCurFilter==='all'?csAll:csAll.filter(c=>c.cat===csCurFilter);
   const area=document.getElementById('csCards');
   if(!list.length){area.innerHTML='<div style="text-align:center;padding:3rem;color:#888;font-size:13px;grid-column:1/-1">目前沒有案例，點「新增案例」開始分享！</div>';return;}
   area.innerHTML=list.map(c=>`
     <div class="cs-card">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:2px;gap:8px">
-        <span class="cs-cat ${csCatCls[c.cat]||'cs-other'}">${csCatLabel[c.cat]||c.cat}</span>
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px;gap:8px">
+        <span class="cs-cat ${csCatCls[c.cat]||'cs-other'}">${csEsc(csCatLabel[c.cat]||c.cat)}</span>
         ${c.model?`<span style="font-size:11px;color:#666;background:#f2f2f2;padding:2px 7px;border-radius:3px">${csEsc(c.model)}</span>`:''}
       </div>
       <div class="cs-title">${csEsc(c.title)}</div>
@@ -644,13 +656,12 @@ function csRender(){
         <span>${csEsc(c.author||'匿名')} · ${new Date(c.ts).toLocaleDateString('zh-TW')}</span>
         <div class="cs-acts">
           <button class="cs-btn-sm" onclick="csToggle('csb_${c.id}',this)">展開</button>
-          <button class="cs-btn-sm" onclick="csEdit('${c.id}')">編輯</button>
+          <button class="cs-btn-sm" onclick="csEditFn('${c.id}')">編輯</button>
           <button class="cs-btn-del" onclick="csDel('${c.id}')">刪除</button>
         </div>
       </div>
     </div>`).join('');
 }
-
 function csEsc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function csToggle(id,btn){const el=document.getElementById(id);if(el.classList.toggle('open'))btn.textContent='收起';else btn.textContent='展開';}
 function csFilter(cat,btn){csCurFilter=cat;document.querySelectorAll('.cs-fbtn').forEach(b=>b.classList.remove('on'));btn.classList.add('on');csRender();}
@@ -665,15 +676,20 @@ function csOpenModal(c){
   document.getElementById('csMBg').style.display='flex';
 }
 function csCloseModal(){document.getElementById('csMBg').style.display='none';csEditId=null;}
-async function csSave(){
+function csSave(){
   const t=document.getElementById('csT').value.trim();
   const b=document.getElementById('csB').value.trim();
   if(!t||!b){alert('請填寫標題和內容');return;}
-  const c={id:csEditId||'c'+Date.now(),title:t,body:b,cat:document.getElementById('csC').value,model:document.getElementById('csM').value.trim(),author:document.getElementById('csA').value.trim(),ts:csEditId?(csAll.find(x=>x.id===csEditId)||{}).ts||Date.now():Date.now()};
-  try{await window.storage.set('case:'+c.id,JSON.stringify(c),true);csCloseModal();await csLoad();}catch(e){alert('儲存失敗，請再試一次');}
+  if(csEditId){
+    const idx=csAll.findIndex(x=>x.id===csEditId);
+    if(idx>-1)csAll[idx]={...csAll[idx],title:t,body:b,cat:document.getElementById('csC').value,model:document.getElementById('csM').value.trim(),author:document.getElementById('csA').value.trim()};
+  }else{
+    csAll.unshift({id:'c'+Date.now(),title:t,body:b,cat:document.getElementById('csC').value,model:document.getElementById('csM').value.trim(),author:document.getElementById('csA').value.trim(),ts:Date.now()});
+  }
+  csSaveAll();csCloseModal();csUpdateStats();csRender();
 }
-function csEdit(id){const c=csAll.find(x=>x.id===id);if(c)csOpenModal(c);}
-async function csDel(id){if(!confirm('確定要刪除這個案例嗎？'))return;try{await window.storage.delete('case:'+id,true);await csLoad();}catch(e){alert('刪除失敗');}}
+function csEditFn(id){const c=csAll.find(x=>x.id===id);if(c)csOpenModal(c);}
+function csDel(id){if(!confirm('確定要刪除這個案例嗎？'))return;csAll=csAll.filter(x=>x.id!==id);csSaveAll();csUpdateStats();csRender();}
 document.getElementById('csMBg').addEventListener('click',function(e){if(e.target===this)csCloseModal();});
 csLoad();
 </script>
