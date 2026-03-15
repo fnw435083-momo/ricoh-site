@@ -115,7 +115,7 @@ section{padding:64px 5%}
 .chat-dept-select{border:1px solid var(--border);border-radius:6px;padding:10px 12px;font-size:13px;font-family:inherit;outline:none;background:#fff;color:var(--text)}
 .chat-join-btn{background:var(--red);color:#fff;border:none;padding:11px 24px;border-radius:6px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;transition:.2s;width:100%}
 .chat-join-btn:hover{background:var(--red-dark)}
-.chat-wrap{background:#fff;border:1px solid var(--border);border-radius:10px;overflow:hidden;display:none}
+.chat-wrap{background:#fff;border:1px solid var(--border);border-radius:10px;overflow:hidden;display:none;flex-direction:column}
 .chat-head{background:var(--g900);padding:14px 20px;display:flex;align-items:center;gap:12px}
 .cdot{width:10px;height:10px;border-radius:50%;background:#2ECC71;animation:pulse 2s infinite;flex-shrink:0}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
@@ -665,7 +665,7 @@ function chatJoin(){
   localStorage.setItem('ricoh_chat_name',n);
   localStorage.setItem('ricoh_chat_dept',dept);
   document.getElementById('chatLogin').style.display='none';
-  document.getElementById('chatWrap').style.display='block';
+  document.getElementById('chatWrap').style.display='flex';
   document.getElementById('myTag').textContent='👤 '+n+' · '+dept;
   document.getElementById('chatSubtitle').textContent='已登入：'+n+' · '+dept+' · @AI 呼叫助理';
   const msgs=document.getElementById('chatMsgs');
