@@ -395,3 +395,512 @@ footer{background:var(--g900);color:rgba(255,255,255,.5);font-size:13px}
           <div style="flex:1">
             <div class="cht">工程師支援聊天室</div>
             <div class="chs" id="chatSubtitle">連線中...</div>
+          </div>
+          <div class="chat-user-tag" id="onlineCount" style="background:rgba(46,204,113,.2);color:#2ECC71;border:1px solid rgba(46,204,113,.3)">👥 0 人在線</div>
+          <div class="chat-user-tag" id="myTag" style="margin-left:8px">👤 未登入</div>
+          <button onclick="chatLogout()" style="background:rgba(255,255,255,.1);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.2);padding:4px 10px;border-radius:4px;font-size:11px;cursor:pointer;margin-left:8px;font-family:inherit">離開</button>
+        </div>
+        <div class="chat-msgs" id="chatMsgs"></div>
+        <div id="aiTyping" style="display:none;padding:6px 16px;font-size:12px;color:#6D28D9;background:#F5F3FF;border-top:1px solid #EDE9FE">🤖 AI 正在回答...</div>
+        <div class="chat-toolbar">
+          <span style="font-size:11.5px;color:var(--sub);white-space:nowrap">呼叫 AI：</span>
+          <div class="ai-sel-btns">
+            <button class="ai-sel-btn claude active-claude" id="btnClaude" onclick="selectAI('claude')">🟣 Claude（直接回答）</button>
+            <button class="ai-sel-btn gpt" id="btnGPT" onclick="selectAI('gpt')">🟢 我的 GPT（開新視窗）</button>
+          </div>
+        </div>
+        <div class="chat-in">
+          <input class="cinput" id="chatInput" placeholder="輸入訊息（@AI 問題 呼叫 AI）按 Enter 送出..." onkeydown="sendMsg(event)">
+          <button class="csend" onclick="sendMsgBtn()">➤</button>
+        </div>
+        <div class="chat-note">🤖 輸入 <strong>@AI [問題]</strong> 呼叫 AI · 上方可切換 Claude 或你的 GPT · 訊息即時同步給所有人</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="features" style="background:var(--off)">
+  <div class="si">
+    <div class="ey"><div class="el"></div><span class="elb">四大核心功能</span></div>
+    <h2 class="stit">建立四大核心功能</h2>
+    <p class="sdesc">整合客戶端服務與工程師端知識查詢，涵蓋完整數位化流程。</p>
+    <div class="fg">
+      <div class="fc"><div class="fn"><span class="fb">1</span>功能一</div><div class="ft">客戶智慧報修</div><div class="fd">AI 先行排除問題，符合條件才導向報修表單，降低無效派工。</div><div class="ftags"><span class="ftag">AI 分流</span><span class="ftag">標準工單</span></div></div>
+      <div class="fc"><div class="fn"><span class="fb">2</span>功能二</div><div class="ft">客戶耗材申請</div><div class="fd">標準化填寫顏色與數量，自動寫入試算表，降低寄錯料風險。</div><div class="ftags"><span class="ftag">線上申請</span><span class="ftag">自動資料庫</span></div></div>
+      <div class="fc"><div class="fn"><span class="fb">3</span>功能三</div><div class="ft">SC 代碼查詢</div><div class="fd">輸入機型與代碼，即時提供意義、分類與判斷條件，取代手冊。</div><div class="ftags"><span class="ftag">即時查詢</span><span class="ftag">備料建議</span></div></div>
+      <div class="fc"><div class="fn"><span class="fb">4</span>功能四</div><div class="ft">料號標準化查詢</div><div class="fd">統一主料號與替代料號，標準化命名，標示版本限制。</div><div class="ftags"><span class="ftag">料號標準化</span><span class="ftag">版本管理</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="comparison">
+  <div class="si">
+    <div class="ey"><div class="el"></div><span class="elb">現行 vs 未來</span></div>
+    <h2 class="stit">流程優化比較</h2>
+    <p class="sdesc">從電話排隊到 AI 分流，從手動查詢到系統自動化。</p>
+    <div class="tabs">
+      <button class="tab on" onclick="switchTab('c',this)">📋 客戶端流程</button>
+      <button class="tab" onclick="switchTab('e',this)">🔧 工程師端流程</button>
+    </div>
+    <div id="tc"><table class="ctable"><thead><tr><th></th><th class="cb">現行做法</th><th class="ca">未來做法</th></tr></thead><tbody><tr><td>設備報修</td><td><div class="sl"><div class="sr"><span class="dot db"></span>客戶電話叫修 → 等待接通</div><div class="sr"><span class="dot db"></span>客服反應 → 簡易排除 → 派工</div></div></td><td><div class="sl"><div class="sr"><span class="dot da"></span><strong>AI 簡易排除</strong> → 報修表單</div><div class="sr"><span class="dot da"></span>客服核對 → <strong>自動派工</strong></div></div></td></tr><tr><td>耗材申請</td><td><div class="sl"><div class="sr"><span class="dot db"></span>電話申請 → 等待接通</div><div class="sr"><span class="dot db"></span>客服核對 SIS → 出貨</div></div></td><td><div class="sl"><div class="sr"><span class="dot da"></span><strong>線上表單申請</strong></div><div class="sr"><span class="dot da"></span><strong>自動核對</strong> → 出貨</div></div></td></tr></tbody></table></div>
+    <div id="te" style="display:none"><table class="ctable"><thead><tr><th></th><th class="cb">現行做法</th><th class="ca">未來做法</th></tr></thead><tbody><tr><td>SC 代碼</td><td><div class="sl"><div class="sr"><span class="dot db"></span>查 SC 代碼 → 翻閱手冊</div><div class="sr"><span class="dot db"></span>人工判讀分類</div></div></td><td><div class="sl"><div class="sr"><span class="dot da"></span>輸入機型 + SC 代碼</div><div class="sr"><span class="dot da"></span><strong>系統顯示意義、分類、判斷模型</strong></div></div></td></tr><tr><td>料號查詢</td><td><div class="sl"><div class="sr"><span class="dot db"></span>查料號 → 翻閱手冊</div><div class="sr"><span class="dot db"></span>人工核對版本</div></div></td><td><div class="sl"><div class="sr"><span class="dot da"></span><strong>系統標準化輸出</strong></div><div class="sr"><span class="dot da"></span>主料號 + 替代料號一覽</div></div></td></tr></tbody></table></div>
+  </div>
+</section>
+
+<section id="kpi">
+  <div class="si">
+    <div class="ey"><div class="el"></div><span class="elb">預期效益</span></div>
+    <h2 class="stit">效益（預估）</h2>
+    <p class="sdesc">系統導入後預計達成的關鍵績效指標。</p>
+    <div class="knums">
+      <div class="kcard"><div class="kbig">30<span class="kunit">%</span></div><div class="kdesc">降低基礎客服電話量</div></div>
+      <div class="kcard"><div class="kbig">↑</div><div class="kdesc">提升客戶即時回應效率</div></div>
+      <div class="kcard"><div class="kbig">↓</div><div class="kdesc">縮短排錯與派工時間</div></div>
+    </div>
+    <div class="klists">
+      <div class="klist"><div class="klh">👥 客戶服務效率提升</div><ul class="klul"><li><span class="kd"></span>降低 30% 基礎客服電話量</li><li><span class="kd"></span>提升客戶即時回應效率</li><li><span class="kd"></span>縮短問題排除時間</li><li><span class="kd"></span>減少客戶等待時間</li></ul></div>
+      <div class="klist"><div class="klh">🔧 工程師支援強化</div><ul class="klul"><li><span class="kd"></span>加速 SC 代碼查詢</li><li><span class="kd"></span>優化料號疊代管理</li><li><span class="kd"></span>統整公司知識資料庫</li><li><span class="kd"></span>建立可擴充入口平台</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<section id="cases" style="background:#fff">
+  <div class="si">
+    <div class="ey"><div class="el"></div><span class="elb">案例分享</span></div>
+    <h2 class="stit">工程師案例分享庫</h2>
+    <p class="sdesc" style="margin-bottom:28px">分享現場經驗與解決方案，所有人都可以新增、編輯、讀取。資料即時同步，共同建立知識庫。</p>
+
+    <div id="caseStats" style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px">
+      <div style="background:var(--off);border-radius:6px;padding:10px 16px;font-size:12px;color:var(--sub)"><span id="csTot" style="display:block;font-size:20px;font-weight:700;color:var(--g900)">—</span>總案例數</div>
+      <div style="background:var(--off);border-radius:6px;padding:10px 16px;font-size:12px;color:var(--sub)"><span id="csSc" style="display:block;font-size:20px;font-weight:700;color:var(--g900)">—</span>SC 代碼</div>
+      <div style="background:var(--off);border-radius:6px;padding:10px 16px;font-size:12px;color:var(--sub)"><span id="csPart" style="display:block;font-size:20px;font-weight:700;color:var(--g900)">—</span>料號類</div>
+      <div style="background:var(--off);border-radius:6px;padding:10px 16px;font-size:12px;color:var(--sub)"><span id="csRep" style="display:block;font-size:20px;font-weight:700;color:var(--g900)">—</span>維修技巧</div>
+    </div>
+
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px">
+      <div id="csFilters" style="display:flex;gap:7px;flex-wrap:wrap">
+        <button class="cs-fbtn on" onclick="csFilter('all',this)">全部</button>
+        <button class="cs-fbtn" onclick="csFilter('sc',this)">SC 代碼</button>
+        <button class="cs-fbtn" onclick="csFilter('part',this)">料號查詢</button>
+        <button class="cs-fbtn" onclick="csFilter('repair',this)">維修技巧</button>
+        <button class="cs-fbtn" onclick="csFilter('other',this)">其他</button>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button onclick="csLoad()" style="background:var(--off);color:var(--g700);border:1px solid var(--border);padding:8px 14px;border-radius:4px;font-size:12px;cursor:pointer;font-family:inherit">↻ 重新整理</button>
+        <button onclick="csOpenModal()" style="background:var(--red);color:#fff;border:none;padding:8px 18px;border-radius:4px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">＋ 新增案例</button>
+      </div>
+    </div>
+
+    <div id="csCards" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px">
+      <div style="text-align:center;padding:2rem;color:var(--sub);font-size:13px;grid-column:1/-1">載入中...</div>
+    </div>
+  </div>
+</section>
+
+<div id="csMBg" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:500;align-items:center;justify-content:center">
+  <div style="background:#fff;border-radius:10px;padding:28px;width:100%;max-width:520px;margin:20px;box-shadow:0 8px 40px rgba(0,0,0,.2)">
+    <h3 id="csMTitle" style="font-size:16px;font-weight:700;color:var(--g900);margin-bottom:20px">新增案例</h3>
+    <div style="margin-bottom:12px"><label style="display:block;font-size:12px;color:var(--sub);margin-bottom:5px">標題 *</label><input id="csT" placeholder="例：IMC-3000 SC-301 處理方式" style="width:100%;border:1px solid var(--border);border-radius:4px;padding:9px 12px;font-size:13.5px;font-family:inherit;outline:none"></div>
+    <div style="margin-bottom:12px"><label style="display:block;font-size:12px;color:var(--sub);margin-bottom:5px">分類 *</label><select id="csC" style="width:100%;border:1px solid var(--border);border-radius:4px;padding:9px 12px;font-size:13.5px;font-family:inherit;outline:none;background:#fff"><option value="sc">SC 代碼</option><option value="part">料號查詢</option><option value="repair">維修技巧</option><option value="other">其他</option></select></div>
+    <div style="margin-bottom:12px"><label style="display:block;font-size:12px;color:var(--sub);margin-bottom:5px">適用機型</label><input id="csM" placeholder="例：IMC-3000、全機型通用" style="width:100%;border:1px solid var(--border);border-radius:4px;padding:9px 12px;font-size:13.5px;font-family:inherit;outline:none"></div>
+    <div style="margin-bottom:12px"><label style="display:block;font-size:12px;color:var(--sub);margin-bottom:5px">案例內容 *</label><textarea id="csB" placeholder="詳細描述問題症狀、排除步驟、使用料號或解決方法..." style="width:100%;border:1px solid var(--border);border-radius:4px;padding:9px 12px;font-size:13.5px;font-family:inherit;outline:none;resize:vertical;min-height:100px"></textarea></div>
+    <div style="margin-bottom:20px"><label style="display:block;font-size:12px;color:var(--sub);margin-bottom:5px">分享者</label><input id="csA" placeholder="例：王工程師（可不填）" style="width:100%;border:1px solid var(--border);border-radius:4px;padding:9px 12px;font-size:13.5px;font-family:inherit;outline:none"></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button onclick="csCloseModal()" style="background:var(--off);color:var(--g700);border:1px solid var(--border);padding:9px 18px;border-radius:4px;font-size:13px;cursor:pointer;font-family:inherit">取消</button>
+      <button onclick="csSave()" style="background:var(--red);color:#fff;border:none;padding:9px 20px;border-radius:4px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">儲存案例</button>
+    </div>
+  </div>
+</div>
+
+<section id="future" style="background:var(--off)">
+  <div class="si">
+    <div class="ey"><div class="el"></div><span class="elb">未來擴充模組</span></div>
+    <h2 class="stit">未來擴充模組</h2>
+    <p class="sdesc">目前已開放四大核心功能，以下為規劃中的擴充模組。</p>
+    <div class="future-grid">
+      <a href="https://chatgpt.com/g/g-69a047f9ab6c8191b65b9895bc75ede0-ricoh-smart-customer-assistant" target="_blank" class="fcard"><div class="ficon">🤖</div><div class="ftitle">AI 客服助理</div><div class="fbadge">已開放</div></a>
+      <a href="https://chatgpt.com/g/g-69a08de59f8c81918a5e9fd36dd12559-gong-cheng-shi-sccha-zhao" target="_blank" class="fcard"><div class="ficon">🔧</div><div class="ftitle">工程師 AI 查詢</div><div class="fbadge">已開放</div></a>
+      <a href="page2.html#knowledge" class="fcard"><div class="ficon">📚</div><div class="ftitle">維修案例知識庫</div><div class="fbadge">已開放</div></a>
+      <a href="page2.html#inventory" class="fcard"><div class="ficon">📦</div><div class="ftitle">零件庫存查詢</div><div class="fbadge">已開放</div></a>
+      <div class="fcard dim"><div class="ficon">📚</div><div class="ftitle">維修案例知識庫</div><div class="fbadge">待更新</div></div>
+      <a href="page2.html#remote" class="fcard"><div class="ficon">🖥️</div><div class="ftitle">遠端支援</div><div class="fbadge">已開放</div></a>
+      <a href="page2.html#eqr" class="fcard"><div class="ficon">📖</div><div class="ftitle">EQR 相關手冊</div><div class="fbadge">已開放</div></a>
+      <div class="fcard dim"><div class="ficon">🔍</div><div class="ftitle">AI OCR 自動化</div><div class="fbadge">待更新</div></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="fb-top">
+    <div>
+      <span class="fwm">RICOH</span>
+      <div class="fsub">Smart Service Hub · 展示版</div>
+      <div class="fdesc">理光智慧客服助理（展示版本）<br>外部客服 + 內部工程師查詢整合入口網站</div>
+    </div>
+    <div class="fcol">
+      <div class="fct">功能入口</div>
+      <ul>
+        <li><a href="https://chatgpt.com/g/g-69a047f9ab6c8191b65b9895bc75ede0-ricoh-smart-customer-assistant" target="_blank">🤖 客戶 AI 客服</a></li>
+        <li><a href="https://chatgpt.com/g/g-69a08de59f8c81918a5e9fd36dd12559-gong-cheng-shi-sccha-zhao" target="_blank">🔧 工程師查詢 AI</a></li>
+        <li><a href="https://forms.gle/tSYdL94CXLajhsV16" target="_blank">📋 即時報修表單</a></li>
+        <li><a href="https://docs.google.com/spreadsheets/d/1NaKP7QopVzUW4jYL8vAYxtj2PrOQBd7ILVEfApvIPlo/edit?usp=sharing" target="_blank">🖨️ 碳粉表單</a></li>
+      </ul>
+    </div>
+    <div class="fcol">
+      <div class="fct">快速導覽</div>
+      <ul>
+        <li><a href="#actions">服務入口</a></li>
+        <li><a href="#ai-assistant">AI 助理</a></li>
+        <li><a href="#chatroom">即時聊天室</a></li>
+        <li><a href="#features">四大功能</a></li>
+        <li><a href="#future">未來擴充</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="fb-bot">
+    <span>© 2026 台灣理光 · 第一組 · 智慧客服與工程師支援系統</span>
+    <div class="ftags"><span class="ftg">AI 驅動</span><span class="ftg">數位轉型</span><span class="ftg">展示版</span></div>
+  </div>
+</footer>
+
+<script>
+function switchTab(id,btn){
+  document.getElementById('tc').style.display=id==='c'?'block':'none';
+  document.getElementById('te').style.display=id==='e'?'block':'none';
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+}
+
+const firebaseConfig = {
+  apiKey: 'AIzaSyDm03V3PmdtHgpkKeRUgsaDIHBM_51NG18',
+  authDomain: 'ricoh-smartservice.firebaseapp.com',
+  databaseURL: 'https://ricoh-smartservice-default-rtdb.asia-southeast1.firebasedatabase.app',
+  projectId: 'ricoh-smartservice',
+  storageBucket: 'ricoh-smartservice.firebasestorage.app',
+  messagingSenderId: '88237602288',
+  appId: '1:88237602288:web:ae176d6a4aeda1e556d935',
+  measurementId: 'G-NDTCZBNN1X'
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+const chatRef = db.ref('messages');
+const onlineRef = db.ref('online');
+
+let myName='';
+let myDept='';
+let myAI='claude';
+let myOnlineRef=null;
+const GPT_URL='https://chatgpt.com/g/g-69a08de59f8c81918a5e9fd36dd12559-gong-cheng-shi-sccha-zhao';
+const shownIds=new Set();
+
+function getTime(ts){
+  const n=ts?new Date(ts):new Date();
+  return n.getHours()+':'+String(n.getMinutes()).padStart(2,'0');
+}
+
+function avatarColor(name){
+  const colors=['#CC0000','#1A56DB','#0F766E','#C2410C','#7C3AED','#0369A1','#15803D','#B45309'];
+  let h=0;
+  for(let i=0;i<name.length;i++) h=(h*31+name.charCodeAt(i))%colors.length;
+  return colors[h];
+}
+
+function addMsgDOM(isMe,isAI,isSys,avText,nameLabel,bubHTML,msgTs){
+  const msgs=document.getElementById('chatMsgs');
+  if(!msgs) return;
+  const d=document.createElement('div');
+  if(isSys){
+    d.className='msg sys';
+    d.innerHTML='<div class="bub">'+bubHTML+'</div>';
+  } else {
+    d.className='msg '+(isMe?'me':isAI?'ai':'other');
+    const avBg=isAI?'#7C3AED':avatarColor(nameLabel||avText);
+    const nameHTML=nameLabel?'<div class="msg-name">'+nameLabel+'</div>':'';
+    d.innerHTML='<div class="av" style="background:'+avBg+'">'+avText+'</div>'+
+      '<div>'+nameHTML+'<div class="bub">'+bubHTML+'</div>'+
+      '<div class="mt">'+getTime(msgTs)+'</div></div>';
+  }
+  msgs.appendChild(d);
+  msgs.scrollTop=msgs.scrollHeight;
+}
+
+function chatJoin(){
+  const nameInput=document.getElementById('myNameInput');
+  const deptInput=document.getElementById('myDeptInput');
+  const loginBox=document.getElementById('chatLogin');
+  const chatWrap=document.getElementById('chatWrap');
+
+  if(!nameInput||!deptInput||!loginBox||!chatWrap){
+    alert('聊天室元件載入失敗，請檢查 HTML id / class');
+    return;
+  }
+
+  const n=nameInput.value.trim();
+  const dept=deptInput.value;
+  if(!n){ alert('請輸入你的名字'); nameInput.focus(); return; }
+
+  myName=n; myDept=dept;
+  localStorage.setItem('ricoh_chat_name',n);
+  localStorage.setItem('ricoh_chat_dept',dept);
+
+  loginBox.style.display='none';
+  chatWrap.style.display='flex';
+  document.getElementById('myTag').textContent='👤 '+n+' · '+dept;
+  document.getElementById('chatMsgs').innerHTML='';
+  shownIds.clear();
+
+  if(myOnlineRef) myOnlineRef.remove();
+  myOnlineRef = onlineRef.push();
+  myOnlineRef.set({name:n, dept:dept, ts:Date.now()});
+  myOnlineRef.onDisconnect().remove();
+
+  onlineRef.off();
+  onlineRef.on('value', snap=>{
+    const count=snap.numChildren();
+    document.getElementById('onlineCount').textContent='👥 '+count+' 人在線';
+    document.getElementById('chatSubtitle').textContent='已登入：'+n+' · '+dept+' · '+count+' 人在線';
+  });
+
+  chatRef.off();
+  chatRef.limitToLast(80).on('child_added', snap=>{
+    const id=snap.key;
+    if(shownIds.has(id)) return;
+    shownIds.add(id);
+    const m=snap.val()||{};
+    const isOwn=(m.name===myName && m.dept===myDept);
+    if(m.type==='sys'){
+      addMsgDOM(false,false,true,'','',m.text||'',m.ts);
+    } else if(m.type==='ai'){
+      addMsgDOM(false,true,false,'AI','Ricoh AI 助理',m.text||'',m.ts);
+    } else {
+      addMsgDOM(isOwn,false,false,(m.name||'?').slice(0,1),(m.name||'未知使用者')+'（'+(m.dept||'-')+'）',m.text||'',m.ts);
+    }
+  });
+
+  addMsgDOM(false,false,true,'','','歡迎 '+n+'（'+dept+'）加入聊天室 · 輸入 @AI 問題 呼叫 AI 助理',Date.now());
+}
+
+function chatLogout(){
+  if(myOnlineRef){ myOnlineRef.remove(); myOnlineRef=null; }
+  chatRef.off();
+  onlineRef.off();
+  shownIds.clear();
+  document.getElementById('chatLogin').style.display='block';
+  document.getElementById('chatWrap').style.display='none';
+  document.getElementById('myTag').textContent='👤 未登入';
+  document.getElementById('chatSubtitle').textContent='連線中...';
+  document.getElementById('onlineCount').textContent='👥 0 人在線';
+  document.getElementById('chatInput').value='';
+  myName=''; myDept='';
+}
+
+function selectAI(type){
+  myAI=type;
+  document.getElementById('btnClaude').className='ai-sel-btn claude'+(type==='claude'?' active-claude':'');
+  document.getElementById('btnGPT').className='ai-sel-btn gpt'+(type==='gpt'?' active-gpt':'');
+}
+
+function sendMsg(e){
+  if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); sendMsgBtn(); }
+}
+
+async function sendMsgBtn(){
+  if(!myName){ alert('請先輸入名字登入'); return; }
+  const inp=document.getElementById('chatInput');
+  const text=inp.value.trim();
+  if(!text) return;
+  inp.value='';
+
+  const safeText=text.replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const isAI=text.toLowerCase().startsWith('@ai');
+
+  chatRef.push({type:'user', name:myName, dept:myDept, text:safeText, ts:Date.now()});
+
+  if(isAI){
+    const q=text.replace(/^@[Aa][Ii]\s*/,'');
+
+    if(myAI==='gpt'){
+      chatRef.push({type:'ai', name:'AI', dept:'', text:'正在開啟 GPT 助理... <a href="'+GPT_URL+'" target="_blank" style="color:#7C3AED;font-weight:700">點此開啟 ↗</a>', ts:Date.now()});
+      window.open(GPT_URL,'_blank');
+      return;
+    }
+
+    document.getElementById('aiTyping').style.display='block';
+
+    try{
+      const res=await fetch('https://api.anthropic.com/v1/messages',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          model:'claude-sonnet-4-20250514',
+          max_tokens:600,
+          system:'你是理光（Ricoh）印表機工程師的 AI 助理，名字叫 Ricoh AI。專門回答 SC 錯誤代碼、零件料號、維修技巧等問題。用繁體中文簡潔條列式回答，如有料號請列出。',
+          messages:[{role:'user',content:q}]
+        })
+      });
+      const data=await res.json();
+      document.getElementById('aiTyping').style.display='none';
+      const reply=(data.content||[]).map(i=>i.text||'').join('')||'抱歉，AI 暫時無法回應。';
+      chatRef.push({type:'ai', name:'AI', dept:'', text:reply.replace(/\n/g,'<br>'), ts:Date.now()});
+    }catch(err){
+      document.getElementById('aiTyping').style.display='none';
+      chatRef.push({type:'ai', name:'AI', dept:'', text:'AI 暫時無法連線，請稍後再試。', ts:Date.now()});
+      console.error(err);
+    }
+  }
+}
+
+document.addEventListener('DOMContentLoaded', function(){
+  const n=localStorage.getItem('ricoh_chat_name');
+  const d=localStorage.getItem('ricoh_chat_dept');
+  if(n) document.getElementById('myNameInput').value=n;
+  if(d) document.getElementById('myDeptInput').value=d;
+});
+
+let csAll=[], csCurFilter='all', csEditId=null;
+const csCatLabel={sc:'SC 代碼',part:'料號查詢',repair:'維修技巧',other:'其他'};
+const csCatCls={sc:'cs-sc',part:'cs-part',repair:'cs-repair',other:'cs-other'};
+
+function csEsc(s){
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function csLoad(){
+  try{
+    const raw=localStorage.getItem('ricoh_cases');
+    csAll=raw?JSON.parse(raw):[];
+  }catch(e){
+    csAll=[];
+  }
+  csAll.sort((a,b)=>b.ts-a.ts);
+  csUpdateStats();
+  csRender();
+}
+
+function csSaveAll(){
+  localStorage.setItem('ricoh_cases',JSON.stringify(csAll));
+}
+
+function csUpdateStats(){
+  document.getElementById('csTot').textContent=csAll.length;
+  document.getElementById('csSc').textContent=csAll.filter(c=>c.cat==='sc').length;
+  document.getElementById('csPart').textContent=csAll.filter(c=>c.cat==='part').length;
+  document.getElementById('csRep').textContent=csAll.filter(c=>c.cat==='repair').length;
+}
+
+function csRender(){
+  const list=csCurFilter==='all'?csAll:csAll.filter(c=>c.cat===csCurFilter);
+  const area=document.getElementById('csCards');
+  if(!list.length){
+    area.innerHTML='<div style="text-align:center;padding:3rem;color:#888;font-size:13px;grid-column:1/-1">目前沒有案例，點「新增案例」開始分享！</div>';
+    return;
+  }
+  area.innerHTML=list.map(c=>{
+    const cat=csCatCls[c.cat]||'cs-other';
+    const catLbl=csEsc(csCatLabel[c.cat]||c.cat);
+    const model=c.model?'<span style="font-size:11px;color:#666;background:#f2f2f2;padding:2px 7px;border-radius:3px">'+csEsc(c.model)+'</span>':'';
+    const body=csEsc(c.body).replace(/\n/g,'<br>');
+    return `
+      <div class="cs-card">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px;gap:8px">
+          <span class="cs-cat ${cat}">${catLbl}</span>${model}
+        </div>
+        <div class="cs-title">${csEsc(c.title)}</div>
+        <div class="cs-body" id="csb_${c.id}">${body}</div>
+        <div class="cs-foot">
+          <span>${csEsc(c.author||'匿名')} · ${new Date(c.ts).toLocaleDateString('zh-TW')}</span>
+          <div class="cs-acts">
+            <button class="cs-btn-sm" onclick="csToggle('csb_${c.id}',this)">展開</button>
+            <button class="cs-btn-sm" onclick="csEditFn('${c.id}')">編輯</button>
+            <button class="cs-btn-del" onclick="csDel('${c.id}')">刪除</button>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function csToggle(id,btn){
+  const el=document.getElementById(id);
+  if(el.classList.toggle('open')) btn.textContent='收起';
+  else btn.textContent='展開';
+}
+
+function csFilter(cat,btn){
+  csCurFilter=cat;
+  document.querySelectorAll('.cs-fbtn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  csRender();
+}
+
+function csOpenModal(c){
+  csEditId=c?c.id:null;
+  document.getElementById('csMTitle').textContent=c?'編輯案例':'新增案例';
+  document.getElementById('csT').value=c?c.title:'';
+  document.getElementById('csC').value=c?c.cat:'sc';
+  document.getElementById('csM').value=c?(c.model||''):'';
+  document.getElementById('csB').value=c?c.body:'';
+  document.getElementById('csA').value=c?(c.author||''):'';
+  document.getElementById('csMBg').style.display='flex';
+}
+
+function csCloseModal(){
+  document.getElementById('csMBg').style.display='none';
+  csEditId=null;
+}
+
+function csSave(){
+  const t=document.getElementById('csT').value.trim();
+  const b=document.getElementById('csB').value.trim();
+  if(!t||!b){ alert('請填寫標題和內容'); return; }
+
+  if(csEditId){
+    const idx=csAll.findIndex(x=>x.id===csEditId);
+    if(idx>-1){
+      csAll[idx]={
+        ...csAll[idx],
+        title:t,
+        body:b,
+        cat:document.getElementById('csC').value,
+        model:document.getElementById('csM').value.trim(),
+        author:document.getElementById('csA').value.trim()
+      };
+    }
+  }else{
+    csAll.unshift({
+      id:'c'+Date.now(),
+      title:t,
+      body:b,
+      cat:document.getElementById('csC').value,
+      model:document.getElementById('csM').value.trim(),
+      author:document.getElementById('csA').value.trim(),
+      ts:Date.now()
+    });
+  }
+  csSaveAll();
+  csCloseModal();
+  csUpdateStats();
+  csRender();
+}
+
+function csEditFn(id){
+  const c=csAll.find(x=>x.id===id);
+  if(c) csOpenModal(c);
+}
+
+function csDel(id){
+  if(!confirm('確定要刪除這個案例嗎？')) return;
+  csAll=csAll.filter(x=>x.id!==id);
+  csSaveAll();
+  csUpdateStats();
+  csRender();
+}
+
+document.getElementById('csMBg').addEventListener('click', function(e){
+  if(e.target===this) csCloseModal();
+});
+
+csLoad();
+</script>
+</body>
+</html>
