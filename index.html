@@ -717,8 +717,7 @@ async function sendMsgBtn(){
       const data=await res.json();
       document.getElementById('aiTyping').style.display='none';
       const reply=(data.content||[]).map(i=>i.text||'').join('')||'抱歉，AI 暫時無法回應。';
-      addMsg('ai','AI','Ricoh AI 助理',reply.replace(/
-/g,'<br>').replace(/</g,'&lt;').replace(/&lt;br>/g,'<br>'),'');
+      addMsg('ai','AI','Ricoh AI 助理',reply.split('\n').join('<br>'),'');
     }catch(e){
       document.getElementById('aiTyping').style.display='none';
       addMsg('ai','AI','Ricoh AI 助理','AI 暫時無法連線，請稍後再試。','');
@@ -760,8 +759,7 @@ function csRender(){
         ${c.model?`<span style="font-size:11px;color:#666;background:#f2f2f2;padding:2px 7px;border-radius:3px">${csEsc(c.model)}</span>`:''}
       </div>
       <div class="cs-title">${csEsc(c.title)}</div>
-      <div class="cs-body" id="csb_${c.id}">${csEsc(c.body).replace(/
-/g,'<br>')}</div>
+      <div class="cs-body" id="csb_${c.id}">${csEsc(c.body).split('\n').join('<br>')}</div>
       <div class="cs-foot">
         <span>${csEsc(c.author||'匿名')} · ${new Date(c.ts).toLocaleDateString('zh-TW')}</span>
         <div class="cs-acts">
