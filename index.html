@@ -767,44 +767,53 @@ const csCatLabel={sc:'SC 代碼',part:'料號查詢',repair:'維修技巧',other
 const csCatCls={sc:'cs-sc',part:'cs-part',repair:'cs-repair',other:'cs-other'};
 
 function csEsc(s){
-  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  return String(s||'')
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;');
 }
 
-function csLoad(){
+async function csLoad(){
+  document.getElementById('csCards').innerHTML =
+    '<div style="text-align:center;padding:2rem;color:var(--sub);font-size:13px;grid-column:1/-1">載入中...</div>';
+
   try{
-    const raw=localStorage.getItem('ricoh_cases');
-    csAll=raw?JSON.parse(raw):[];
+    const snap = await casesCol.orderBy('ts','desc').get();
+    csAll = snap.docs.map(d => ({ id:d.id, ...d.data() }));
   }catch(e){
-    csAll=[];
+    csAll = [];
+    console.error('Firestore 載入失敗：', e);
   }
-  csAll.sort((a,b)=>b.ts-a.ts);
+
   csUpdateStats();
   csRender();
 }
 
-function csSaveAll(){
-  localStorage.setItem('ricoh_cases',JSON.stringify(csAll));
-}
-
 function csUpdateStats(){
-  document.getElementById('csTot').textContent=csAll.length;
-  document.getElementById('csSc').textContent=csAll.filter(c=>c.cat==='sc').length;
-  document.getElementById('csPart').textContent=csAll.filter(c=>c.cat==='part').length;
-  document.getElementById('csRep').textContent=csAll.filter(c=>c.cat==='repair').length;
+  document.getElementById('csTot').textContent = csAll.length;
+  document.getElementById('csSc').textContent = csAll.filter(c=>c.cat==='sc').length;
+  document.getElementById('csPart').textContent = csAll.filter(c=>c.cat==='part').length;
+  document.getElementById('csRep').textContent = csAll.filter(c=>c.cat==='repair').length;
 }
 
 function csRender(){
-  const list=csCurFilter==='all'?csAll:csAll.filter(c=>c.cat===csCurFilter);
-  const area=document.getElementById('csCards');
+  const list = csCurFilter==='all' ? csAll : csAll.filter(c=>c.cat===csCurFilter);
+  const area = document.getElementById('csCards');
+
   if(!list.length){
-    area.innerHTML='<div style="text-align:center;padding:3rem;color:#888;font-size:13px;grid-column:1/-1">目前沒有案例，點「新增案例」開始分享！</div>';
+    area.innerHTML =
+      '<div style="text-align:center;padding:3rem;color:#888;font-size:13px;grid-column:1/-1">目前沒有案例，點「新增案例」開始分享！</div>';
     return;
   }
-  area.innerHTML=list.map(c=>{
-    const cat=csCatCls[c.cat]||'cs-other';
-    const catLbl=csEsc(csCatLabel[c.cat]||c.cat);
-    const model=c.model?'<span style="font-size:11px;color:#666;background:#f2f2f2;padding:2px 7px;border-radius:3px">'+csEsc(c.model)+'</span>':'';
-    const body=csEsc(c.body).replace(/\n/g,'<br>');
+
+  area.innerHTML = list.map(c=>{
+    const cat = csCatCls[c.cat] || 'cs-other';
+    const catLbl = csEsc(csCatLabel[c.cat] || c.cat);
+    const model = c.model
+      ? '<span style="font-size:11px;color:#666;background:#f2f2f2;padding:2px 7px;border-radius:3px">'+csEsc(c.model)+'</span>'
+      : '';
+    const body = csEsc(c.body).replace(/\n/g,'<br>');
+
     return `
       <div class="cs-card">
         <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px;gap:8px">
@@ -825,79 +834,81 @@ function csRender(){
 }
 
 function csToggle(id,btn){
-  const el=document.getElementById(id);
+  const el = document.getElementById(id);
   if(el.classList.toggle('open')) btn.textContent='收起';
   else btn.textContent='展開';
 }
 
 function csFilter(cat,btn){
-  csCurFilter=cat;
+  csCurFilter = cat;
   document.querySelectorAll('.cs-fbtn').forEach(b=>b.classList.remove('on'));
   btn.classList.add('on');
   csRender();
 }
 
 function csOpenModal(c){
-  csEditId=c?c.id:null;
-  document.getElementById('csMTitle').textContent=c?'編輯案例':'新增案例';
-  document.getElementById('csT').value=c?c.title:'';
-  document.getElementById('csC').value=c?c.cat:'sc';
-  document.getElementById('csM').value=c?(c.model||''):'';
-  document.getElementById('csB').value=c?c.body:'';
-  document.getElementById('csA').value=c?(c.author||''):'';
-  document.getElementById('csMBg').style.display='flex';
+  csEditId = c ? c.id : null;
+  document.getElementById('csMTitle').textContent = c ? '編輯案例' : '新增案例';
+  document.getElementById('csT').value = c ? c.title : '';
+  document.getElementById('csC').value = c ? c.cat : 'sc';
+  document.getElementById('csM').value = c ? (c.model||'') : '';
+  document.getElementById('csB').value = c ? c.body : '';
+  document.getElementById('csA').value = c ? (c.author||'') : '';
+  document.getElementById('csMBg').style.display = 'flex';
 }
 
 function csCloseModal(){
-  document.getElementById('csMBg').style.display='none';
-  csEditId=null;
+  document.getElementById('csMBg').style.display = 'none';
+  csEditId = null;
 }
 
-function csSave(){
-  const t=document.getElementById('csT').value.trim();
-  const b=document.getElementById('csB').value.trim();
-  if(!t||!b){ alert('請填寫標題和內容'); return; }
+async function csSave(){
+  const t = document.getElementById('csT').value.trim();
+  const b = document.getElementById('csB').value.trim();
 
-  if(csEditId){
-    const idx=csAll.findIndex(x=>x.id===csEditId);
-    if(idx>-1){
-      csAll[idx]={
-        ...csAll[idx],
-        title:t,
-        body:b,
-        cat:document.getElementById('csC').value,
-        model:document.getElementById('csM').value.trim(),
-        author:document.getElementById('csA').value.trim()
-      };
-    }
-  }else{
-    csAll.unshift({
-      id:'c'+Date.now(),
-      title:t,
-      body:b,
-      cat:document.getElementById('csC').value,
-      model:document.getElementById('csM').value.trim(),
-      author:document.getElementById('csA').value.trim(),
-      ts:Date.now()
-    });
+  if(!t || !b){
+    alert('請填寫標題和內容');
+    return;
   }
-  csSaveAll();
-  csCloseModal();
-  csUpdateStats();
-  csRender();
+
+  const oldItem = csEditId ? csAll.find(x=>x.id===csEditId) : null;
+
+  const data = {
+    title: t,
+    body: b,
+    cat: document.getElementById('csC').value,
+    model: document.getElementById('csM').value.trim(),
+    author: document.getElementById('csA').value.trim(),
+    ts: oldItem?.ts || Date.now()
+  };
+
+  try{
+    if(csEditId){
+      await casesCol.doc(csEditId).update(data);
+    }else{
+      await casesCol.add(data);
+    }
+    csCloseModal();
+    csLoad();
+  }catch(e){
+    alert('儲存失敗：' + e.message);
+  }
 }
 
 function csEditFn(id){
-  const c=csAll.find(x=>x.id===id);
+  const c = csAll.find(x=>x.id===id);
   if(c) csOpenModal(c);
 }
 
-function csDel(id){
+async function csDel(id){
   if(!confirm('確定要刪除這個案例嗎？')) return;
-  csAll=csAll.filter(x=>x.id!==id);
-  csSaveAll();
-  csUpdateStats();
-  csRender();
+
+  try{
+    await casesCol.doc(id).delete();
+    csLoad();
+  }catch(e){
+    alert('刪除失敗：' + e.message);
+  }
 }
 
 document.getElementById('csMBg').addEventListener('click', function(e){
