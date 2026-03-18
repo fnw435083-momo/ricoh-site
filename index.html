@@ -637,12 +637,22 @@
     };
 
     firebase.initializeApp(firebaseConfig);
+    const manualsConfig = {
+  apiKey: 'AIzaSyBo-ByBJkq-WV6-HNsDTh3019FgUN1U7MI',
+  authDomain: 'ricoh-manuals.firebaseapp.com',
+  projectId: 'ricoh-manuals',
+  storageBucket: 'ricoh-manuals.firebasestorage.app',
+  messagingSenderId: '356272293692',
+  appId: '1:356272293692:web:a52d7e466db623e5398039'
+};
+
+const manualsApp = firebase.initializeApp(manualsConfig, 'manuals');
+const fsdb = firebase.firestore(manualsApp);
+const casesCol = fsdb.collection('cases');
     const db = firebase.database();
     const chatRef = db.ref('messages');
     const onlineRef = db.ref('online');
-
-    let casesCol = null;
-
+    
     let myName='';
     let myDept='';
     let myAI='claude';
@@ -859,31 +869,31 @@
         .replace(/>/g,'&gt;');
     }
 
-    async function csLoad(){
-      const area=document.getElementById('csCards');
+   let csUnsub = null;
 
-      if(!casesCol){
-        area.innerHTML='<div style="text-align:center;padding:3rem;color:#888;font-size:13px;grid-column:1/-1">案例功能尚未接上 Firestore，現在先保留版面與按鈕。</div>';
-        document.getElementById('csTot').textContent='—';
-        document.getElementById('csSc').textContent='—';
-        document.getElementById('csPart').textContent='—';
-        document.getElementById('csRep').textContent='—';
-        return;
-      }
+function csLoad(){
+  const area = document.getElementById('csCards');
+  if(area){
+    area.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--sub);font-size:13px;grid-column:1/-1">載入中...</div>';
+  }
 
-      area.innerHTML='<div style="text-align:center;padding:2rem;color:var(--sub);font-size:13px;grid-column:1/-1">載入中...</div>';
+  if(csUnsub) csUnsub();
 
-      try{
-        const snap = await casesCol.orderBy('ts','desc').get();
-        csAll = snap.docs.map(d => ({ id:d.id, ...d.data() }));
-      }catch(e){
-        csAll = [];
-        console.error(e);
-      }
-
+  csUnsub = casesCol.orderBy('ts', 'desc').onSnapshot(
+    snap => {
+      csAll = snap.docs.map(d => ({ id:d.id, ...d.data() }));
       csUpdateStats();
       csRender();
+    },
+    err => {
+      csAll = [];
+      console.error('Firestore 即時監聽失敗：', err);
+      if(area){
+        area.innerHTML = '<div style="text-align:center;padding:2rem;color:#CC0000;font-size:13px;grid-column:1/-1">案例資料載入失敗</div>';
+      }
     }
+  );
+}
 
     function csUpdateStats(){
       document.getElementById('csTot').textContent = csAll.length;
