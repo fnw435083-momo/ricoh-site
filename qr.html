@@ -17,10 +17,10 @@
 #printArea{display:none}
 @media(max-width:850px){.grid{grid-template-columns:1fr}.form{grid-template-columns:1fr}.title h1{font-size:32px}.owner{font-size:16px}}
 @media print{
- @page{size:A4 portrait;margin:8mm}
+ @page{size:A4 portrait;margin:5mm}
  body.printing>*:not(#printArea){display:none!important}
  body.printing #printArea{display:block!important;width:100%}
- .print-page{width:194mm;height:281mm;display:grid;grid-template-columns:repeat(4,40mm);grid-template-rows:repeat(5,50mm);gap:0mm;page-break-after:always;break-after:page;align-items:center;justify-items:center}
+ .print-page{width:200mm;height:287mm;display:grid;grid-template-columns:repeat(5,40mm);grid-template-rows:repeat(5,50mm);gap:0mm;page-break-after:always;break-after:page;align-items:center;justify-items:center}
  .print-page:last-child{page-break-after:auto;break-after:auto}
  .print-label{width:40mm;height:50mm;border:0.3mm solid #999;text-align:center;padding:1mm 0;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;overflow:hidden}
  .print-label .company{font-size:10pt;font-weight:900;line-height:1.2;height:6mm;display:flex;align-items:center;justify-content:center;width:100%;overflow:hidden}
@@ -57,7 +57,7 @@
 <section class="card batch"><h2>② CSV 批次匯入</h2>
 <div class="batch-top"><input class="file" type="file" id="csv" accept=".csv"><button class="btn" onclick="downloadTemplate()">下載 CSV 範本</button><button class="btn red" onclick="importCSV()">匯入並產生</button></div>
 <div class="table-wrap"><table class="table"><thead><tr><th>客戶名稱</th><th>機型</th><th>機號</th><th>客戶地址</th><th>聯絡人</th><th>聯絡方式</th><th>客服信箱</th><th>操作</th></tr></thead><tbody id="rows"><tr><td colspan="8" class="empty">尚未匯入資料</td></tr></tbody></table></div>
-<div class="actions"><button class="btn" onclick="printBatch()">批次列印（每頁 15 張）</button><button class="btn" onclick="batch=[];render()">清除批次資料</button></div>
+<div class="actions"><button class="btn" onclick="printBatch()">批次列印（每頁 25 張）</button><button class="btn" onclick="batch=[];render()">清除批次資料</button></div>
 </section>
 </main><div id="printArea"></div>
 <script>
@@ -75,7 +75,7 @@ function parseCSV(t){let lines=t.replace(/^\uFEFF/,'').split(/\r?\n/).filter(x=>
 function importCSV(){let f=document.getElementById('csv').files[0];if(!f)return alert('請先選擇 CSV 檔案');let r=new FileReader();r.onload=e=>{batch=parseCSV(e.target.result).filter(x=>x.machine);render()};r.readAsText(f,'UTF-8')}
 function render(){let tb=document.getElementById('rows');if(!batch.length){tb.innerHTML='<tr><td colspan="8" class="empty">尚未匯入資料</td></tr>';return}tb.innerHTML=batch.map((d,i)=>'<tr><td>'+esc(d.company)+'</td><td>'+esc(d.model)+'</td><td>'+esc(d.machine)+'</td><td>'+esc(d.address)+'</td><td>'+esc(d.contact)+'</td><td>'+esc(d.phone)+'</td><td>'+esc(d.email)+'</td><td><button class="btn" onclick="loadRow('+i+')">載入</button> <button class="btn" onclick="batch.splice('+i+',1);render()">刪除</button></td></tr>').join('')}
 function loadRow(i){let d=batch[i];['company','model','machine','email','address','contact','phone'].forEach(k=>document.getElementById(k).value=d[k]);generate();scrollTo({top:0,behavior:'smooth'})}
-function printBatch(){if(!batch.length)return alert('請先匯入 CSV 資料');let pages=[];for(let i=0;i<batch.length;i+=15){let chunk=batch.slice(i,i+15);pages.push('<div class="print-page">'+chunk.map((d,j)=>'<div class="print-label"><div class="company">'+esc(d.company)+'</div><div id="bqr'+i+'_'+j+'" class="qr75"></div><div class="machine">'+esc(d.machine)+'</div><div class="model">'+esc(d.model)+'</div></div>').join('')+'</div>')}document.getElementById('printArea').innerHTML=pages.join('');batch.forEach((d,i)=>{let page=Math.floor(i/15),j=i%15;draw(document.getElementById('bqr'+(page*15)+'_'+j),d,700)});document.body.classList.add('printing');setTimeout(()=>{window.print();document.body.classList.remove('printing')},500)}
+function printBatch(){if(!batch.length)return alert('請先匯入 CSV 資料');let pages=[];for(let i=0;i<batch.length;i+=25){let chunk=batch.slice(i,i+25);pages.push('<div class="print-page">'+chunk.map((d,j)=>'<div class="print-label"><div class="company">'+esc(d.company)+'</div><div id="bqr'+i+'_'+j+'" class="qr75"></div><div class="machine">'+esc(d.machine)+'</div><div class="model">'+esc(d.model)+'</div></div>').join('')+'</div>')}document.getElementById('printArea').innerHTML=pages.join('');batch.forEach((d,i)=>{let page=Math.floor(i/25),j=i%25;draw(document.getElementById('bqr'+(page*25)+'_'+j),d,700)});document.body.classList.add('printing');setTimeout(()=>{window.print();document.body.classList.remove('printing')},500)}
 function downloadTemplate(){let s='客戶名稱,機型,機號,客戶地址,聯絡人,聯絡方式,客服信箱\n台灣理光,IMC6010,A123567890,,,,rt@ricoh.com.tw';let b=new Blob(['\ufeff'+s],{type:'text/csv;charset=utf-8'});let a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='RICOH_QR_CSV範本.csv';a.click()}
 function esc(s){return String(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
 generate();
