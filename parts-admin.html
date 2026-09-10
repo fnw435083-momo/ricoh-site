@@ -12,28 +12,13 @@
 <header class="nav"><a class="brand" href="index.html">RICOH <span>Smart Service Hub｜工程師工作中心</span></a><a class="back" href="parts.html">← 回零件資料庫</a></header>
 <main class="wrap">
 <div><div class="kicker">Parts Admin</div><div class="title">工程零件資料庫管理</div><div class="desc">雲端零件資料管理。只有管理員登入後才能新增、修改、刪除資料。</div></div>
-<section id="loginPanel" class="panel login">
-<h3>管理員登入</h3>
-<label class="label">帳號</label><input id="email" class="input" value="admin" autocomplete="username">
-<label class="label">密碼</label><input id="password" class="input" type="password" autocomplete="current-password">
-<div class="actions"><button id="login" class="btn">登入</button></div>
-<div id="loginMsg"></div>
-<p class="small">管理員帳號：admin｜不開放自行註冊。</p>
-</section>
+<section id="loginPanel" class="panel login"><h3>管理員登入</h3><label class="label">帳號</label><input id="email" class="input" value="admin" autocomplete="username"><label class="label">密碼</label><input id="password" class="input" type="password" autocomplete="current-password"><div class="actions"><button id="login" class="btn">登入</button></div><div id="loginMsg"></div><p class="small">管理員帳號：admin｜不開放自行註冊。</p></section>
 <section id="adminPanel" class="hidden">
 <div class="panel"><div class="userbar"><span id="userInfo"></span><button id="logout" class="btn secondary">登出</button></div></div>
-<section class="panel"><h3 id="formTitle">新增零件</h3>
-<div class="formgrid">
-<div><label class="label">料號 *</label><input id="partsNo" class="input" placeholder="例如 D0BK2205"></div>
-<div><label class="label">零件名稱</label><input id="name" class="input" placeholder="例如 PCU K"></div>
-<div class="full"><label class="label">適用機型</label><input id="models" class="input" placeholder="例如 IM C3000；IM C3500"></div>
-<div><label class="label">名稱狀態</label><input id="status" class="input" placeholder="例如 名稱一致"></div>
-<div><label class="label">原始名稱</label><input id="originalNames" class="input" placeholder="例如 PCU K；PCU-K"></div>
-</div><div class="actions"><button id="save" class="btn">儲存</button><button id="cancel" class="btn secondary hidden">取消編輯</button></div><div id="saveMsg"></div></section>
+<section class="panel"><h3 id="formTitle">新增零件</h3><div class="formgrid"><div><label class="label">料號 *</label><input id="partsNo" class="input" placeholder="例如 D0BK2205"></div><div><label class="label">零件名稱</label><input id="name" class="input" placeholder="例如 PCU K"></div><div class="full"><label class="label">適用機型</label><input id="models" class="input" placeholder="例如 IM C3000；IM C3500"></div><div><label class="label">名稱狀態</label><input id="status" class="input" placeholder="例如 名稱一致"></div><div><label class="label">原始名稱</label><input id="originalNames" class="input" placeholder="例如 PCU K；PCU-K"></div></div><div class="actions"><button id="save" class="btn">儲存</button><button id="cancel" class="btn secondary hidden">取消編輯</button></div><div id="saveMsg"></div></section>
 <section class="panel"><h3>既有資料同步</h3><p class="small">第一次使用可把目前網站上的既有零件資料一次匯入 Supabase。之後以雲端資料為主。</p><div class="actions"><button id="importExisting" class="btn secondary">同步目前既有資料</button><input id="csvFile" type="file" accept=".csv,text/csv" class="input" style="max-width:320px"><button id="importCsv" class="btn secondary">匯入 CSV</button></div><div id="importMsg"></div></section>
-<section class="panel"><div class="toolbar"><input id="search" class="input" placeholder="搜尋料號、名稱或機型"><span id="count" class="count"></span></div><div id="list"><div class="small" style="padding:20px 0">正在載入…</div></div></section>
-</section>
-<div class="footer">TY0032-Willie 製作｜RICOH Smart Service Hub</div>
+<section class="panel"><div class="toolbar"><input id="search" class="input" placeholder="搜尋料號、名稱或機型"><span id="count" class="count"></span></div><div id="searchHint" class="small" style="margin-top:8px">機型搜尋採精準比對；例如輸入 300，不會帶出 3000、3001、3002。</div><div id="list"><div class="small" style="padding:20px 0">正在載入…</div></div></section>
+</section><div class="footer">TY0032-Willie 製作｜RICOH Smart Service Hub</div>
 </main>
 <script>
 const SUPABASE_URL='https://ppzdwearxmxrkqgcphvt.supabase.co';
@@ -45,7 +30,39 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&
 function msg(id,text,type='ok'){$(id).innerHTML=text?'<div class="msg '+type+'">'+esc(text)+'</div>':''}
 async function session(){const {data}=await client.auth.getSession();return data.session}
 async function loadParts(){const {data,error}=await client.from('parts').select('*').order('parts_no');if(error)throw error;ALL=data||[];renderList()}
-function renderList(){const q=$('search').value.trim().toUpperCase();const hit=ALL.filter(x=>(x.parts_no+' '+(x.name||'')+' '+(x.models||'')+' '+(x.original_names||'')).toUpperCase().includes(q));$('count').textContent=hit.length+' 筆';if(!hit.length){$('list').innerHTML='<div class="small" style="padding:25px 0">沒有資料</div>';return}$('list').innerHTML='<table><thead><tr><th>料號</th><th>名稱</th><th>適用機型</th><th>操作</th></tr></thead><tbody>'+hit.map(x=>'<tr><td class="mono">'+esc(x.parts_no)+'</td><td>'+esc(x.name||'')+'<div class="small">'+esc(x.original_names||'')+'</div></td><td>'+esc(x.models||'')+'</td><td><button class="btn secondary" onclick="editPart('+x.id+')">修改</button> <button class="btn danger" onclick="deletePart('+x.id+')">刪除</button></td></tr>').join('')+'</tbody></table>'}
+function normalizeModel(s){return String(s??'').toUpperCase().replace(/[^A-Z0-9]/g,'')}
+function modelVariants(raw){
+ const text=String(raw??'').toUpperCase(); const out=[];
+ for(const group of text.split(/[;；、,\n]+/)){
+  const g=group.trim(); if(!g)continue;
+  const nums=g.match(/\d+/g)||[];
+  const first=g.match(/^[^\d]*?(?=\d)/); const prefix=first?first[0]:'';
+  nums.forEach(n=>{out.push(n); if(prefix)out.push(normalizeModel(prefix+n));});
+  const compact=normalizeModel(g); if(compact)out.push(compact);
+ }
+ return [...new Set(out)];
+}
+function modelMatches(rawModels,rawQuery){
+ const q=normalizeModel(rawQuery); if(!q)return false;
+ const variants=modelVariants(rawModels);
+ if(/^\d+$/.test(q))return variants.includes(q);
+ if(variants.includes(q))return true;
+ const qNums=q.match(/\d+/g)||[]; if(qNums.length!==1)return false;
+ const qNum=qNums[0]; const qPrefix=q.slice(0,q.length-qNum.length);
+ return variants.some(v=>v.endsWith(qNum)&&v===qPrefix+qNum);
+}
+function renderList(){
+ const rawQ=$('search').value.trim();
+ const q=rawQ.toUpperCase();
+ const hit=ALL.filter(x=>{
+  if(!q)return true;
+  if(modelMatches(x.models,rawQ))return true;
+  return (String(x.parts_no||'')+' '+String(x.name||'')+' '+String(x.original_names||'')).toUpperCase().includes(q);
+ });
+ $('count').textContent=hit.length+' 筆';
+ if(!hit.length){$('list').innerHTML='<div class="small" style="padding:25px 0">沒有資料</div>';return}
+ $('list').innerHTML='<table><thead><tr><th>料號</th><th>名稱</th><th>適用機型</th><th>操作</th></tr></thead><tbody>'+hit.map(x=>'<tr><td class="mono">'+esc(x.parts_no)+'</td><td>'+esc(x.name||'')+'<div class="small">'+esc(x.original_names||'')+'</div></td><td>'+esc(x.models||'')+'</td><td><button class="btn secondary" onclick="editPart('+x.id+')">修改</button> <button class="btn danger" onclick="deletePart('+x.id+')">刪除</button></td></tr>').join('')+'</tbody></table>';
+}
 function clearForm(){editingId=null;$('formTitle').textContent='新增零件';['partsNo','name','models','status','originalNames'].forEach(id=>$(id).value='');$('partsNo').disabled=false;$('cancel').classList.add('hidden')}
 window.editPart=id=>{const x=ALL.find(v=>v.id===id);if(!x)return;editingId=id;$('formTitle').textContent='修改零件';$('partsNo').value=x.parts_no||'';$('name').value=x.name||'';$('models').value=x.models||'';$('status').value=x.status||'';$('originalNames').value=x.original_names||'';$('partsNo').disabled=true;$('cancel').classList.remove('hidden');window.scrollTo({top:0,behavior:'smooth'})}
 window.deletePart=async id=>{const x=ALL.find(v=>v.id===id);if(!x||!confirm('確定刪除 '+x.parts_no+'？'))return;const {error}=await client.from('parts').delete().eq('id',id);if(error){msg('saveMsg','刪除失敗：'+error.message,'err');return}msg('saveMsg','已刪除 '+x.parts_no);await loadParts()}
@@ -59,4 +76,5 @@ $('importCsv').onclick=async()=>{if(!await session()){msg('importMsg','請先登
 async function init(){const s=await session();if(!s){$('loginPanel').classList.remove('hidden');$('adminPanel').classList.add('hidden');return}$('loginPanel').classList.add('hidden');$('adminPanel').classList.remove('hidden');$('userInfo').textContent='管理員：'+(s.user.email||ADMIN_EMAIL);try{await loadParts()}catch(e){msg('saveMsg','資料載入失敗：'+e.message,'err')}}
 client.auth.onAuthStateChange(()=>init());init();
 </script>
-</body></html>
+</body>
+</html>
