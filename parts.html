@@ -19,43 +19,57 @@
 <div id="stats" class="stats"></div><div id="app"><div class="loading">正在載入零件資料…</div></div>
 <div class="footer">TY0032-Willie 製作｜資料來源：公司提供「出貨剪貼簿20240216.xls」｜原始資料保留，標準名稱僅做保守整理</div>
 </main>
-<script src="https://cdn.jsdelivr.net/npm/pako@2.1.0/dist/pako.min.js"></script>
 <script>
 let DATA=[];
 const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 
-// 不使用 atob：避免 iPhone Safari 對 Base64 字串的字元判斷造成解碼錯誤
 function decodeBase64(s){
  s=String(s).replace(/^\uFEFF/,'').replace(/\s/g,'').replace(/-/g,'+').replace(/_/g,'/');
  while(s.length%4)s+='=';
  const table='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
- const out=[]; let buffer=0,bits=0;
+ const out=new Uint8Array(Math.floor(s.length*3/4));
+ let buffer=0,bits=0,pos=0;
  for(let i=0;i<s.length;i++){
   const c=s[i]; if(c==='=')break;
-  const v=table.indexOf(c); if(v<0)continue;
+  const v=table.indexOf(c);
+  if(v<0)throw new Error('資料檔 Base64 內容異常');
   buffer=(buffer<<6)|v; bits+=6;
-  if(bits>=8){bits-=8;out.push((buffer>>bits)&255);}
+  if(bits>=8){bits-=8;out[pos++]=(buffer>>bits)&255;}
  }
- return new Uint8Array(out);
+ return out.slice(0,pos);
+}
+
+async function ungzipNative(bytes){
+ if(!('DecompressionStream' in window))throw new Error('瀏覽器不支援原生解壓縮');
+ const stream=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
+ return await new Response(stream).text();
 }
 
 async function loadData(){
  const r=await fetch('parts-data.json?v=20260910',{cache:'no-store'});
  if(!r.ok)throw new Error('資料檔載入失敗（HTTP '+r.status+'）');
  const raw=(await r.text()).trim();
- // 目前資料檔為 gzip + Base64；若未來改成一般 JSON，也可直接讀取
  if(raw.startsWith('{')||raw.startsWith('['))return JSON.parse(raw);
  const bytes=decodeBase64(raw);
- const text=pako.ungzip(bytes,{to:'string'});
- return JSON.parse(text);
+ // iPhone Safari 優先使用系統原生 gzip 解壓縮，不再依賴 pako/CDN
+ try{
+  const text=await ungzipNative(bytes);
+  return JSON.parse(text);
+ }catch(nativeErr){
+  // 舊版瀏覽器才使用 pako 備援
+  if(window.pako){
+   const text=pako.ungzip(bytes,{to:'string'});
+   return JSON.parse(text);
+  }
+  throw new Error('資料解壓縮失敗：'+nativeErr.message);
+ }
 }
 
 function normalizeRows(payload){
  const rows=Array.isArray(payload)?payload:(payload.master||[]);
  return rows.map(x=>{
   if(!Array.isArray(x))return x;
-  // 支援目前 5 欄精簡格式：Parts No.、名稱、機型、狀態、原始名稱
-  if(x.length===5)return [x[0],x[1],x[3],x[4],x[2],'', ''];
+  if(x.length===5)return [x[0],x[1],x[3],x[4],x[2],'',''];
   return x;
  }).filter(x=>Array.isArray(x)&&x[0]);
 }
@@ -81,7 +95,7 @@ function render(){
  render();
 }catch(e){
  console.error(e);
- document.getElementById('app').innerHTML='<div class="error">零件資料載入失敗：'+esc(e.message)+'<br>這次已改用獨立 Base64 解碼器，不再使用 atob。請重新整理頁面。</div>';
+ document.getElementById('app').innerHTML='<div class="error">零件資料載入失敗：'+esc(e.message)+'<br>已改成 iPhone Safari 優先使用原生 gzip 解壓縮，不再依賴 Base64／pako 解壓縮套件。請重新整理頁面。</div>';
 }})();
 document.getElementById('q').addEventListener('input',render);
 document.getElementById('clear').onclick=()=>{document.getElementById('q').value='';render()};
