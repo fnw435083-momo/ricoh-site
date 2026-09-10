@@ -4,85 +4,39 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>工程零件資料庫｜RICOH Smart Service Hub</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{--blue:#0878e8;--navy:#08295d;--ink:#173456;--sub:#60758f;--line:#dbe8f5}*{box-sizing:border-box}body{margin:0;font-family:'Noto Sans TC',Arial,sans-serif;color:var(--ink);background:#f5f9fd}a{text-decoration:none;color:inherit}.nav{height:64px;background:linear-gradient(100deg,#061d46,#0a4f9e 58%,#087bdc);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 max(22px,5%)}.brand{font-weight:900;font-size:20px}.brand span{font-size:11px;font-weight:500;margin-left:10px;color:#dff6ff}.back{font-size:12px;font-weight:700}.wrap{max-width:1180px;margin:auto;padding:42px 22px 70px}.kicker{font-size:10px;font-weight:900;letter-spacing:.15em;color:var(--blue);text-transform:uppercase}.title{font-size:34px;font-weight:900;color:#0b2d59;margin:6px 0}.desc{font-size:13px;color:var(--sub);line-height:1.8}.searchbox{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:0 8px 28px #0b5ca00b;margin-top:24px}.searchrow{display:flex;gap:10px}.search{flex:1;border:2px solid #c9d9e8;border-radius:9px;padding:15px 16px;font-size:16px;outline:none}.search:focus{border-color:#55b9ff;box-shadow:0 0 0 3px #55b9ff22}.clear{border:1px solid var(--line);background:#fff;border-radius:9px;padding:0 20px;font-weight:800;color:#41627f;cursor:pointer}.hint{font-size:11px;color:#8295a8;margin-top:10px}.stats{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0}.stat{background:#fff;border:1px solid var(--line);border-radius:9px;padding:8px 13px;font-size:11px;color:var(--sub)}.stat b{color:#12375e;font-size:15px;margin-right:4px}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.card{background:#fff;border:1px solid var(--line);border-radius:13px;padding:20px}.partno{font-family:Consolas,monospace;color:#0874d8;font-weight:900;font-size:15px}.name{font-size:17px;font-weight:900;color:#14385f;margin-top:7px}.empty{text-align:center;background:#fff;border:1px dashed #c9d9e8;border-radius:13px;padding:50px 20px;color:#72879d}.loading{text-align:center;padding:40px;color:#65809c}.error{background:#fff3f3;border:1px solid #f2c4c4;color:#a32626;border-radius:10px;padding:15px;font-size:12px;line-height:1.8}.footer{text-align:center;color:#8aa0b6;font-size:10px;margin-top:40px}@media(max-width:760px){.grid{grid-template-columns:1fr}.title{font-size:28px}.searchrow{flex-direction:column}.clear{height:42px}.nav{padding:0 18px}.brand span{display:none}}
+:root{--blue:#0878e8;--navy:#08295d;--ink:#173456;--sub:#60758f;--line:#dbe8f5}*{box-sizing:border-box}body{margin:0;font-family:'Noto Sans TC',Arial,sans-serif;color:var(--ink);background:#f5f9fd}a{text-decoration:none;color:inherit}.nav{height:64px;background:linear-gradient(100deg,#061d46,#0a4f9e 58%,#087bdc);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 max(22px,5%)}.brand{font-weight:900;font-size:20px}.brand span{font-size:11px;font-weight:500;margin-left:10px;color:#dff6ff}.navlinks{display:flex;gap:14px;align-items:center}.back{font-size:12px;font-weight:700}.admin{font-size:12px;font-weight:800;background:#fff;color:#0a4f9e;padding:8px 12px;border-radius:8px}.wrap{max-width:1180px;margin:auto;padding:42px 22px 70px}.kicker{font-size:10px;font-weight:900;letter-spacing:.15em;color:var(--blue);text-transform:uppercase}.title{font-size:34px;font-weight:900;color:#0b2d59;margin:6px 0}.desc{font-size:13px;color:var(--sub);line-height:1.8}.searchbox{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:0 8px 28px #0b5ca00b;margin-top:24px}.searchrow{display:flex;gap:10px}.search{flex:1;border:2px solid #c9d9e8;border-radius:9px;padding:15px 16px;font-size:16px;outline:none}.search:focus{border-color:#55b9ff;box-shadow:0 0 0 3px #55b9ff22}.clear{border:1px solid var(--line);background:#fff;border-radius:9px;padding:0 20px;font-weight:800;color:#41627f;cursor:pointer}.hint{font-size:11px;color:#8295a8;margin-top:10px}.stats{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0}.stat{background:#fff;border:1px solid var(--line);border-radius:9px;padding:8px 13px;font-size:11px;color:var(--sub)}.stat b{color:#12375e;font-size:15px;margin-right:4px}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.card{background:#fff;border:1px solid var(--line);border-radius:13px;padding:20px}.partno{font-family:Consolas,monospace;color:#0874d8;font-weight:900;font-size:15px}.name{font-size:17px;font-weight:900;color:#14385f;margin-top:7px}.empty{text-align:center;background:#fff;border:1px dashed #c9d9e8;border-radius:13px;padding:50px 20px;color:#72879d}.loading{text-align:center;padding:40px;color:#65809c}.error{background:#fff3f3;border:1px solid #f2c4c4;color:#a32626;border-radius:10px;padding:15px;font-size:12px;line-height:1.8}.footer{text-align:center;color:#8aa0b6;font-size:10px;margin-top:40px}@media(max-width:760px){.grid{grid-template-columns:1fr}.title{font-size:28px}.searchrow{flex-direction:column}.clear{height:42px}.nav{padding:0 18px}.brand span{display:none}.navlinks{gap:7px}.admin{padding:7px 9px}}
 </style>
 </head>
 <body>
-<header class="nav"><a class="brand" href="index.html">RICOH <span>Smart Service Hub｜工程師工作中心</span></a><a class="back" href="index.html">← 回工程師中心</a></header>
+<header class="nav"><a class="brand" href="index.html">RICOH <span>Smart Service Hub｜工程師工作中心</span></a><div class="navlinks"><a class="admin" href="parts-admin.html">⚙ 管理料號</a><a class="back" href="index.html">← 回工程師中心</a></div></header>
 <main class="wrap">
 <div><div class="kicker">Parts Database</div><div class="title">工程零件資料庫</div><div class="desc">輸入機型，直接查詢該機型適用的零件。</div></div>
 <section class="searchbox">
  <div class="searchrow"><input id="q" class="search" placeholder="輸入機型，例如 IMC 3000、IM C3000、MP C4500" autocomplete="off"><button id="clear" class="clear">清除</button></div>
- <div class="hint">直接輸入你平常使用的機型寫法即可，例如「IMC 3000」；系統會自動忽略空格、連字號等格式差異。輸入「300」只會比對真正含有獨立 300 型號的資料，不會把 3000、3002 等誤算進來。</div>
+ <div class="hint">直接輸入平常使用的機型寫法即可。輸入「300」只會比對真正的 300 型號，不會把 3000、3002、1300 誤算進來。</div>
 </section>
 <div id="stats" class="stats"></div><div id="app"><div class="loading">正在載入零件資料…</div></div>
-<div class="footer">TY0032-Willie 製作｜資料來源：公司提供「出貨剪貼簿20240216.xls」</div>
+<div class="footer">TY0032-Willie 製作｜資料來源：Supabase 雲端零件資料庫</div>
 </main>
 <script>
+const SUPABASE_URL='https://ppzdwearxmxrkqgcphvt.supabase.co';
+const SUPABASE_KEY='sb_publishable_S9TK4Q45LNUE-iD2QeNeZQ_-_KvRBFb';
+const client=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 let DATA=[];
 const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-function decodeBase64(s){
- s=String(s).replace(/^\uFEFF/,'').replace(/\s/g,'').replace(/-/g,'+').replace(/_/g,'/');
- while(s.length%4)s+='=';
- const table='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
- const out=new Uint8Array(Math.floor(s.length*3/4));
- let buffer=0,bits=0,pos=0;
- for(let i=0;i<s.length;i++){const c=s[i];if(c==='=')break;const v=table.indexOf(c);if(v<0)throw new Error('資料檔 Base64 內容異常');buffer=(buffer<<6)|v;bits+=6;if(bits>=8){bits-=8;out[pos++]=(buffer>>bits)&255;}}
- return out.slice(0,pos);
-}
-async function ungzipNative(bytes){
- if(!('DecompressionStream' in window))throw new Error('瀏覽器不支援原生解壓縮');
- const stream=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
- return await new Response(stream).text();
-}
-async function loadData(){
- const r=await fetch('parts-data.json?v=20260910',{cache:'no-store'});
- if(!r.ok)throw new Error('資料檔載入失敗（HTTP '+r.status+'）');
- const raw=(await r.text()).trim();
- if(raw.startsWith('{')||raw.startsWith('['))return JSON.parse(raw);
- const bytes=decodeBase64(raw);
- try{return JSON.parse(await ungzipNative(bytes));}
- catch(nativeErr){if(window.pako)return JSON.parse(pako.ungzip(bytes,{to:'string'}));throw new Error('資料解壓縮失敗：'+nativeErr.message)}
-}
-function normalizeRows(payload){
- const rows=Array.isArray(payload)?payload:(payload.master||[]);
- return rows.map(x=>{if(!Array.isArray(x))return x;if(x.length===5)return [x[0],x[1],x[3],x[4],x[2]];return x}).filter(x=>Array.isArray(x)&&x[0]);
-}
 function normalizeModel(s){return String(s??'').toUpperCase().replace(/[^A-Z0-9]/g,'');}
-function modelMatches(rawModels, rawQuery){
- const q=normalizeModel(rawQuery);
- if(!q)return false;
- const text=String(rawModels??'').toUpperCase();
- // 純數字查詢：只比對完整型號數字，避免 300 把 3000、3002、1300 一起帶出來。
- if(/^\d+$/.test(q)){
-  const nums=text.match(/\d+/g)||[];
-  return nums.some(n=>n===q);
- }
- // 含英文字的完整機型：將不同分隔的同系列機型拆開後精準比對。
- const parts=text.split(/[\/；;、,\n]+/).map(normalizeModel).filter(Boolean);
- if(parts.some(p=>p===q))return true;
- // 若資料本身是單一機型但含空格/連字號，也允許精準比對。
- return normalizeModel(text)===q;
+function modelMatches(rawModels,rawQuery){const q=normalizeModel(rawQuery);if(!q)return false;const text=String(rawModels??'').toUpperCase();if(/^\d+$/.test(q)){const nums=text.match(/\d+/g)||[];return nums.some(n=>n===q)}const segments=text.split(/[\/；;、,\n]+/).map(normalizeModel).filter(Boolean);return segments.some(s=>s===q)}
+async function loadData(){
+ const {data,error}=await client.from('parts').select('id,parts_no,name,models,status,original_names').order('parts_no');
+ if(error)throw error;
+ if(data&&data.length){DATA=data.map(x=>[x.parts_no,x.name,x.status,x.original_names,x.models]);return}
+ document.getElementById('app').innerHTML='<div class="empty">目前雲端資料庫還沒有零件資料。<br>請進入「⚙ 管理料號」登入後，按「同步目前既有資料」。</div>';
 }
-function render(){
- const rawQ=document.getElementById('q').value.trim();
- if(!rawQ){
-  document.getElementById('stats').innerHTML='';
-  document.getElementById('app').innerHTML='<div class="empty">請先輸入機型。<br>例如：IMC 3000、IM C3000、MP C4500</div>';
-  return;
- }
- const hit=DATA.filter(x=>modelMatches(x[4],rawQ));
- document.getElementById('stats').innerHTML='<div class="stat"><b>'+hit.length+'</b> 個適用零件</div>';
- if(!hit.length){document.getElementById('app').innerHTML='<div class="empty">找不到此機型的零件資料。<br>請確認機型，例如 IMC 3000、MP C4500。</div>';return;}
- document.getElementById('app').innerHTML='<div class="grid">'+hit.map(x=>'<article class="card"><div class="partno">'+esc(x[0])+'</div><div class="name">'+esc(x[1]||'未設定名稱')+'</div></article>').join('')+'</div>';
-}
-(async()=>{try{const payload=await loadData();DATA=normalizeRows(payload);render();}catch(e){console.error(e);document.getElementById('app').innerHTML='<div class="error">零件資料載入失敗：'+esc(e.message)+'</div>';}})();
-document.getElementById('q').addEventListener('input',render);
-document.getElementById('clear').onclick=()=>{document.getElementById('q').value='';render()};
+function render(){const rawQ=document.getElementById('q').value.trim();if(!rawQ){document.getElementById('stats').innerHTML='';if(DATA.length)document.getElementById('app').innerHTML='<div class="empty">請先輸入機型。<br>例如：IMC 3000、IM C3000、MP C4500</div>';return}const hit=DATA.filter(x=>modelMatches(x[4],rawQ));document.getElementById('stats').innerHTML='<div class="stat"><b>'+hit.length+'</b> 個適用零件</div>';if(!hit.length){document.getElementById('app').innerHTML='<div class="empty">找不到此機型的零件資料。<br>請確認機型，例如 IMC 3000、MP C4500。</div>';return}document.getElementById('app').innerHTML='<div class="grid">'+hit.map(x=>'<article class="card"><div class="partno">'+esc(x[0])+'</div><div class="name">'+esc(x[1]||'未設定名稱')+'</div></article>').join('')+'</div>'}
+(async()=>{try{await loadData();render()}catch(e){console.error(e);document.getElementById('app').innerHTML='<div class="error">零件資料載入失敗：'+esc(e.message)+'</div>'}})();
+document.getElementById('q').addEventListener('input',render);document.getElementById('clear').onclick=()=>{document.getElementById('q').value='';render()};
 </script>
 </body>
 </html>
