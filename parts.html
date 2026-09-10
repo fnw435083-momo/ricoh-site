@@ -17,7 +17,7 @@
 <div><div class="kicker">Parts Database</div><div class="title">工程零件資料庫</div><div class="desc">輸入機型，直接查詢該機型適用的零件。</div></div>
 <section class="searchbox">
  <div class="searchrow"><input id="q" class="search" placeholder="輸入機型，例如 IMC 3000、IM C3000、MP C4500" autocomplete="off"><button id="clear" class="clear">清除</button></div>
- <div class="hint">直接輸入你平常使用的機型寫法即可，例如「IMC 3000」；系統會自動忽略空格、連字號等格式差異。</div>
+ <div class="hint">直接輸入你平常使用的機型寫法即可，例如「IMC 3000」；系統會自動忽略空格、連字號等格式差異。輸入「300」只會比對真正含有獨立 300 型號的資料，不會把 3000、3002 等誤算進來。</div>
 </section>
 <div id="stats" class="stats"></div><div id="app"><div class="loading">正在載入零件資料…</div></div>
 <div class="footer">TY0032-Willie 製作｜資料來源：公司提供「出貨剪貼簿20240216.xls」</div>
@@ -52,8 +52,22 @@ function normalizeRows(payload){
  const rows=Array.isArray(payload)?payload:(payload.master||[]);
  return rows.map(x=>{if(!Array.isArray(x))return x;if(x.length===5)return [x[0],x[1],x[3],x[4],x[2]];return x}).filter(x=>Array.isArray(x)&&x[0]);
 }
-// 工程師常用寫法：IMC 3000、IM C3000、IM-C3000 都視為同一機型
 function normalizeModel(s){return String(s??'').toUpperCase().replace(/[^A-Z0-9]/g,'');}
+function modelMatches(rawModels, rawQuery){
+ const q=normalizeModel(rawQuery);
+ if(!q)return false;
+ const text=String(rawModels??'').toUpperCase();
+ // 純數字查詢：只比對完整型號數字，避免 300 把 3000、3002、1300 一起帶出來。
+ if(/^\d+$/.test(q)){
+  const nums=text.match(/\d+/g)||[];
+  return nums.some(n=>n===q);
+ }
+ // 含英文字的完整機型：將不同分隔的同系列機型拆開後精準比對。
+ const parts=text.split(/[\/；;、,\n]+/).map(normalizeModel).filter(Boolean);
+ if(parts.some(p=>p===q))return true;
+ // 若資料本身是單一機型但含空格/連字號，也允許精準比對。
+ return normalizeModel(text)===q;
+}
 function render(){
  const rawQ=document.getElementById('q').value.trim();
  if(!rawQ){
@@ -61,10 +75,9 @@ function render(){
   document.getElementById('app').innerHTML='<div class="empty">請先輸入機型。<br>例如：IMC 3000、IM C3000、MP C4500</div>';
   return;
  }
- const q=normalizeModel(rawQ);
- const hit=DATA.filter(x=>normalizeModel(x[4]).includes(q));
+ const hit=DATA.filter(x=>modelMatches(x[4],rawQ));
  document.getElementById('stats').innerHTML='<div class="stat"><b>'+hit.length+'</b> 個適用零件</div>';
- if(!hit.length){document.getElementById('app').innerHTML='<div class="empty">找不到此機型的零件資料。<br>請確認機型名稱，例如 IMC 3000、IM C3000。</div>';return;}
+ if(!hit.length){document.getElementById('app').innerHTML='<div class="empty">找不到此機型的零件資料。<br>請確認機型，例如 IMC 3000、MP C4500。</div>';return;}
  document.getElementById('app').innerHTML='<div class="grid">'+hit.map(x=>'<article class="card"><div class="partno">'+esc(x[0])+'</div><div class="name">'+esc(x[1]||'未設定名稱')+'</div></article>').join('')+'</div>';
 }
 (async()=>{try{const payload=await loadData();DATA=normalizeRows(payload);render();}catch(e){console.error(e);document.getElementById('app').innerHTML='<div class="error">零件資料載入失敗：'+esc(e.message)+'</div>';}})();
