@@ -9,8 +9,12 @@
     if(!visitorId){visitorId=(crypto.randomUUID?crypto.randomUUID():'v-'+Date.now()+'-'+Math.random().toString(36).slice(2));localStorage.setItem(key,visitorId)}
     const page=location.pathname.split('/').pop()||'index.html';
     const title=document.title||page;
-    function send(action,target){db.from('usage_events').insert({page,page_title:title,action:action||'view',target:target||null,session_id:visitorId,metadata:{referrer:document.referrer?new URL(document.referrer).pathname:null}}).then(()=>{}).catch(()=>{})}
-    window.ricohTrack=function(action,target){send(action,target)};
+    function send(action,target,metadata){db.from('usage_events').insert({page,page_title:title,action:action||'view',target:target||null,session_id:visitorId,metadata:Object.assign({referrer:document.referrer?new URL(document.referrer).pathname:null},metadata||{})}).then(()=>{}).catch(()=>{})}
+    window.ricohTrack=function(action,target,metadata){send(action,target,metadata)};
+    function addRecent(){let arr=[];try{arr=JSON.parse(localStorage.getItem('ricoh_smart_hub_recent')||'[]')}catch(_){};arr=arr.filter(x=>x.url!==location.href);arr.unshift({url:location.href,title,at:new Date().toISOString()});localStorage.setItem('ricoh_smart_hub_recent',JSON.stringify(arr.slice(0,30)))}
+    window.ricohFavorite=function(item){let arr=[];try{arr=JSON.parse(localStorage.getItem('ricoh_smart_hub_favorites')||'[]')}catch(_){};const key=item.key||item.url;const i=arr.findIndex(x=>(x.key||x.url)===key);if(i>=0){arr.splice(i,1);send('favorite_remove',key)}else{arr.unshift(item);send('favorite_add',key)}localStorage.setItem('ricoh_smart_hub_favorites',JSON.stringify(arr.slice(0,100)));return i<0};
+    window.ricohIsFavorite=function(key){try{return JSON.parse(localStorage.getItem('ricoh_smart_hub_favorites')||'[]').some(x=>(x.key||x.url)===key)}catch(_){return false}};
+    addRecent();
     window.addEventListener('load',function(){send('view',null)});
     document.addEventListener('click',function(e){
       const a=e.target.closest('a');
