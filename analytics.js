@@ -18,6 +18,8 @@
       const b=e.target.closest('button');
       if(b){const text=(b.innerText||b.getAttribute('aria-label')||'').trim();if(text)send('button',text.slice(0,80))}
     },true);
+    const searchInputs=document.querySelectorAll('input[type="search"],#q,#search');
+    searchInputs.forEach(input=>{let timer=null,last='';input.addEventListener('input',function(){clearTimeout(timer);const value=input.value.trim().slice(0,80);timer=setTimeout(()=>{if(value&&value!==last){last=value;send('search',value)}},700)})});
   };
   if(window.supabase)start();else{const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';s.onload=start;document.head.appendChild(s)}
 })();
