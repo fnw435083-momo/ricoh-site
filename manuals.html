@@ -5,13 +5,42 @@
 <title>工程手冊中心｜RICOH Smart Hub</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{--blue:#1677e8;--navy:#08295d;--ink:#10233f;--sub:#536783;--line:#dbe8f5;--max:1120px}*{box-sizing:border-box;margin:0;padding:0}body{font-family:"Noto Sans TC","Microsoft JhengHei",Arial,sans-serif;color:var(--ink);background:#f5f9fd;line-height:1.7}a{text-decoration:none;color:inherit}.nav{height:64px;background:linear-gradient(100deg,#061d46,#0a4f9e 58%,#087bdc);color:#fff;display:flex;align-items:center;padding:0 max(20px,5%);box-shadow:0 4px 20px #06295d33}.brand{font-weight:900;font-size:19px}.wrap{max-width:var(--max);margin:auto;padding:48px 20px 70px}.hero{background:linear-gradient(135deg,#fff,#edf8ff);border:1px solid var(--line);border-radius:20px;padding:36px;margin-bottom:22px;box-shadow:0 10px 35px #0b5ca012}.kicker{font-size:11px;color:#0874d8;font-weight:800;letter-spacing:.14em}.hero h1{font-size:clamp(28px,4vw,44px);line-height:1.2;margin:8px 0 10px;color:#092754}.hero p{color:var(--sub);font-size:14px}.search{margin-top:24px;display:flex;gap:10px}.search input{flex:1;border:1px solid #cbddec;border-radius:10px;padding:13px 15px;font-size:15px;outline:none}.search input:focus{border-color:#4cbfff;box-shadow:0 0 0 3px #55e7ff22}.count{font-size:12px;color:#71849b;margin:16px 2px}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px;box-shadow:0 5px 18px #0b5ca00b;transition:.2s}.card:hover{transform:translateY(-2px);box-shadow:0 12px 30px #0b5ca018}.model{display:inline-block;background:#eaf6ff;color:#0870d5;font-size:11px;font-weight:800;border-radius:5px;padding:4px 8px}.card h2{font-size:19px;margin:11px 0 3px}.meta{font-size:12px;color:#72859c;margin-bottom:16px}.open{display:inline-flex;border:0;background:linear-gradient(135deg,#168cff,#075bd1);color:#fff;border-radius:8px;padding:10px 15px;font-size:13px;font-weight:700;cursor:pointer}.empty,.error{background:#fff;border:1px dashed #cbddec;border-radius:14px;padding:28px;text-align:center;color:var(--sub)}.error{border-color:#f0c2c2;color:#a33}.loading{text-align:center;color:var(--sub);padding:30px}.hint{font-size:11px;color:#7b8da3;margin-top:10px}@media(max-width:700px){.wrap{padding:28px 14px 50px}.hero{padding:25px}.grid{grid-template-columns:1fr}.search{flex-direction:column}.search input{width:100%}}
+:root{--blue:#1677e8;--navy:#08295d;--ink:#10233f;--sub:#536783;--line:#dbe8f5;--max:1120px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Noto Sans TC","Microsoft JhengHei",Arial,sans-serif;color:var(--ink);background:#f5f9fd;line-height:1.7}
+a{text-decoration:none;color:inherit}
+.nav{height:64px;background:linear-gradient(100deg,#061d46,#0a4f9e 58%,#087bdc);color:#fff;display:flex;align-items:center;padding:0 max(20px,5%);box-shadow:0 4px 20px #06295d33}
+.brand{font-weight:900;font-size:19px}
+.home-entry{position:fixed;right:18px;top:82px;z-index:30;background:#08295d;color:#fff!important;border:1px solid #3d6799;border-radius:9px;padding:9px 13px;font-size:11px;font-weight:900;box-shadow:0 5px 18px #08295d33;transition:.18s}
+.home-entry:hover{background:#0878e8;border-color:#0878e8}
+.wrap{max-width:var(--max);margin:auto;padding:48px 20px 70px}
+.hero{background:linear-gradient(135deg,#fff,#edf8ff);border:1px solid var(--line);border-radius:20px;padding:36px;margin-bottom:22px;box-shadow:0 10px 35px #0b5ca012}
+.kicker{font-size:11px;color:#0874d8;font-weight:800;letter-spacing:.14em}
+.hero h1{font-size:clamp(28px,4vw,44px);line-height:1.2;margin:8px 0 10px;color:#092754}
+.hero p{color:var(--sub);font-size:14px}
+.search{margin-top:24px;display:flex;gap:10px}
+.search input{flex:1;border:1px solid #cbddec;border-radius:10px;padding:13px 15px;font-size:15px;outline:none}
+.search input:focus{border-color:#4cbfff;box-shadow:0 0 0 3px #55e7ff22}
+.count{font-size:12px;color:#71849b;margin:16px 2px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px;box-shadow:0 5px 18px #0b5ca00b;transition:.2s}
+.card:hover{transform:translateY(-2px);box-shadow:0 12px 30px #0b5ca018}
+.model{display:inline-block;background:#eaf6ff;color:#0870d5;font-size:11px;font-weight:800;border-radius:5px;padding:4px 8px}
+.card h2{font-size:19px;margin:11px 0 3px}
+.meta{font-size:12px;color:#72859c;margin-bottom:16px}
+.open{display:inline-flex;border:0;background:linear-gradient(135deg,#168cff,#075bd1);color:#fff;border-radius:8px;padding:10px 15px;font-size:13px;font-weight:700;cursor:pointer}
+.empty,.error{background:#fff;border:1px dashed #cbddec;border-radius:14px;padding:28px;text-align:center;color:var(--sub)}
+.error{border-color:#f0c2c2;color:#a33}
+.loading{text-align:center;color:var(--sub);padding:30px}
+.hint{font-size:11px;color:#7b8da3;margin-top:10px}
+@media(max-width:700px){.wrap{padding:28px 14px 50px}.hero{padding:25px}.grid{grid-template-columns:1fr}.search{flex-direction:column}.search input{width:100%}.home-entry{top:72px;right:12px}}
 </style>
 </head>
 <body>
+<a class="home-entry" href="index.html">← 回首頁</a>
 <header class="nav"><a class="brand" href="index.html">RICOH Smart Service Hub</a></header>
 <main class="wrap">
-<section class="hero"><div class="kicker">ENGINEERING DOCUMENT CENTER</div><h1>工程手冊中心</h1><p>集中查找 Service Manual、Field Service 與工程文件。只要把 PDF 上傳到 Supabase 的 manuals 資料夾，這裡就會自動顯示。</p><div class="search"><input id="search" type="search" placeholder="搜尋機型、手冊名稱或檔名，例如 IM C2000"><a class="open" href="index.html">回首頁</a></div><div class="hint">新上傳的 PDF 不需要再手動新增資料列。</div></section>
+<section class="hero"><div class="kicker">ENGINEERING DOCUMENT CENTER</div><h1>工程手冊中心</h1><p>集中查找 Service Manual、Field Service 與工程文件。只要把 PDF 上傳到 Supabase 的 manuals 資料夾，這裡就會自動顯示。</p><div class="search"><input id="search" type="search" placeholder="搜尋機型、手冊名稱或檔名，例如 IM C2000"></div><div class="hint">新上傳的 PDF 不需要再手動新增資料列。</div></section>
 <div id="count" class="count">載入中…</div><div id="list" class="grid"><div class="loading">正在讀取工程手冊…</div></div>
 </main>
 <script>
